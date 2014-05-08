@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/_ext/742366431/SLL.o \
 	${OBJECTDIR}/Disk_File.o \
 	${OBJECTDIR}/main.o
 
@@ -62,6 +63,11 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/trunk: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/trunk ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/_ext/742366431/SLL.o: ../../Netbeans7.3Projects/Structures/SLL.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/742366431
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/742366431/SLL.o ../../Netbeans7.3Projects/Structures/SLL.cpp
 
 ${OBJECTDIR}/Disk_File.o: Disk_File.cpp 
 	${MKDIR} -p ${OBJECTDIR}

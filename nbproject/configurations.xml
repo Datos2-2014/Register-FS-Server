@@ -27,6 +27,8 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>../../Netbeans7.3Projects/Structures/SLL.cpp</itemPath>
+    <itemPath>../../Netbeans7.3Projects/Structures/SLL.h</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -41,6 +43,16 @@
           <commandLine>-std=c++0x</commandLine>
         </ccTool>
       </compileType>
+      <item path="../../Netbeans7.3Projects/Structures/SLL.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Netbeans7.3Projects/Structures/SLL.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="Disk_File.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Disk_File.h" ex="false" tool="3" flavor2="0">
@@ -68,6 +80,16 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="../../Netbeans7.3Projects/Structures/SLL.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Netbeans7.3Projects/Structures/SLL.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="Disk_File.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Disk_File.h" ex="false" tool="3" flavor2="0">
