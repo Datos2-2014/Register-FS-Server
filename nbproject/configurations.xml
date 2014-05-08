@@ -6,17 +6,19 @@
                    projectFiles="true">
       <itemPath>Disk_File.h</itemPath>
       <itemPath>SLL.h</itemPath>
+      <itemPath>SLLNode.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
                    projectFiles="true">
-    </logicalFolder>
-    <logicalFolder name="SourceFiles"
-                   displayName="Source Files"
-                   projectFiles="true">
-      <itemPath>Disk_File.cpp</itemPath>
-      <itemPath>SLL.cpp</itemPath>
-      <itemPath>main.cpp</itemPath>
+      <logicalFolder name="SourceFiles"
+                     displayName="Source Files"
+                     projectFiles="true">
+        <itemPath>Disk_File.cpp</itemPath>
+        <itemPath>SLL.cpp</itemPath>
+        <itemPath>SLLNode.cpp</itemPath>
+        <itemPath>main.cpp</itemPath>
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
@@ -29,8 +31,6 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
-    <itemPath>SLLNode.cpp</itemPath>
-    <itemPath>SLLNode.h</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
