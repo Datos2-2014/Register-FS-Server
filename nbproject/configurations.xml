@@ -37,6 +37,9 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <ccTool>
+          <commandLine>-std=c++0x</commandLine>
+        </ccTool>
       </compileType>
       <item path="Disk_File.cpp" ex="false" tool="1" flavor2="0">
       </item>
