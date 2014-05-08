@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>ANB.h</itemPath>
       <itemPath>Disk_File.h</itemPath>
       <itemPath>SLL.h</itemPath>
       <itemPath>SLLNode.h</itemPath>
@@ -14,6 +15,7 @@
       <logicalFolder name="SourceFiles"
                      displayName="Source Files"
                      projectFiles="true">
+        <itemPath>ANB.cpp</itemPath>
         <itemPath>Disk_File.cpp</itemPath>
         <itemPath>SLL.cpp</itemPath>
         <itemPath>SLLNode.cpp</itemPath>
@@ -45,6 +47,10 @@
           <commandLine>-std=c++0x</commandLine>
         </ccTool>
       </compileType>
+      <item path="ANB.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ANB.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Disk_File.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Disk_File.h" ex="false" tool="3" flavor2="0">
@@ -80,6 +86,10 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="ANB.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="ANB.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Disk_File.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Disk_File.h" ex="false" tool="3" flavor2="0">

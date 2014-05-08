@@ -21,7 +21,7 @@ SLLNode::SLLNode(Disk_File *pFile, string pFolderName) {
     }
     else {
         file = pFile;
-        name = "";
+        name = pFolderName;
         flag = 1;
         next = NULL;
     }
@@ -48,3 +48,12 @@ void SLLNode::setNext(SLLNode* pNext) {
 int SLLNode::getFlag() {
     return flag;
 }
+
+SLL* SLLNode::getFolder() {
+    return folder;
+}
+
+string SLLNode::getName() {
+    return name;
+}
+

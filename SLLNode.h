@@ -22,6 +22,8 @@ class SLLNode {
         SLLNode* getNext(); //Obtiene un puntero hacia el siguiente nodo
         void setNext(SLLNode*); //Establece el puntero hacia un nodo siguiente
         int getFlag(); //Bandera que representa si el contenido del nodo es o no archivo
+        string getName(); //Devuelve el nombre de la carpeta
+        SLL* getFolder(); //Devuelve el contenido de una carpeta
         
     private:
         SLLNode* next; //Nodo siguiente
