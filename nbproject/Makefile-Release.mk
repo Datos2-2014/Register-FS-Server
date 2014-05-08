@@ -35,8 +35,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/742366431/SLL.o \
 	${OBJECTDIR}/Disk_File.o \
+	${OBJECTDIR}/SLL.o \
+	${OBJECTDIR}/SLLNode.o \
 	${OBJECTDIR}/main.o
 
 
@@ -64,15 +65,20 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/trunk: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/trunk ${OBJECTFILES} ${LDLIBSOPTIONS}
 
-${OBJECTDIR}/_ext/742366431/SLL.o: ../../Netbeans7.3Projects/Structures/SLL.cpp 
-	${MKDIR} -p ${OBJECTDIR}/_ext/742366431
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/742366431/SLL.o ../../Netbeans7.3Projects/Structures/SLL.cpp
-
 ${OBJECTDIR}/Disk_File.o: Disk_File.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Disk_File.o Disk_File.cpp
+
+${OBJECTDIR}/SLL.o: SLL.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SLL.o SLL.cpp
+
+${OBJECTDIR}/SLLNode.o: SLLNode.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SLLNode.o SLLNode.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}

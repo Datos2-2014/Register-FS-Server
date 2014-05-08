@@ -5,6 +5,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>Disk_File.h</itemPath>
+      <itemPath>SLL.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -14,6 +15,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>Disk_File.cpp</itemPath>
+      <itemPath>SLL.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -27,8 +29,8 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
-    <itemPath>../../Netbeans7.3Projects/Structures/SLL.cpp</itemPath>
-    <itemPath>../../Netbeans7.3Projects/Structures/SLL.h</itemPath>
+    <itemPath>SLLNode.cpp</itemPath>
+    <itemPath>SLLNode.h</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -43,19 +45,17 @@
           <commandLine>-std=c++0x</commandLine>
         </ccTool>
       </compileType>
-      <item path="../../Netbeans7.3Projects/Structures/SLL.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../Netbeans7.3Projects/Structures/SLL.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="Disk_File.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Disk_File.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SLL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SLL.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SLLNode.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SLLNode.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -80,19 +80,17 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
-      <item path="../../Netbeans7.3Projects/Structures/SLL.cpp"
-            ex="false"
-            tool="1"
-            flavor2="0">
-      </item>
-      <item path="../../Netbeans7.3Projects/Structures/SLL.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
       <item path="Disk_File.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Disk_File.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SLL.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SLL.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SLLNode.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="SLLNode.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
