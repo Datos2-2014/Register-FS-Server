@@ -16,24 +16,16 @@ class SLL {
         SLL(const SLL& orig);
         virtual ~SLL();
         
-        SLLNode* getFirst();
-        void setFirst(SLLNode*);
-        int getSize();
+        SLLNode* getFirst(); //Obtiene el primer nodo de la lista
+        void setFirst(SLLNode*); //Establece un puntero para el primer nodo de la lista
+        int getSize(); //Obtiene el tamaño total actual de la lista
         
-//        void print();
-//        void insertHead(int);
-        void insert(Disk_File*, string);
-//        void insertInOrder(int);
-        void removeFile(string);
-//        bool search(int);
-//        SLL* merge(SLL&);
-//        SLL* intersection(SLL&);
-//        void invert();
-//        void insertRandom(int);
+        void insert(Disk_File*, string); //Inserta un nodo a la lista
+        void removeFile(string); //Remueve un nodo de la lista
     
     private:
-        SLLNode *first;
-        int size;
+        SLLNode *first; //Primer nodo de la lista
+        int size; //Tamaño actual de la lista
 };
 
 #endif	/* SLL_H */

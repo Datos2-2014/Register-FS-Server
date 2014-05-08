@@ -18,20 +18,20 @@ class SLLNode {
         SLLNode(const SLLNode& orig);
         virtual ~SLLNode();
         
-        Disk_File* getFile();
-        SLLNode* getNext();
-        void setNext(SLLNode*);
-        int getFlag();
+        Disk_File* getFile(); //Obtiene el archivo almacenado en el nodo
+        SLLNode* getNext(); //Obtiene un puntero hacia el siguiente nodo
+        void setNext(SLLNode*); //Establece el puntero hacia un nodo siguiente
+        int getFlag(); //Bandera que representa si el contenido del nodo es o no archivo
         
     private:
-        SLLNode* next;
+        SLLNode* next; //Nodo siguiente
         
         int flag; //1:Archivo; 0:Carpeta
         
-        Disk_File* file;
+        Disk_File* file; //Archivo
         
-        SLL* folder;
-        string name;
+        SLL* folder; //Carpeta; lista de su contenido
+        string name; //Nombre para la carpeta
 };
 
 #endif	/* SLLNODE_H */

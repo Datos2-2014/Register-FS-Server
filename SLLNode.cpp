@@ -6,7 +6,11 @@
  */
 #include "SLLNode.h"
 
-
+/**
+ * Constructor, crea un nodo a partir de su dato, sea carpeta o archivo
+ * @param pFile Archivo para establecercomo contenido, en el caso de que sea nulo se crea una carpeta a partir del siguiente parametro
+ * @param pFolderName Nombre para la carpeta a crear en caso de que lo que se quiera sea una carpeta
+ */
 SLLNode::SLLNode(Disk_File *pFile, string pFolderName) {
     if(pFile == NULL) {
         flag = 0;
