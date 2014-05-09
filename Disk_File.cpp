@@ -67,7 +67,7 @@ Disk_File::~Disk_File() {
  * 
  * Writes a string in the file 
  */
-void Disk_File::write(string pToWrite, int pBlock, int pDisp){
+void Disk_File::write(string pToWrite, int pBlock, int pDisp, int pId){
     char* pToWriteChar = strdup(pToWrite.c_str());
     fstream fs(fileName, ios::in | ios::out | ios::binary);
     move(pBlock, pDisp, &fs);
@@ -84,8 +84,8 @@ void Disk_File::write(string pToWrite, int pBlock, int pDisp){
  * 
  * Reads a string from the file 
  */
-string Disk_File::read(int pRegister, int pDisp, int pSize){
-    char* Read;
+string Disk_File::read(int pRegister, int pDisp, int pSize, int pID){
+    char* Read= new char [pSize];
     fstream fs(fileName,  ios::in | ios::out |ios::binary);
     cout << " size to read " << pSize << endl;
     cout << " pos to read  " << pRegister*(_registerSize+1)+pDisp << endl;
@@ -124,7 +124,8 @@ void Disk_File::move(int pRegister, int pBytes, fstream* pFile){
     }
     pFile->seekp(_headerSize+(pRegister*(_registerSize+1))+pBytes, ios_base::beg);
     pFile->seekg(_headerSize+(pRegister*(_registerSize+1))+pBytes, ios_base::beg);
-    cout<< "rto Byte: "<< pFile->tellp() << endl;
+    cout<< "wto Byte: "<< pFile->tellp() << endl;
+    cout<< "rto Byte: "<< pFile->tellg() << endl;
 }
 
 /*

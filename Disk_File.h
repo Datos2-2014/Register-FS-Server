@@ -20,8 +20,8 @@ public:
     int getBlockSize();
     virtual ~Disk_File();
     //void format();
-    void write(string, int ,int );
-    string read(int, int, int);
+    void write(string, int ,int , int);
+    string read(int, int, int, int);
     string readHeader();
     void writeHeader(string);
     void cleanRegister(int);
