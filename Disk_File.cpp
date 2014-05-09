@@ -12,28 +12,30 @@
  * pFileName::char* the desired name of the file
  * pSize::float the desired size of the file in gb
  */
-Disk_File::Disk_File(string pFileName, float pSize) {
-    this->size=pSize;
+Disk_File::Disk_File(string pClientDescriptor,string pFileName) {
     char* name = strdup(pFileName.c_str());
     if(exists(name)|!isValid(pFileName)){
         setFileName(getValidName());
     }else{
         setFileName(name);
     }
-    this->format();
-    this->blockSize=defaultBlockSize;
-    cout << "BlockSize: " << blockSize << endl;
+    this->_clientDescriptor=pClientDescriptor;
+}
+
+void Disk_File::init(int pSize){
+    fstream fs((char*)fileName, std::ios::out | std::ios::binary);
+    fs.close();
+    this->_registerSize=pSize;
 }
 /*
  * 
  */
 Disk_File::Disk_File(){
-    this->size=defaultDiskSize;
-    setFileName(getValidName());
-    this->format();
-    this->blockSize=defaultBlockSize;
-    cout << "BlockSize: " << blockSize << endl;
-    
+//    this->size=defaultDiskSize;
+//    setFileName(getValidName());
+//    this->_registerSize=defaultBlockSize;
+//    cout << "BlockSize: " << _registerSize << endl;
+//    
 }
 
 Disk_File::Disk_File(const Disk_File& orig) {
@@ -46,15 +48,15 @@ Disk_File::~Disk_File() {
  * Returns Void
  * Fills the document with 0
  */
-void Disk_File::format(){
-    fstream fs((char*)fileName, std::ios::out | std::ios::binary);
-    cout << "Formating     " << fileName << "  .... "<< endl;
-    move(0, 0, &fs);
-    for(int i=0; i<=(size*(1024*1024*1024));i++){
-        fs.write((char*)&zero, 1);
-    }
-    fs.close();
-}
+//void Disk_File::format(){
+//    fstream fs((char*)fileName, std::ios::out | std::ios::binary);
+//    cout << "Formating     " << fileName << "  .... "<< endl;
+//    move(0, 0, &fs);
+//    for(int i=0; i<=(size*(1024*1024*1024));i++){
+//        fs.write((char*)&zero, 1);
+//    }
+//    fs.close();
+//}
 /*
  * Parameters:
  * pTowrite::std::string the string to write in the file
@@ -69,7 +71,7 @@ void Disk_File::write(string pToWrite, int pBlock, int pDisp){
     char* pToWriteChar = strdup(pToWrite.c_str());
     fstream fs(fileName, ios::in | ios::out | ios::binary);
     move(pBlock, pDisp, &fs);
-    fs.write(pToWriteChar, sizeOF(pToWrite));
+    fs.write(pToWriteChar, pToWrite.size());
     fs.close();
 }
 /*
@@ -82,10 +84,12 @@ void Disk_File::write(string pToWrite, int pBlock, int pDisp){
  * 
  * Reads a string from the file 
  */
-string Disk_File::read(int pBlock, int pDisp, int pSize){
+string Disk_File::read(int pRegister, int pDisp, int pSize){
     char* Read;
-    fstream fs(fileName, ios::in | ios::out | ios::binary);
-    move(pBlock, pDisp, &fs);
+    fstream fs(fileName,  ios::in | ios::out |ios::binary);
+    cout << " size to read " << pSize << endl;
+    cout << " pos to read  " << pRegister*(_registerSize+1)+pDisp << endl;
+    move(pRegister, pDisp, &fs);
     fs.read(Read, pSize);
     fs.close();
     string result = Read;
@@ -102,10 +106,25 @@ string Disk_File::read(int pBlock, int pDisp, int pSize){
  * Move the pointer of a file to write or read
  * 
  */
-void Disk_File::move(int toBlock, int pBytes,fstream* pFile){
-    pFile->seekp(headerSize+(toBlock*(blockSize+1))+pBytes, ios_base::beg);
-    pFile->seekg(headerSize+(toBlock*(blockSize+1))+pBytes, ios_base::beg);
-    cout<< "rto Byte: "<<toBlock*(blockSize+1)+pBytes << endl;
+void Disk_File::move(int pRegister, int pBytes, fstream* pFile){
+    pFile->seekp( 0, std::ios::end );
+    pFile->seekg( 0, std::ios::end );
+    std::streampos fsize = pFile->tellp();
+    cout << " tama;o archivo  " << fsize << endl;
+    cout << "posicion del puntero g"<< pFile->tellg() << endl;
+    cout << " posicion que quiere   " << _headerSize+(pRegister*(_registerSize+1))+pBytes << endl;
+    cout << " tama;o del registro " << _registerSize << endl;
+    cout << " tama;o del header  " << _headerSize << endl;
+    cout << " registroo " << pRegister << endl;
+    cout << " desplazamiento  " << pBytes << endl;
+    if(_headerSize+(pRegister*(_registerSize+1))+pBytes>fsize){
+        for(int i=fsize; i<(_headerSize+(pRegister*(_registerSize+1)+_registerSize+1)+pBytes); i++){
+            pFile->write((char*)&zero, 1);
+        }
+    }
+    pFile->seekp(_headerSize+(pRegister*(_registerSize+1))+pBytes, ios_base::beg);
+    pFile->seekg(_headerSize+(pRegister*(_registerSize+1))+pBytes, ios_base::beg);
+    cout<< "rto Byte: "<< pFile->tellp() << endl;
 }
 
 /*
@@ -117,7 +136,7 @@ void Disk_File::move(int toBlock, int pBytes,fstream* pFile){
  * Returns the blocksize
  */
 int Disk_File::getBlockSize(){
-    return this->blockSize;
+    return this->_registerSize;
 }
 /*
  * Parameters:
@@ -127,8 +146,8 @@ int Disk_File::getBlockSize(){
  * 
  * Set the size of the block(Cluster)
  */
-void Disk_File::setBlockSize(float pBlockSize){
-    this->blockSize=pBlockSize;
+void Disk_File::setRegisterSize(int pBlockSize){
+    this->_registerSize=pBlockSize;
 }
 /*
  * Parameters:
@@ -138,9 +157,9 @@ void Disk_File::setBlockSize(float pBlockSize){
  * 
  * Will fill with 0 all the bytes in the block
  */
-void Disk_File::cleanBlock(int pBlock){
+void Disk_File::cleanRegister(int pBlock){
     fstream fs(fileName, ios::in | ios::out | ios::binary);
-    for(int i=0; i<=blockSize; i++){
+    for(int i=0; i<=_registerSize; i++){
         move(pBlock, i, &fs);
         fs.write((char*)&zero, 1);
     }
@@ -200,7 +219,7 @@ bool Disk_File::exists(char* pFileName){
  */
 bool Disk_File::isValid(string pFileName){
     char* pFileNameChar1 = strdup(pFileName.c_str());
-    int size=sizeOF(pFileName);
+    int size=pFileName.size();
     const char* bin=".bin";
     bool isvalid=true;
     int j=0;
@@ -228,12 +247,14 @@ bool Disk_File::isValid(string pFileName){
  * Write the header of the file
  */
 void Disk_File::writeHeader(string pHeader){
+    this->_headerSize=pHeader.size();
+    
     fstream fs;
     char* pFileNameChar2 = strdup(pHeader.c_str());
     cout << "Writing header" << endl;
-    fs.open(fileName, ios::in | ios::out | ios::binary);
-    fs.seekp(0);
-    fs.write(pFileNameChar2, sizeOF(pHeader));
+    fs.open(fileName, ios::in|ios::out  | ios::binary);
+    fs.seekp(0, ios_base::beg);
+    fs.write(pFileNameChar2, _headerSize);
     fs.close();
 }
 
@@ -247,29 +268,13 @@ void Disk_File::writeHeader(string pHeader){
 string Disk_File::readHeader(){
     fstream fs;
     cout << "reading header" << endl;
-    fs.open(fileName, ios::in | ios::out | ios::binary);
+    fs.open(fileName,  ios::in |ios::out| ios::binary);
     fs.seekg(0);
     fs.seekp(0);
     char* read;
-    fs.read(read, headerSize);
+    fs.read(read, _headerSize);
     fs.close();
     return read;
-}
-/*
- * Parameters:
- * pString::string  the string to check
- * 
- * Returns:
- * The size of the string in int
- * 
- * Returns the size of the string that you enter
- */
-int Disk_File::sizeOF(string pString){
-    int size=0;
-    while(pString[size]!=NULL){
-        size++;
-    }
-    return size;
 }
 
 /*
@@ -290,4 +295,9 @@ char* Disk_File::getValidName(){
         nametoCheckChar = strdup(nameToCheck.c_str());
     }
     return nametoCheckChar;
+}
+
+
+ string Disk_File::getClientDescriptor() {
+        return _clientDescriptor;
 }

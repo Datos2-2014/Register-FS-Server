@@ -14,37 +14,36 @@ using namespace std;
 
 class Disk_File {
 public:
-    Disk_File(string, float);
+    Disk_File(string, string);
     Disk_File();
     Disk_File(const Disk_File& orig);
     int getBlockSize();
     virtual ~Disk_File();
-    void format();
+    //void format();
     void write(string, int ,int );
     string read(int, int, int);
     string readHeader();
     void writeHeader(string);
-    void cleanBlock(int);
+    void cleanRegister(int);
     string getFileName() const;
-    void setBlockSize(float);
-    
+    void init(int);
+
+    string getClientDescriptor();
     
 private:
-    float size;
-    const float defaultDiskSize=0.5;
     const short zero=0;
+    string _clientDescriptor;
     char* fileName;
-    float blockSize;
-    const int GB=1073741824;//Bytes
+    int _registerSize;
+   // const int GB=1073741824;//Bytes
     const string defaultName="Disk";
     void move(int, int, fstream*);
-    const float defaultBlockSize=0.5;//Megabytes
-    const int headerSize=32;//Bytes
+    int _headerSize;//Bytes
     void setFileName(char*);
     bool isValid(string);
     bool exists(char*);
-    int sizeOF(string);
     char* getValidName();
+    void setRegisterSize(int);
 };
 
 #endif	/* DISK_FILE_H */
