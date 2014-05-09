@@ -21,7 +21,7 @@ class SLL {
         int getSize(); //Obtiene el tamaño total actual de la lista
         
         void insert(Disk_File*, string); //Inserta un nodo a la lista
-        void removeFile(string); //Remueve un nodo de la lista
+        void remove(string); //Remueve un nodo de la lista
     
     private:
         SLLNode *first; //Primer nodo de la lista

@@ -73,18 +73,18 @@ void SLL::insert(Disk_File* pFile, string pFolderName) {
  * Referencia: http://ronnyml.wordpress.com/2009/07/04/listas-enlazadas-clase-lista-en-c/
  * @param pData Elemento para buscar el nodo a eliminar.
  */
-void SLL::removeFile(string pFileDesc) {
+void SLL::remove(string pFileDesc) {
     SLLNode* tmp1 = first;
     SLLNode* tmp2 = first->getNext();
     
-    if((first->getFlag() == 1) && (first->getFile()->getFileName().compare(pFileDesc))) {
+    if((first->getFlag() == 1) && (first->getFile()->getFileName().compare(pFileDesc) == 0)) { //Cambiar getFileName por FileDescriptor
             first = first->getNext();
             delete tmp1;
     }
     
     else {
         while(tmp2) {
-            if((tmp2->getFlag() == 1) && (tmp2->getFile()->getFileName().compare(pFileDesc))) {
+            if((tmp2->getFlag() == 1) && (tmp2->getFile()->getFileName().compare(pFileDesc) == 0)) {
                 tmp1->setNext(tmp2->getNext());
                 delete tmp2;
                 size --;

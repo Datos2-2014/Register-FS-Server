@@ -6,6 +6,9 @@
  */
 
 #include "ANB.h"
+#include <string>
+
+using namespace std;
 
 ANB::ANB() {
     root = new SLLNode(NULL, "/");
@@ -78,12 +81,11 @@ int ANB::newFolder(string pName, char pPath[]) {
 //}
 
 /**
- * Busca un nodo en el arbol a partir del nombre de su archivo o contenedor.
- * @param pName Caracter del nombre de la carpeta o archivo
- * @param pAnterior Carpeta anterior
+ * Busca un nodo en el arbol a partir del nombre de su direccion.
+ * @param pPath Caracter de la direccion de la carpeta
  * @return Puntero hacia el nodo de la lista donde se encuentra
  */
-SLLNode* ANB::searchFolder(char pPath[]) {
+SLLNode* ANB::searchFolder(char* pPath) {
     SLLNode* tmp = root;
     SLL* listaActual = tmp->getFolder();
     
@@ -91,7 +93,7 @@ SLLNode* ANB::searchFolder(char pPath[]) {
     while(folderActual!=NULL) {
         for(tmp = listaActual->getFirst(); tmp!=NULL; tmp = tmp->getNext()) {
             std::string foldAct_str(folderActual);
-            if((tmp->getFlag()==0)&&(foldAct_str.compare(tmp->getName()))) {
+            if((tmp->getFlag()==0)&&(foldAct_str.compare(tmp->getName()) == 0)) {
                 listaActual = tmp->getFolder();
                 break;
             }
@@ -104,4 +106,58 @@ SLLNode* ANB::searchFolder(char pPath[]) {
         }
     }
     return tmp;
+}
+
+/**
+ * Crea el esquema para los registros  de los archivos
+ * @param pFileDesc File descriptor del archivo al cual se le va a definir el esquema
+ * @param pCol cadena con las columnas y el nombre de cada una, de la forma: {<column1Name>,<column1Type>,<column1Size>},{<column2Name>,<column2Type>,<column2Size>},..,{<columnNName>,<columnNType>,<columnNSize>}
+ * @return 
+ */
+int ANB::createSchema(char pFileDesc[32], string pCol) {
+    
+}
+
+/**
+ * Recibe un file descriptor(array de caracteres de 32 posiciones) y elimina el archivo representado por este.
+ * @param pFileDesc File descriptor necesario para buscar el archivo a borrar dentero del arbol n-ario
+ */
+void ANB::deleteFile(char pFileDesc[32]) {
+    SLL* contentFolder = root->getFolder();
+    
+    if(contentFolder == NULL) {
+        cout << "El archivo no existe" << endl;
+    }
+    else {
+        SLL* listaArchivo = searchFile(pFileDesc, contentFolder);
+        if(listaArchivo == NULL) {
+            cout << "El archivo no existe" << endl;
+        }
+        else {
+            listaArchivo->remove(pFileDesc);
+        }
+    }
+}
+SLL* ANB::searchFile(char pFileDesc[32], SLL* pFolder) {
+    SLL* contentFolder = pFolder;
+    if(contentFolder == NULL) {
+        return NULL;
+    }    
+    else {
+        SLLNode* tmp = contentFolder->getFirst();
+        while(tmp!=NULL) {
+            if(tmp->getFlag() == 1) {
+                if(tmp->getFile()->getFileName().compare(pFileDesc)==0) { //Cambiar getFileName por getFileDesc
+                    return contentFolder;
+                }
+                else {
+                    tmp = tmp->getNext();
+                }
+            }
+            else {
+                return searchFile(pFileDesc,tmp->getFolder());
+            }
+        }
+        return NULL;
+    }
 }

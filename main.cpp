@@ -1,9 +1,7 @@
 #include <string.h>
 #include <iostream>
 #include "Disk_File.h"
-using namespace std;
-
-int main()
+using namespace std;int main()    
 { 
     string registro="pablo clavo un clavito|pablo clavo un clavito|pablo clavo un clavito|pablo clavo un clavito|pablo clavo un clavito|";
     string m2="lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/";
