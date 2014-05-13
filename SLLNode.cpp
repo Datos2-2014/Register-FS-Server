@@ -56,4 +56,3 @@ SLL* SLLNode::getFolder() {
 string SLLNode::getName() {
     return name;
 }
-

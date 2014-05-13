@@ -69,11 +69,11 @@ void SLL::insert(Disk_File* pFile, string pFolderName) {
 
 
 /**
- * Elimina un nodo de lal lista a partir de su elemento.
+ * Elimina un nodo de la lista a partir de su elemento.
  * Referencia: http://ronnyml.wordpress.com/2009/07/04/listas-enlazadas-clase-lista-en-c/
  * @param pData Elemento para buscar el nodo a eliminar.
  */
-void SLL::remove(string pFileDesc) {
+void SLL::removeFile(string pFileDesc) {
     SLLNode* tmp1 = first;
     SLLNode* tmp2 = first->getNext();
     
@@ -96,5 +96,35 @@ void SLL::remove(string pFileDesc) {
             }
         }
         cout << "El archivo no existe" << endl;
+    }
+}
+
+/**
+ * Remueve una carpeta de una lista simple a partir de su nombre.
+ * @param pName Nombre de la carpeta a eliminar
+ */
+void SLL::removeFolder(string pName) {
+    SLLNode* tmp1 = first;
+    SLLNode* tmp2 = first->getNext();
+    
+    if((first->getFlag() == 0) && (first->getName().compare(pName) == 0)) { //Cambiar getFileName por FileDescriptor
+            first = first->getNext();
+            delete tmp1;
+    }
+    
+    else {
+        while(tmp2) {
+            if((tmp2->getFlag() == 0) && (tmp2->getName().compare(pName) == 0)) {
+                tmp1->setNext(tmp2->getNext());
+                delete tmp2;
+                size --;
+                return;
+            }
+            else {
+                tmp1 = tmp1->getNext();
+                tmp2 = tmp2->getNext();
+            }
+        }
+        cout << "La carpeta no existe" << endl;
     }
 }
