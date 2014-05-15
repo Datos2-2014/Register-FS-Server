@@ -41,11 +41,16 @@ public:
     int getHeaderSize() const;
     int getRegisterSize() const;
     string getFileDescriptor() const;
+
+    string getName() const {
+        return _Name;
+    }
     
 private:
     const short zero=0;
     string _clientDescriptor;
     string _fileDescriptor;
+    string _Name;
     char* _peerDescriptor;
     int _registerSize;
     const string defaultName="Disk";

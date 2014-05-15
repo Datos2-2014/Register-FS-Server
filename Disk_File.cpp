@@ -14,11 +14,8 @@
  */
 Disk_File::Disk_File(string pClientDescriptor,string pFileName) {
     char* name = strdup(pFileName.c_str());
-    if(exists(name)|!isValid(pFileName)){
        this->_peerDescriptor=(getValidName());
-    }else{
-        this->_peerDescriptor=(name);
-    }
+       this->_Name=pFileName;
     this->_clientDescriptor=pClientDescriptor;
 }
 

@@ -153,7 +153,7 @@ SLL* ANB::searchFile(char pFileDesc[33], SLL* pFolder) {
         SLLNode* tmp = contentFolder->getFirst();
         while(tmp!=NULL) {
             if(tmp->getFlag() == 1) {
-                if(tmp->getFile()->getFileName().compare(pFileDesc)==0) { //Cambiar getFileName por getFileDesc
+                if(tmp->getFile()->getPeerDescriptor().compare(pFileDesc)==0) { //Cambiar getFileName por getFileDesc
                     return contentFolder;
                 }
                 else {
@@ -239,7 +239,7 @@ void ANB::queryFolder(char pPath[]) {
             cout << tmp->getName() << endl;
         }
         else {
-            string name = tmp->getFile()->getFileName();
+            string name = tmp->getFile()->getName();
             string fileDesc = tmp->getFile()->getClientDescriptor();
             cout << name << " - " << fileDesc << endl;
         }
