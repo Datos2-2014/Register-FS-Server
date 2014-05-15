@@ -10,14 +10,23 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 using namespace std;
+
+static const short caseInteger=0;
+static const short caseFloat=1;
+static const short caseBigInt=2;
+static const short caseCharArray=3;
+static const short caseByte=4;
+static const short caseShort=5;
+
 
 class Disk_File {
 public:
     Disk_File(string, string);
     Disk_File();
     Disk_File(const Disk_File& orig);
-    int getBlockSize();
+    int getRegisterSize();
     virtual ~Disk_File();
     //void format();
     void write(string, int ,int , int);
@@ -25,25 +34,29 @@ public:
     string readHeader();
     void writeHeader(string);
     void cleanRegister(int);
-    string getFileName() const;
+    string getPeerDescriptor() const;
     void init(int);
 
     string getClientDescriptor();
+    int getHeaderSize() const;
+    int getRegisterSize() const;
+    string getFileDescriptor() const;
     
 private:
     const short zero=0;
     string _clientDescriptor;
-    char* fileName;
+    string _fileDescriptor;
+    char* _peerDescriptor;
     int _registerSize;
-   // const int GB=1073741824;//Bytes
     const string defaultName="Disk";
     void move(int, int, fstream*);
     int _headerSize;//Bytes
-    void setFileName(char*);
     bool isValid(string);
     bool exists(char*);
     char* getValidName();
     void setRegisterSize(int);
+    inline bool isInteger(const string &);
+    bool isFloat( string );
 };
 
 #endif	/* DISK_FILE_H */

@@ -15,15 +15,15 @@
 Disk_File::Disk_File(string pClientDescriptor,string pFileName) {
     char* name = strdup(pFileName.c_str());
     if(exists(name)|!isValid(pFileName)){
-        setFileName(getValidName());
+       this->_peerDescriptor=(getValidName());
     }else{
-        setFileName(name);
+        this->_peerDescriptor=(name);
     }
     this->_clientDescriptor=pClientDescriptor;
 }
 
 void Disk_File::init(int pSize){
-    fstream fs((char*)fileName, std::ios::out | std::ios::binary);
+    fstream fs((char*)_peerDescriptor, std::ios::out | std::ios::binary);
     fs.close();
     this->_registerSize=pSize;
 }
@@ -68,11 +68,51 @@ Disk_File::~Disk_File() {
  * Writes a string in the file 
  */
 void Disk_File::write(string pToWrite, int pBlock, int pDisp, int pId){
-    char* pToWriteChar = strdup(pToWrite.c_str());
-    fstream fs(fileName, ios::in | ios::out | ios::binary);
-    move(pBlock, pDisp, &fs);
-    fs.write(pToWriteChar, pToWrite.size());
-    fs.close();
+    switch(pId){
+        case caseCharArray:
+        {
+            char* cToWriteChar = strdup(pToWrite.c_str());
+            fstream fs(_peerDescriptor, ios::in | ios::out | ios::binary);
+            move(pBlock, pDisp, &fs);
+            fs.write(cToWriteChar, pToWrite.size());
+            fs.close();
+            break;
+        }
+        case caseInteger:
+        {
+            if(isInteger(pToWrite)){
+                int iToWrite = atoi(pToWrite.c_str());
+//              char* iToWriteChar = strdup(pToWrite.c_str());
+                fstream fs(_peerDescriptor, ios::in | ios::out | ios::binary);
+                move(pBlock, pDisp, &fs);
+                fs.write((char*)&iToWrite, sizeof(iToWrite));
+                fs.close();
+            }else{
+                throw -1;//Falta ponerle el verdadero error
+            }
+            break;
+        }
+//        case caseFloat:
+//        {
+//            if(isFloat(pToWrite)){
+//                float fToWrite = atof(pToWrite.c_str());
+////                char* iToWriteChar = strdup(pToWrite.c_str());
+//                fstream fs(_peerDescriptor, ios::in | ios::out | ios::binary);
+//                move(pBlock, pDisp, &fs);
+//                fs.write((char*)&fToWrite, sizeof(fToWrite));
+//                fs.close();
+//            }else{
+//                throw -1;//Falta ponerle el verdadero error
+//            }
+//            break;
+//        }
+        default:
+        {
+            throw -1;// poner error para cuando el id no es correcto
+        }
+            
+    }
+    
 }
 /*
  * Parameters:
@@ -85,15 +125,44 @@ void Disk_File::write(string pToWrite, int pBlock, int pDisp, int pId){
  * Reads a string from the file 
  */
 string Disk_File::read(int pRegister, int pDisp, int pSize, int pID){
-    char* Read= new char [pSize];
-    fstream fs(fileName,  ios::in | ios::out |ios::binary);
-    cout << " size to read " << pSize << endl;
-    cout << " pos to read  " << pRegister*(_registerSize+1)+pDisp << endl;
-    move(pRegister, pDisp, &fs);
-    fs.read(Read, pSize);
-    fs.close();
-    string result = Read;
-    return result;
+    string result="";
+    switch(pID){
+        case caseCharArray:
+        {
+            char Read[pSize];
+            fstream fs(_peerDescriptor,  ios::in | ios::out |ios::binary);
+            move(pRegister, pDisp, &fs);
+            fs.read((char*)&Read, pSize);
+            fs.close();
+            result = Read;
+            break;
+        }
+        case caseInteger:
+        {
+            int iRead= 0;
+            fstream fs(_peerDescriptor,  ios::in | ios::out |ios::binary);
+            move(pRegister, pDisp, &fs);
+            fs.read((char*)&iRead, pSize);
+            fs.close();
+            result = iRead;
+            break;
+        }
+//        case caseFloat:
+//        {
+//            float fRead= 0;
+//            fstream fs(_peerDescriptor,  ios::in | ios::out |ios::binary);
+//            move(pRegister, pDisp, &fs);
+//            fs.read((char*)&fRead, sizeof(fRead));
+//            fs.close();
+//            result = fRead;
+//            break;
+//        }
+        default:
+        {
+            throw -1;// poner error para cuando el id no es correcto
+        }
+        return result;
+    }
 }
 /*
  * Parameters:
@@ -128,28 +197,7 @@ void Disk_File::move(int pRegister, int pBytes, fstream* pFile){
     cout<< "rto Byte: "<< pFile->tellg() << endl;
 }
 
-/*
- * No parameters
- * 
- * Return:
- * The int that representes the size of the blocks in the file
- * 
- * Returns the blocksize
- */
-int Disk_File::getBlockSize(){
-    return this->_registerSize;
-}
-/*
- * Parameters:
- * pBlockSize::float the desired size of the block(cluster)
- * 
- * No returns
- * 
- * Set the size of the block(Cluster)
- */
-void Disk_File::setRegisterSize(int pBlockSize){
-    this->_registerSize=pBlockSize;
-}
+
 /*
  * Parameters:
  *pBlock::int the block to format
@@ -159,36 +207,16 @@ void Disk_File::setRegisterSize(int pBlockSize){
  * Will fill with 0 all the bytes in the block
  */
 void Disk_File::cleanRegister(int pBlock){
-    fstream fs(fileName, ios::in | ios::out | ios::binary);
+    fstream fs(_peerDescriptor, ios::in | ios::out | ios::binary);
     for(int i=0; i<=_registerSize; i++){
         move(pBlock, i, &fs);
         fs.write((char*)&zero, 1);
     }
     fs.close();
 }
-/*
- * Parameters:
- * filename::char* the name of the file
- * 
- * No returns
- * 
- * Set the name of the file
- */
-void Disk_File::setFileName(char* fileName) {
-    this->fileName = fileName;
-}
-/*
- * No parameters
- * 
- * Returns:
- * The name of this file string
- * 
- * Returns the name of the file
- */
-string Disk_File::getFileName() const {
-    string name(fileName);
-    return name;
-}
+
+
+
 
 /*
  * Parameters:
@@ -253,7 +281,7 @@ void Disk_File::writeHeader(string pHeader){
     fstream fs;
     char* pFileNameChar2 = strdup(pHeader.c_str());
     cout << "Writing header" << endl;
-    fs.open(fileName, ios::in|ios::out  | ios::binary);
+    fs.open(_peerDescriptor, ios::in|ios::out  | ios::binary);
     fs.seekp(0, ios_base::beg);
     fs.write(pFileNameChar2, _headerSize);
     fs.close();
@@ -269,7 +297,7 @@ void Disk_File::writeHeader(string pHeader){
 string Disk_File::readHeader(){
     fstream fs;
     cout << "reading header" << endl;
-    fs.open(fileName,  ios::in |ios::out| ios::binary);
+    fs.open(_peerDescriptor,  ios::in |ios::out| ios::binary);
     fs.seekg(0);
     fs.seekp(0);
     char* read;
@@ -298,7 +326,88 @@ char* Disk_File::getValidName(){
     return nametoCheckChar;
 }
 
+/*
+ * No parameters
+ * 
+ * Return:
+ * The int that representes the size of the blocks in the file
+ * 
+ * Returns the blocksize
+ */
+int Disk_File::getRegisterSize(){
+    return this->_registerSize;
+}
+/*
+ * Parameters:
+ * pBlockSize::float the desired size of the block(cluster)
+ * 
+ * No returns
+ * 
+ * Set the size of the block(Cluster)
+ */
+void Disk_File::setRegisterSize(int pBlockSize){
+    this->_registerSize=pBlockSize;
+}
 
+/*
+ * No params
+ * 
+ * Returns:
+ *      the Client descriptor
+ * 
+ * Returns the Client descriptor
+ */
  string Disk_File::getClientDescriptor() {
         return _clientDescriptor;
+}
+
+ int Disk_File::getHeaderSize() const {
+     return _headerSize;
+ }
+
+ int Disk_File::getRegisterSize() const {
+     return _registerSize;
+ }
+
+ string Disk_File::getFileDescriptor() const {
+     return _fileDescriptor;
+ }
+ 
+ 
+ /*
+ * No parameters
+ * 
+ * Returns:
+ * The name of this file string
+ * 
+ * Returns the name of the file
+ */
+string Disk_File::getPeerDescriptor() const {
+    string name(_peerDescriptor);
+    return name;
+}
+
+
+ /*
+  * Funcion para verificar si el string es un int valido
+  * 
+  */
+ inline bool Disk_File::isInteger(const std::string & s)
+{
+   if(s.empty() || ((!isdigit(s[0])) && (s[0] != '-') && (s[0] != '+'))) return false ;
+   if((s.length()>11)) return false;
+   if(!(-2147483648<stol(s.c_str()) && stol(s.c_str())<2147483648)) return false;
+   cout << stol(s.c_str()) << endl;
+   char * p ;
+   strtol(s.c_str(), &p, 10) ;
+   
+   return ((*p == 0));
+}
+ 
+ bool Disk_File::isFloat( string myString ) {
+    std::istringstream iss(myString);
+    float f;
+    iss >> noskipws >> f; // noskipws considers leading whitespace invalid
+    // Check the entire string was consumed and if either failbit or badbit is set
+    return iss.eof() && !iss.fail(); 
 }
