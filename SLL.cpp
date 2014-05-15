@@ -77,14 +77,14 @@ void SLL::removeFile(string pFileDesc) {
     SLLNode* tmp1 = first;
     SLLNode* tmp2 = first->getNext();
     
-    if((first->getFlag() == 1) && (first->getFile()->getFileName().compare(pFileDesc) == 0)) { //Cambiar getFileName por FileDescriptor
+    if((first->getFlag() == 1) && (first->getFile()->getPeerDescriptor().compare(pFileDesc) == 0)) { //Cambiar getFileName por FileDescriptor
             first = first->getNext();
             delete tmp1;
     }
     
     else {
         while(tmp2) {
-            if((tmp2->getFlag() == 1) && (tmp2->getFile()->getFileName().compare(pFileDesc) == 0)) {
+            if((tmp2->getFlag() == 1) && (tmp2->getFile()->getPeerDescriptor().compare(pFileDesc) == 0)) {
                 tmp1->setNext(tmp2->getNext());
                 delete tmp2;
                 size --;
