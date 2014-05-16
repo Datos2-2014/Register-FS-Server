@@ -128,3 +128,17 @@ void SLL::removeFolder(string pName) {
         cout << "La carpeta no existe" << endl;
     }
 }
+
+SLLNode* SLL::searchFile(char pFileDesc[]) {
+    SLLNode* tmp = first;
+    while(tmp!=NULL) {
+        if(tmp->getFile()->getFileDescriptor().compare(pFileDesc)) { //Cambiar getFileName por FileDescriptor
+            return tmp;
+        }
+        else {
+            tmp = tmp->getNext();
+        }
+    }
+    cout << "El archivo no existe" << endl;
+    return NULL;
+}

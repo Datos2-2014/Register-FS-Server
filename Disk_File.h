@@ -10,7 +10,9 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include "schema.h"
 #include <sstream>
+
 using namespace std;
 
 static const short caseInteger=0;
@@ -36,15 +38,18 @@ public:
     void cleanRegister(int);
     string getPeerDescriptor() const;
     void init(int);
-
     string getClientDescriptor();
+
+    void setSchema(string);
+    schema* getSchema();
+
     int getHeaderSize() const;
     int getRegisterSize() const;
     string getFileDescriptor() const;
 
-    string getName() const {
-        return _Name;
-    }
+    string getName() const;
+
+    int getRegisterFree();
     
 private:
     const short zero=0;
@@ -52,8 +57,10 @@ private:
     string _fileDescriptor;
     string _Name;
     char* _peerDescriptor;
-    int _registerSize;
+    int _registerSize; 
     const string defaultName="Disk";
+    schema* schemeRegister;
+    
     void move(int, int, fstream*);
     int _headerSize;//Bytes
     bool isValid(string);

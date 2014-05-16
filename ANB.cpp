@@ -55,30 +55,30 @@ int ANB::newFolder(string pName, char pPath[]) {
  * @param pPath Direccion donde se encuentra el archivo
  * @return Puntero hacia un arreglo de caracteres que contiene el fileDescriptor
  */
-//char* ANB::newFile(char pClientDescriptor[17], char pName[65], char pPath[]) {
-//    SLLNode* tmp = root;
-//    
-//    char* folderActual = strtok(pPath, "/");
-//    
-//    if (folderActual==NULL) {
-//        Disk_File* file = new Disk_File(pClientDescriptor, pName);
-//        root->getFolder()->insert(file, pName);
-//    }
-//    else {
-//        tmp = searchFolder(pPath);
-//        if(tmp==NULL) {
-//            cout << "Ubicación incorrecta" << endl;
-//            return NULL;
-//        }
-//        else {
-//            Disk_File* file = new Disk_File(pClientDescriptor, pName);
-//            tmp->getFolder()->insert(file, pName);
-//            
-//            char* peerDesc[16] = file.getPeerDescriptor();
-//            return peerDesc;
-//        }
-//    }
-//}
+string ANB::newFile(char pClientDescriptor[17], char pName[65], char pPath[]) {
+    SLLNode* tmp = root;
+    
+    char* folderActual = strtok(pPath, "/");
+    
+    if (folderActual==NULL) {
+        Disk_File* file = new Disk_File(pClientDescriptor, pName);
+        root->getFolder()->insert(file, pName);
+    }
+    else {
+        tmp = searchFolder(pPath);
+        if(tmp==NULL) {
+            cout << "Ubicación incorrecta" << endl;
+            return NULL;
+        }
+        else {
+            Disk_File* file = new Disk_File(pClientDescriptor, pName);
+            tmp->getFolder()->insert(file, pName);
+            
+            string peerDesc = file->getPeerDescriptor();
+            return peerDesc;
+        }
+    }
+}
 
 /**
  * Función auxiliar. Busca un nodo en el arbol a partir del nombre de su direccion.
@@ -115,7 +115,16 @@ SLLNode* ANB::searchFolder(char pPath[]) {
  * @return 1-Si la operacion no fue exitosa, 0-si lo fue
  */
 int ANB::createSchema(char pFileDesc[33], string pCol) {
+    SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
     
+    SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
+    if (archivo==NULL) {
+        return 1;
+    }
+    else {
+        archivo->getFile()->setSchema(pCol);
+        return 0;
+    }
 }
 
 /**
@@ -176,15 +185,17 @@ SLL* ANB::searchFile(char pFileDesc[33], SLL* pFolder) {
 void ANB::deleteFolder(char pPath[]) {
     char* folderActual = strtok(pPath, "/");
     char* folderAnt;
+    string folderAnt_str;
     while(folderActual != NULL) {
         folderAnt = folderActual;
         folderActual = strtok(0, "/");
+        std::string foldAnt_str(folderAnt);
+        folderAnt_str = foldAnt_str;        
     }
-    std::string foldAnt_str(folderAnt);
     
     SLL* folder = searchSLLFolder(pPath);
     if(folder != NULL) {
-        folder->removeFolder(foldAnt_str);
+        folder->removeFolder(folderAnt_str);
     }
 }
 /**
@@ -242,6 +253,65 @@ void ANB::queryFolder(char pPath[]) {
             string name = tmp->getFile()->getName();
             string fileDesc = tmp->getFile()->getClientDescriptor();
             cout << name << " - " << fileDesc << endl;
+        }
+    }
+}
+
+/**
+ * Obtiene el esquema de registro de un archivo especificado por 
+ * su fileDescriptor pasado como parámetro.
+ * @param pFileDesc FileDescriptor del archivo al que se le desea crear el nuevo esquema de registro.
+ * @return Puntero hacia el objeto esquema respectivo del archivo.
+ */
+schema* ANB::getSchema(char pFileDesc[]) {
+    SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
+    SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
+    
+    if(archivo == NULL) {
+        return NULL;
+    }
+    else {
+        return archivo->getFile()->getSchema();
+    }
+}
+
+/**
+ * Crea un nuevo registro y lo añade al archivo especificado por su
+ * fileDescriptor pasado como parámetro.
+ * @param pFileDesc Descriptor del archivo para encontrar el archivo al que se le desea crear el nuevo registro de datos.
+ * @param pValores Cadena de valores pasados por el usuario, contiene tanto el nombre de la columna como su vaor respectivo.
+ * @return Una cadena de caracteres que contiene el número de registro y su posición dentro del archivo.
+ */
+string ANB::addRegister(char pFileDesc[33], string pValores) {
+    SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
+    SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
+    Disk_File* file = archivo->getFile();
+    
+    string nomb;
+    string value;
+    
+    int tipo_dato = 1;
+    int n = 3;
+    
+    while(n < pValores.size()-2) {
+        int i = n;
+        int j = n;
+        
+        while(pValores[j] != '>') {
+            j++;
+        }
+        string dato = pValores.substr(i,i+j-1);
+        
+        if(tipo_dato == 1) {
+            nomb = dato;
+            tipo_dato++;
+            n=j+3;
+        }
+        else {
+            value = dato;
+            tipo_dato = 1;
+            n = j+5;
+            file->write(value, file->getRegisterFree(), file->getSchema()->getDesplazamiento(nomb), file->getSchema()->getConst(nomb), file->getSchema()->getColTam());
         }
     }
 }

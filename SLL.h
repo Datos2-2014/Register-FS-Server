@@ -23,6 +23,7 @@ class SLL {
         void insert(Disk_File*, string); //Inserta un nodo a la lista
         void removeFile(string); //Remueve un nodo de la lista
         void removeFolder(string); //Remueve una carpeta de una lista simple
+        SLLNode* searchFile(char[]); //Busca un archivo a partir de su file descriptor.
     
     private:
         SLLNode *first; //Primer nodo de la lista

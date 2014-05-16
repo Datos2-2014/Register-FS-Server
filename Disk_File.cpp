@@ -357,6 +357,69 @@ void Disk_File::setRegisterSize(int pBlockSize){
  string Disk_File::getClientDescriptor() {
         return _clientDescriptor;
 }
+ 
+ /**
+  * Establece el esquema de registro para este archivo.
+  * @param formato Representa el formato como van a ordenarsen las columnas y especifica
+  * los tipos, nombres y tamaños de datos.
+  */
+ void Disk_File::setSchema(string formato) {
+     int tipo_dato=1;
+     int n=3;
+     while (n < formato.size()-2){
+         int i=n;
+         int j=n;
+         while (formato[j]!='>'){
+             j++;
+         }
+         string dato=formato.substr(i,i+j-1);
+         if (tipo_dato==1){
+             schemeRegister->set_nombre(dato);
+             tipo_dato++;
+             n=j+3;
+         }
+         else{
+             if (tipo_dato==2){
+                 schemeRegister->set_tipo(dato);
+                 tipo_dato++;
+                 n=j+3;
+             }
+             else{
+                 if (tipo_dato==3){
+                     schemeRegister->set_tamanyo(dato);
+                     tipo_dato=1;
+                     n=j+5;
+                 }
+             }
+         }
+     }
+     schemeRegister->setTamanyoTotal();
+ }
+ 
+ schema* Disk_File::getSchema() {     
+     list<string> nombre = schemeRegister->get_nombre();
+     list<string>::iterator it_nombre = nombre.begin();
+     while(it_nombre != nombre.end()) {
+         cout << *it_nombre++ << "\t";
+     }
+     cout << endl;
+     
+     list<string> tipo = schemeRegister->get_tipo();
+     list<string>::iterator it_tipo = tipo.begin();
+     while(it_tipo != tipo.end()) {
+         cout << *it_tipo++ <<  "\t";
+     }
+     cout << endl;
+     
+     list<string> tamanyo = schemeRegister->get_tamanyo();
+     list<string>::iterator it_tamanyo = tamanyo.begin();
+     while(it_tamanyo != tamanyo.end()) {
+         cout << *it_tamanyo++ <<  "\t";
+     }
+     cout << endl;
+     
+     return schemeRegister;
+}
 
  int Disk_File::getHeaderSize() const {
      return _headerSize;
@@ -407,4 +470,9 @@ string Disk_File::getPeerDescriptor() const {
     iss >> noskipws >> f; // noskipws considers leading whitespace invalid
     // Check the entire string was consumed and if either failbit or badbit is set
     return iss.eof() && !iss.fail(); 
+}
+ 
+ 
+int Disk_File::getRegisterFree() {
+    return 0;
 }

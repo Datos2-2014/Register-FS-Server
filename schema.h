@@ -15,15 +15,25 @@ using namespace std;
 
 class schema {
 public:
+    void set_nombre(string);
+    void set_tipo(string);
+    void set_tamanyo(string);
     schema();
     schema(const schema& orig);
     virtual ~schema();
+    list<string> get_nombre();
+    list<string> get_tipo();
+    list<string> get_tamanyo();
+    void setTamanyoTotal();
+    int getDesplazamiento(string);
+    int getColTam(string);
+    int getConst(string);
     
 private:
-    char fileDescr[32];
     list<string> nombre;
     list<string> tipo;
     list<string> tamanyo;
+    int tamanyoTotal=0;
 };
 
 #endif	/* SCHEMA_H */
