@@ -311,7 +311,8 @@ string ANB::addRegister(char pFileDesc[33], string pValores) {
             value = dato;
             tipo_dato = 1;
             n = j+5;
-            file->write(value, file->getRegisterFree(), file->getSchema()->getDesplazamiento(nomb), file->getSchema()->getConst(nomb), file->getSchema()->getColTam());
+            file->write(value, file->getRegisterFree(), file->getSchema()->getDesplazamiento(nomb), file->getSchema()->getConst(nomb), file->getSchema()->getColTam(nomb));
         }
     }
+    return to_string(file->getRegisterFree());
 }

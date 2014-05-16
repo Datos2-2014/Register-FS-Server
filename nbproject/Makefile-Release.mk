@@ -37,6 +37,8 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/ANB.o \
 	${OBJECTDIR}/Disk_File.o \
+	${OBJECTDIR}/RegisterPointer.o \
+	${OBJECTDIR}/RegisterPointerNode.o \
 	${OBJECTDIR}/SLL.o \
 	${OBJECTDIR}/SLLNode.o \
 	${OBJECTDIR}/main.o \
@@ -76,6 +78,16 @@ ${OBJECTDIR}/Disk_File.o: Disk_File.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Disk_File.o Disk_File.cpp
+
+${OBJECTDIR}/RegisterPointer.o: RegisterPointer.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/RegisterPointer.o RegisterPointer.cpp
+
+${OBJECTDIR}/RegisterPointerNode.o: RegisterPointerNode.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/RegisterPointerNode.o RegisterPointerNode.cpp
 
 ${OBJECTDIR}/SLL.o: SLL.cpp 
 	${MKDIR} -p ${OBJECTDIR}

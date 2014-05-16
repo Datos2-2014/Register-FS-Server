@@ -12,6 +12,7 @@
 #include <iostream>
 #include "schema.h"
 #include <sstream>
+#include <list>
 
 using namespace std;
 

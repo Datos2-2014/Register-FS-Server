@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>ANB.h</itemPath>
       <itemPath>Disk_File.h</itemPath>
+      <itemPath>RegisterPointer.h</itemPath>
       <itemPath>SLL.h</itemPath>
       <itemPath>SLLNode.h</itemPath>
       <itemPath>schema.h</itemPath>
@@ -18,6 +19,7 @@
                      projectFiles="true">
         <itemPath>ANB.cpp</itemPath>
         <itemPath>Disk_File.cpp</itemPath>
+        <itemPath>RegisterPointer.cpp</itemPath>
         <itemPath>SLL.cpp</itemPath>
         <itemPath>SLLNode.cpp</itemPath>
         <itemPath>main.cpp</itemPath>
@@ -35,6 +37,8 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
+    <itemPath>RegisterPointerNode.cpp</itemPath>
+    <itemPath>RegisterPointerNode.h</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -56,6 +60,14 @@
       <item path="Disk_File.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Disk_File.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="RegisterPointer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="RegisterPointer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="RegisterPointerNode.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="RegisterPointerNode.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="SLL.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -99,6 +111,14 @@
       <item path="Disk_File.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Disk_File.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="RegisterPointer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="RegisterPointer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="RegisterPointerNode.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="RegisterPointerNode.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="SLL.cpp" ex="false" tool="1" flavor2="0">
       </item>
