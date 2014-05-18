@@ -41,6 +41,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/RegisterPointerNode.o \
 	${OBJECTDIR}/SLL.o \
 	${OBJECTDIR}/SLLNode.o \
+	${OBJECTDIR}/header.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/schema.o
 
@@ -98,6 +99,11 @@ ${OBJECTDIR}/SLLNode.o: SLLNode.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/SLLNode.o SLLNode.cpp
+
+${OBJECTDIR}/header.o: header.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/header.o header.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}

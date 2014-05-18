@@ -10,18 +10,26 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
-#include "schema.h"
 #include <sstream>
-#include <list>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
+#include "header.h"
+#include "RegisterPointer.h"
+#include "ConfigurationFile.h"
+#include "schema.h"
+#define Peer_SIZE 64
+#define LETTER 26
+#define NUMBER 10
+#define caseInteger 0
+#define caseFloat 1
+#define caseBigInt 2
+#define caseCharArray 3
+#define caseByte 4
+#define caseShort 5
 using namespace std;
 
-static const short caseInteger=0;
-static const short caseFloat=1;
-static const short caseBigInt=2;
-static const short caseCharArray=3;
-static const short caseByte=4;
-static const short caseShort=5;
 
 
 class Disk_File {
@@ -32,44 +40,53 @@ public:
     int getRegisterSize();
     virtual ~Disk_File();
     //void format();
-    void write(string, int ,int , int);
+    void write(string, int ,int , int, int);
     string read(int, int, int, int);
     string readHeader();
     void writeHeader(string);
     void cleanRegister(int);
     string getPeerDescriptor() const;
     void init(int);
-    string getClientDescriptor();
-
     void setSchema(string);
     schema* getSchema();
 
+    string getClientDescriptor();
     int getHeaderSize() const;
     int getRegisterSize() const;
     string getFileDescriptor() const;
-
-    string getName() const;
-
+    RegisterPointer getDeletedRecords() const;
+    RegisterPointer getUsedRecords() const;
+    header getHeader() const;
+    
     int getRegisterFree();
+    
+    string getName() const {
+        return _Name;
+    }
     
 private:
     const short zero=0;
     string _clientDescriptor;
     string _fileDescriptor;
     string _Name;
+    string _Path;
+    header _header;
+    RegisterPointer usedRecords;
+    RegisterPointer deletedRecords;
     char* _peerDescriptor;
-    int _registerSize; 
-    const string defaultName="Disk";
+    int _registerSize;
     schema* schemeRegister;
-    
     void move(int, int, fstream*);
     int _headerSize;//Bytes
     bool isValid(string);
     bool exists(char*);
-    char* getValidName();
+    char* getValidPeer();
     void setRegisterSize(int);
+    void loadRegisters();
     inline bool isInteger(const string &);
     bool isFloat( string );
+    bool isShort(string);
+    
 };
 
 #endif	/* DISK_FILE_H */

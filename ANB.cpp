@@ -311,8 +311,31 @@ string ANB::addRegister(char pFileDesc[33], string pValores) {
             value = dato;
             tipo_dato = 1;
             n = j+5;
-            file->write(value, file->getRegisterFree(), file->getSchema()->getDesplazamiento(nomb), file->getSchema()->getConst(nomb), file->getSchema()->getColTam(nomb));
+            int registLibre = file->getRegisterFree();
+            file->write(value, registLibre, file->getSchema()->getDesplazamiento(nomb), file->getSchema()->getConst(nomb), file->getSchema()->getColTam(nomb));
         }
     }
     return to_string(file->getRegisterFree());
+}
+
+/**
+ * Obtiene un registro a partir, ya sea de su número de registro, o de su desplazamiento
+ * dentro del archivo(definido por pFlag). El archivo es definido po pFileDesc.
+ * @param pColummns Columnas que se desean recuperar(* si son todas, o se definen).
+ * @param pFlag Bandera que indica cual es el modo de busqueda del registro
+ * 1-si es por numero de registro, 0-si es por desplazamiento dentro del archivo
+ * @param pFileDesc FileDescriptor que representa al archivo donde se encuentra
+ * el registro para mostrar.
+ * @param pDeplaz Desplazamiento del registro a mostrar, dentro de su archivo.
+ * @param pRegisterNumber Número de registro dentro del archivo.
+ * @return Una cadena de caracteres que contiene los datos de las columnas consulatadas
+ */
+string ANB::getRegister(string pColummns, int pFlag, char pFileDesc[33], int pRegisterNumber_Desp) {
+    SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
+    SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
+    Disk_File* file = archivo->getFile();
+    
+    if (pFlag == 0) {
+        file;
+    }
 }

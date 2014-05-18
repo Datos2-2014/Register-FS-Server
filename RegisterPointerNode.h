@@ -10,9 +10,15 @@
 
 class RegisterPointerNode {
 public:
-    RegisterPointerNode();
+    RegisterPointerNode(int, int);
     RegisterPointerNode(const RegisterPointerNode& orig);
     virtual ~RegisterPointerNode();
+    void SetNext(RegisterPointerNode* next);
+    RegisterPointerNode* GetNext() const;
+    void SetSiguiente(int siguiente);
+    int GetSiguiente() const;
+    void SetActual(int actual);
+    int GetActual() const;
     
 private:
     int actual;

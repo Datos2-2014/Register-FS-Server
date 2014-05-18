@@ -18,6 +18,7 @@ int main(int argc, char** argv)
     string dato=pru.substr(0,j);
     cout <<dato;
     if(dato=="touch"){
+        
         cout << "touch";
     }
     else if(dato=="mkcont"){
