@@ -681,6 +681,3 @@ string Disk_File::getPeerDescriptor() const {
     // Check the entire string was consumed and if either failbit or badbit is set
     return iss.eof() && !iss.fail(); 
 }
- 
- 
-
