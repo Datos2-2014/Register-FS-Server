@@ -4,11 +4,15 @@
 #include <list>
 #include <string>
 #include <cstdlib>
+#include "Jzon.h"
+#include "ANB.h"
 
 using namespace std;
 
 int main(int argc, char** argv)    
-{
+{        
+    ANB* File_System = new ANB();
+    
     string pru;
     getline(cin,pru);
     int j=0;
@@ -18,17 +22,142 @@ int main(int argc, char** argv)
     string dato=pru.substr(0,j);
     cout <<dato;
     if(dato=="touch"){
+        /*Separación de los parámetros del comando*/
+        int punt1 = j+1;
+        while (pru[punt1] != '>'){
+            punt1++;
+        }
+        string param1 = pru.substr(j+1,punt1);
         
-        cout << "touch";
+        int punt2 = punt1+2;
+        while (pru[punt2] != '>'){
+            punt2++;
+        }
+        string param2= pru.substr(punt1+2,punt2);
+        
+        int punt3 = punt2+2;
+        while (pru[punt3] != '>'){
+            punt3++;
+        }
+        string param3 = pru.substr(punt2+2,punt3);
+        
+        /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
+        string ret = File_System->newFile(param2, param1, param3);
+        
+        /*Parse y envío en formato json */
+        Jzon::Object root;                              //Creación del objeto para parsear el contenido
+        root.Add("Peer descriptor", ret);               //Añade una etiqueta con el valor correspondiente
+        
+        Jzon::Writer writer(root, Jzon::StandardFormat);//Escribe la etiqueta en el formato estándar
+        writer.Write();                                 //Escribe el nodo
+        std::string result = writer.GetResult();        //Almacena en una variable string el formato json creado
+        
+        //Enviar "result" al cliente
+        
+        cout << result << endl;
+        cout << "touch Finalizado" << endl;
     }
     else if(dato=="mkcont"){
-        cout << "mkcont";
+        /*Separación de los parámetros del comando*/
+        int punt1 = j+1;
+        while (pru[punt1] != '>'){
+            punt1++;
+        }
+        string param1 = pru.substr(j+1,punt1);
+        
+        int punt2 = punt1+2;
+        while (pru[punt2] != '>'){
+            punt2++;
+        }
+        string param2 = pru.substr(punt1+2,punt2);
+        
+        /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
+        int ret = File_System->newFolder(param2, param1);
+        
+        /*Parse y envío en formato json */
+        Jzon::Object root;                              //Creación del objeto para parsear el contenido
+        root.Add("Operacion No Exitosa", ret);          //Añade una etiqueta con el valor correspondiente
+        
+        Jzon::Writer writer(root, Jzon::StandardFormat);//Escribe la etiqueta en el formato estándar
+        writer.Write();                                 //Escribe el nodo
+        std::string result = writer.GetResult();        //Almacena en una variable string el formato json creado
+        
+        //Enviar "result" al cliente
+        
+        cout << result << endl;
+        cout << "mkcont Finalizado" << endl;
     }
     else if(dato=="mkschema"){
-        cout << "mkschema";
+        /*Separación de los parámetros del comando*/
+        int punt1 = j+1;
+        while (pru[punt1] != '>'){
+            punt1++;
+        }
+        string param1 = pru.substr(j+1,punt1);
+        
+        int punt2 = punt1+1;
+        bool flag = false;
+        while(!flag) {
+            if((pru[punt2]=='}') && (pru[punt2+1]=='}')) {
+                flag = true;
+            }
+            else {
+                punt2++;
+            }
+        }
+        string param2 = pru.substr(punt1+1,punt2+2);
+        
+        /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
+        int ret = File_System->createSchema(param1, param2);
+        
+        /*Parse y envío en formato json */
+        Jzon::Object root;                              //Creación del objeto para parsear el contenido
+        root.Add("Operacion No Exitosa", ret);          //Añade una etiqueta con el valor correspondiente
+        
+        Jzon::Writer writer(root, Jzon::StandardFormat);//Escribe la etiqueta en el formato estándar
+        writer.Write();                                 //Escribe el nodo
+        std::string result = writer.GetResult();        //Almacena en una variable string el formato json creado
+        
+        //Enviar "result" al cliente
+        
+        cout << result << endl;
+        cout << "mkschema Finalizado" << endl;
     }
     else if(dato=="add-reg"){
-        cout << "add-reg";
+        /*Separación de los parámetros del comando*/
+        int punt1 = j+1;
+        while (pru[punt1] != '>'){
+            punt1++;
+        }
+        string param1 = pru.substr(j+1,punt1);
+        
+        int punt2 = punt1+1;
+        bool flag = false;
+        while(!flag) {
+            if(pru[punt2]=='}' && pru[punt2+1]=='}') {
+                flag = true;
+            }
+            else {
+                punt2++;
+            }
+        }
+        string param2 = pru.substr(punt1+1,punt2+2);
+        
+        /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
+        string ret = File_System->addRegister(param1, param2);
+        
+        /*Parse y envío en formato json */
+        Jzon::Object root;                              //Creación del objeto para parsear el contenido
+        root.Add("Número de registro", ret);            //Añade una etiqueta con el valor correspondiente
+        
+        Jzon::Writer writer(root, Jzon::StandardFormat);//Escribe la etiqueta en el formato estándar
+        writer.Write();                                 //Escribe el nodo
+        std::string result = writer.GetResult();        //Almacena en una variable string el formato json creado
+        
+        //Enviar "result" al cliente
+        
+        cout << result << endl;
+        cout << "add-reg Finalizado" << endl;
     }
     else if(dato=="get-reg"){
         cout << "get-reg";
@@ -40,90 +169,64 @@ int main(int argc, char** argv)
         cout << "mod-reg";
     }
     else if(dato=="del-file"){
-        cout << "del-file";
+        /*Separación de los parámetros del comando*/
+        int punt1 = j+1;
+        while (pru[punt1] != '>'){
+            punt1++;
+        }
+        string param1 = pru.substr(j+1,punt1);
+        
+        /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
+        File_System->deleteFile(param1);
+        
+        cout << "del-file Finalizado" << endl;
     }
     else if(dato=="del-cont"){
-        cout << "del-cont";
+        /*Separación de los parámetros del comando*/
+        int punt1 = j+1;
+        while (pru[punt1] != '>'){
+            punt1++;
+        }
+        string param1 = pru.substr(j+1,punt1);
+        
+        /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
+        File_System->deleteFolder(param1);
+        
+        cout << "del-cont Finalizado" << endl;
     }
     else if(dato=="get-schema"){
-        cout << "get-schema";
+        /*Separación de los parámetros del comando*/
+        int punt1 = j+1;
+        while (pru[punt1] != '>'){
+            punt1++;
+        }
+        string param1 = pru.substr(j+1,punt1);
+        
+        /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
+        string ret = File_System->getSchema(param1);
+        
+        //Enviar result al cliente
+        
+        cout << ret << endl;
+        cout << "get-schema Finalizado" << endl;
     }
     else if(dato=="ls-cont"){
-        cout << "ls-reg";
+        /*Separación de los parámetros del comando*/
+        int punt1 = j+1;
+        while (pru[punt1] != '>'){
+            punt1++;
+        }
+        string param1 = pru.substr(j+1,punt1);
+        
+        /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
+        File_System->queryFolder(param1);
+        
+        cout << "ls-cont Finalizado" << endl;
     }
     else if(dato=="cat-file"){
         cout << "cat-file";
     }
     else{
         cout <<"se ha digitado un comando invalido";        
-    }
-    
-    return 0;
-    
-//    string registro="pablo clavo un clavito|pablo clavo un clavito|pablo clavo un clavito|pablo clavo un clavito|pablo clavo un clavito|";
-//    string m2="lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/lalalala/";
-//    string header="trabalenguas >D";
-//    cout << "inicializando  " << endl;
-//    Disk_File file1= Disk_File(" hello world ", "lol");
-//    file1.init(200);
-//    cout << "escribiendo  " << endl;
-//    file1.writeHeader(header);
-//    file1.write(registro, 1, 2, 5);
-//    
-//    cout << " leyeno"<< endl;
-//    
-//    cout << file1.readHeader() << endl;
-//    cout << file1.read(1,2, registro.size(), 5) << endl;
-//    cout << "termino" << endl;
-//    
-//    cout << "archivo 2" << endl;
-//        Disk_File file=Disk_File("hi world ","file1");
-//        file.init(128);
-//        file.writeHeader(header);
-//        file.write(registro, 0, 0 , 5);
-//        file.write(m2, 0, registro.size(), 5);
-//        file.write(registro, 2, 0,5);
-//        file.write(m2, 3, 0,5);
-//        cout <<file.read(2, 0, registro.size(),5)<<endl;
-//        cout <<file.readHeader()<< " Header  1"  <<endl<< endl;
-  
-//    string pru="hola";
-//    int n=pru.size();
-//    cout<<n << endl;
-//    string prueba=pru.substr(0,3);
-//    cout << prueba <<endl;
-    
-//    char path[] = "/jere/fotos/myPhotos/";
-//    
-//    cout << path << endl;
-//    char* folderActual = strtok(path, "/");
-//    char* folderAnt;
-//    cout << folderActual << endl;
-//    string fA;
-//    
-//    while(folderActual!=NULL) {
-//        folderAnt = folderActual;
-//        folderActual = strtok(0, "/");
-//        cout << "folderAnt "<<folderAnt << endl;
-////        cout << "fa" << folderActual << endl;
-//        std::string fAstr(folderAnt);
-//        fA = fAstr;
-//    }
-//    
-//    cout << "salio " << fA;
-    
-    
-//    list<string> nombre;
-//    nombre.push_front("1");
-//    nombre.push_front("2");
-//    int b = 0;
-//    
-//    list<string>::iterator it = nombre.begin();
-//    while(it != nombre.end()) {
-//        string s = *it;
-//        int a = atoi(s.c_str());
-//        b += a;
-//        it++;
-//    }
-//    cout << b;
+    }    
 }

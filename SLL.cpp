@@ -77,7 +77,7 @@ void SLL::removeFile(string pFileDesc) {
     SLLNode* tmp1 = first;
     SLLNode* tmp2 = first->getNext();
     
-    if((first->getFlag() == 1) && (first->getFile()->getPeerDescriptor().compare(pFileDesc) == 0)) { //Cambiar getFileName por FileDescriptor
+    if((first->getFlag() == 1) && (first->getFile()->getFileDescriptor().compare(pFileDesc) == 0)) {
             first = first->getNext();
             delete tmp1;
     }
@@ -107,7 +107,7 @@ void SLL::removeFolder(string pName) {
     SLLNode* tmp1 = first;
     SLLNode* tmp2 = first->getNext();
     
-    if((first->getFlag() == 0) && (first->getName().compare(pName) == 0)) { //Cambiar getFileName por FileDescriptor
+    if((first->getFlag() == 0) && (first->getName().compare(pName) == 0)) {
             first = first->getNext();
             delete tmp1;
     }
@@ -129,10 +129,10 @@ void SLL::removeFolder(string pName) {
     }
 }
 
-SLLNode* SLL::searchFile(char pFileDesc[]) {
+SLLNode* SLL::searchFile(string pFileDesc) {
     SLLNode* tmp = first;
     while(tmp!=NULL) {
-        if(tmp->getFile()->getFileDescriptor().compare(pFileDesc)) { //Cambiar getFileName por FileDescriptor
+        if(tmp->getFile()->getFileDescriptor().compare(pFileDesc)) {
             return tmp;
         }
         else {

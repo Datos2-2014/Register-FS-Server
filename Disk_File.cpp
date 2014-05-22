@@ -14,7 +14,7 @@
  */
 Disk_File::Disk_File(string pClientDescriptor,string pFileName) {
     this->_peerDescriptor=(getValidPeer());
-    this->_Path=string(path)+_peerDescriptor+".bin";
+//    this->_Path=string(path)+_peerDescriptor+".bin";
     this->_Name=pFileName;
     this->_clientDescriptor=pClientDescriptor;
     this->_fileDescriptor=_clientDescriptor+_peerDescriptor;
@@ -49,11 +49,11 @@ void Disk_File::init(int pSize){
 
 int Disk_File::getRegisterFree(){
     if(deletedRecords.GetHead()!=NULL){
-        RegisterPointerNode * tmp= deletedRecords.pop();
-        usedRecords.addRegister(tmp->GetActual(), NULL);
-        _header.setFin(tmp->GetActual());
+//        RegisterPointerNode * tmp= deletedRecords.pop();
+//        usedRecords.addRegister(tmp->GetActual(), NULL);
+//        _header.setFin(tmp->GetActual());
         _header.setNumregtot(_header.getNumregtot()+1);
-        return tmp->GetActual();
+//        return tmp->GetActual();
     }else{
         if(_header.getNumregtot()==_header.getFin()){
              RegisterPointerNode * tmp= new RegisterPointerNode(_header.getFin()+1, NULL);

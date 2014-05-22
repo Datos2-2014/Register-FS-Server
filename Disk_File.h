@@ -17,7 +17,7 @@
 
 #include "header.h"
 #include "RegisterPointer.h"
-#include "ConfigurationFile.h"
+//#include "ConfigurationFile.h"
 #include "schema.h"
 #define Peer_SIZE 64
 #define LETTER 26

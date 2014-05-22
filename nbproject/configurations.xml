@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>ANB.h</itemPath>
       <itemPath>Disk_File.h</itemPath>
+      <itemPath>Jzon.h</itemPath>
       <itemPath>RegisterPointer.h</itemPath>
       <itemPath>RegisterPointerNode.h</itemPath>
       <itemPath>SLL.h</itemPath>
@@ -21,6 +22,7 @@
                      projectFiles="true">
         <itemPath>ANB.cpp</itemPath>
         <itemPath>Disk_File.cpp</itemPath>
+        <itemPath>Jzon.cpp</itemPath>
         <itemPath>RegisterPointer.cpp</itemPath>
         <itemPath>RegisterPointerNode.cpp</itemPath>
         <itemPath>SLL.cpp</itemPath>
@@ -62,6 +64,10 @@
       <item path="Disk_File.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Disk_File.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Jzon.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Jzon.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="RegisterPointer.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -117,6 +123,10 @@
       <item path="Disk_File.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Disk_File.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Jzon.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Jzon.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="RegisterPointer.cpp" ex="false" tool="1" flavor2="0">
       </item>

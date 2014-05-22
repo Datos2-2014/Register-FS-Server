@@ -139,7 +139,11 @@ int schema::getColTam(string pNombre) {
         return 0;
     }
 }
-
+/**
+ * Obtiene una constante que representa el tipo de dato en la columna buscada.
+ * @param pNombre Columna para buscar y obtener su tipo de dato.
+ * @return Valor constante que representa el tipo de dato.
+ */
 int schema::getConst(string pNombre) {
     list<string>::iterator it_nombre = nombre.begin();
     
