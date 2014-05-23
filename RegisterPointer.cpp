@@ -119,8 +119,10 @@ int RegisterPointer::search(int pData) {
  * Elimina el head de la lista. (POP)
  * Referencia: http://ronnyml.wordpress.com/2009/07/04/listas-enlazadas-clase-lista-en-c/
  */
-void RegisterPointer::deleteHead() {
+RegisterPointerNode* RegisterPointer::deleteHead() {
+     RegisterPointerNode* tmp=_head;
     _head = _head->GetNext();
+    return tmp;
  
 }
 
