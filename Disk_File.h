@@ -8,6 +8,7 @@
 #ifndef DISK_FILE_H
 #define	DISK_FILE_H
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <string.h>
 #include <stdio.h>

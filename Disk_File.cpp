@@ -99,7 +99,7 @@ Disk_File::Disk_File(const Disk_File& orig) {
          while (formato[j]!='>'){
              j++;
          }
-         string dato=formato.substr(i,i+j-1);
+         string dato=formato.substr(i,j);  //string dato=formato.substr(i,i+j-1);
          if (tipo_dato==1){
              schemeRegister->set_nombre(dato);
              tipo_dato++;
