@@ -23,7 +23,7 @@ public:
     void addRegister(int, int);
     void remove(int);
     int search(int);
-    void deleteHead();
+    RegisterPointerNode* deleteHead();
 private:
     RegisterPointerNode* _head;
     RegisterPointerNode* _tail;
