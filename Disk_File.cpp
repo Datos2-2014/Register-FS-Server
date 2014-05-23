@@ -14,7 +14,7 @@
  */
 Disk_File::Disk_File(string pClientDescriptor,string pFileName) {
     this->_peerDescriptor=(getValidPeer());
-//    this->_Path=string(path)+_peerDescriptor+".bin";
+    this->_Path=string(path)+_peerDescriptor+".bin";
     this->_Name=pFileName;
     this->_clientDescriptor=pClientDescriptor;
     this->_fileDescriptor=_clientDescriptor+_peerDescriptor;
@@ -41,26 +41,33 @@ header Disk_File::getHeader() const {
 void Disk_File::init(int pSize){
     fstream fs(_Path, std::ios::out | std::ios::binary);
     fs.close();
-    this->_registerSize=pSize+4;
+    this->_registerSize=pSize+_registerHeaderSize;
     this->_header=header(0,0,0,0,0,0);
     this->deletedRecords=RegisterPointer();
     this->usedRecords=RegisterPointer();
 }
 
+/*
+ * Retorna el proximo registro escribible
+ * @param none
+ * @return int with the register number
+ * 
+ */
 int Disk_File::getRegisterFree(){
     if(deletedRecords.GetHead()!=NULL){
-//        RegisterPointerNode * tmp= deletedRecords.pop();
-//        usedRecords.addRegister(tmp->GetActual(), NULL);
-//        _header.setFin(tmp->GetActual());
+        RegisterPointerNode * tmp= deletedRecords.deleteHead();
+        updateRegisterHeader(usedRecords.GetHead()->GetActual(), tmp->GetActual(), 0, 0);
+        usedRecords.addRegister(tmp->GetActual(), -1);
+        _header.setFin(tmp->GetActual());
         _header.setNumregtot(_header.getNumregtot()+1);
-//        return tmp->GetActual();
+        return tmp->GetActual();
     }else{
         if(_header.getNumregtot()==_header.getFin()){
-             RegisterPointerNode * tmp= new RegisterPointerNode(_header.getFin()+1, NULL);
+            RegisterPointerNode * tmp= new RegisterPointerNode(_header.getFin()+1, -1);
+            updateRegisterHeader(usedRecords.GetHead()->GetActual(), tmp->GetActual(), 0, 0);
             _header.setFin(tmp->GetActual());
-            usedRecords.addRegister(tmp->GetActual(), NULL);
+            usedRecords.addRegister(tmp->GetActual(), -1);
             _header.setNumregtot(_header.getNumregtot()+1);
-            
         }
     }
 }
@@ -143,25 +150,30 @@ Disk_File::Disk_File(const Disk_File& orig) {
 
 Disk_File::~Disk_File() {
 }
-/*
- * No params
- * Returns Void
- * Fills the document with 0
- */
+///*
+// * No params
+// * Returns Void
+// * Fills the document with 0
+// */
 //void Disk_File::format(){
 //    fstream fs((char*)fileName, std::ios::out | std::ios::binary);
 //    cout << "Formating     " << fileName << "  .... "<< endl;
-//    move(0, 0, &fs);
+//    move(0, 0, &fDisk_File.cpp:415:10: error: invalid use of incomplete type ‘std::fstream {aka class std::basic_fstream<char>}’s);
 //    for(int i=0; i<=(size*(1024*1024*1024));i++){
 //        fs.write((char*)&zero, 1);
 //    }
 //    fs.close();
 //}
+
+
 /*
  * Parameters:
  * pTowrite::std::string the string to write in the file
- * pBlock::int the block in the file where the string will be write
- * pByte::int the displacement in bytes in the block
+ * pRegister::int the block in the file where the string will be write
+ * pDisp::int the displacement in bytes in the block
+ * pId::int the type; use de cases variables defined before
+ * pSize::int use this for the big ints is the size of the big int (in bytes)  
+ * that you want to write 
  * 
  * No returns
  * 
@@ -173,7 +185,7 @@ void Disk_File::write(string pToWrite, int pRegistro, int pDisp, int pId, int pS
         {
             char* cToWriteChar = strdup(pToWrite.c_str());
             fstream fs(_Path, ios::in | ios::out | ios::binary);
-            move(pRegistro, pDisp, &fs);
+            move(pRegistro, pDisp+ _registerHeaderSize, &fs);
             fs.write(cToWriteChar, pToWrite.size());
             fs.close();
             break;
@@ -183,7 +195,7 @@ void Disk_File::write(string pToWrite, int pRegistro, int pDisp, int pId, int pS
             if(isInteger(pToWrite)){
                 int iToWrite = atoi(pToWrite.c_str());
                 fstream fs(_Path, ios::in | ios::out | ios::binary);
-                move(pRegistro, pDisp, &fs);
+                move(pRegistro, pDisp+ _registerHeaderSize, &fs);
                 fs.write((char*)&iToWrite, sizeof(iToWrite));
                 fs.close();
             }else{
@@ -196,7 +208,7 @@ void Disk_File::write(string pToWrite, int pRegistro, int pDisp, int pId, int pS
             if(isFloat(pToWrite)){
                 float fToWrite = std::stod(pToWrite);
                 fstream fs(_Path, ios::in | ios::out | ios::binary);
-                move(pRegistro, pDisp, &fs);
+                move(pRegistro, pDisp+ _registerHeaderSize, &fs);
                 fs.write((char*)&fToWrite, sizeof(fToWrite));
                 fs.close();
             }else{
@@ -209,7 +221,7 @@ void Disk_File::write(string pToWrite, int pRegistro, int pDisp, int pId, int pS
             if(pToWrite.size()==1){
                 char* cToWrite = strdup(pToWrite.c_str());
                 fstream fs(_Path, ios::in | ios::out | ios::binary);
-                move(pRegistro, pDisp, &fs);
+                move(pRegistro, pDisp+ _registerHeaderSize, &fs);
                 fs.write((char*)cToWrite, sizeof(cToWrite));
                 fs.close();
             }else{
@@ -222,7 +234,7 @@ void Disk_File::write(string pToWrite, int pRegistro, int pDisp, int pId, int pS
             if(isShort(pToWrite)){
                 short iToWrite = atoi(pToWrite.c_str());
                 fstream fs(_Path, ios::in | ios::out | ios::binary);
-                move(pRegistro, pDisp, &fs);
+                move(pRegistro, pDisp+ _registerHeaderSize, &fs);
                 fs.write((char*)&iToWrite, sizeof(iToWrite));
                 fs.close();
             }else{
@@ -246,7 +258,7 @@ void Disk_File::write(string pToWrite, int pRegistro, int pDisp, int pId, int pS
                         if(isInteger(tmp.c_str())){
                             int iToWrite = atoi(tmp.c_str());
                             fstream fs(_Path, ios::in | ios::out | ios::binary);
-                            move(pRegistro, pDisp+(i*4), &fs);
+                            move(pRegistro, pDisp+(i*4)+ _registerHeaderSize, &fs);
                             fs.write((char*)&iToWrite, sizeof(iToWrite));
                             fs.close();
                         }
@@ -272,11 +284,13 @@ void Disk_File::write(string pToWrite, int pRegistro, int pDisp, int pId, int pS
     }
     
 }
+
 /*
  * Parameters:
- * pBlock::int the block in the file where the string will be write
- * pByte::int the displacement in bytes in the block
+ * pRegister::int the block in the file where the string will be write
+ * pDisp::int the displacement in bytes in the block
  * pSize::int the size in bytes of the string to read
+ * pId::int the type; use de cases variables defined before
  * Returns:
  * The read of the position in string
  * 
@@ -290,7 +304,7 @@ string Disk_File::read(int pRegister, int pDisp, int pSize, int pID){
             
             char Read[pSize];
             fstream fs(_Path,  ios::in | ios::out |ios::binary);
-            move(pRegister, pDisp, &fs);
+            move(pRegister, pDisp+ _registerHeaderSize, &fs);
             fs.read((char*)&Read, pSize);
             fs.close();
             result = Read;
@@ -300,7 +314,7 @@ string Disk_File::read(int pRegister, int pDisp, int pSize, int pID){
         {
             int iRead= 0;
             fstream fs(_Path,  ios::in | ios::out |ios::binary);
-            move(pRegister, pDisp, &fs);
+            move(pRegister, pDisp+ _registerHeaderSize, &fs);
             fs.read((char*)&iRead, pSize);
             fs.close();
             result = to_string(iRead);
@@ -310,7 +324,7 @@ string Disk_File::read(int pRegister, int pDisp, int pSize, int pID){
         {
             float fRead= 0;
             fstream fs(_Path,  ios::in | ios::out |ios::binary);
-            move(pRegister, pDisp, &fs);
+            move(pRegister, pDisp+ _registerHeaderSize, &fs);
             fs.read((char*)&fRead, sizeof(fRead));
             fs.close();
             result = to_string(fRead);
@@ -321,7 +335,7 @@ string Disk_File::read(int pRegister, int pDisp, int pSize, int pID){
             if(pSize==1){
                 char bRead;
                 fstream fs(_Path,  ios::in | ios::out |ios::binary);
-                move(pRegister, pDisp, &fs);
+                move(pRegister, pDisp+ _registerHeaderSize, &fs);
                 fs.read((char*)&bRead, pSize);
                 fs.close();
                 result = bRead;
@@ -334,7 +348,7 @@ string Disk_File::read(int pRegister, int pDisp, int pSize, int pID){
         {
             short iRead= 0;
             fstream fs(_Path,  ios::in | ios::out |ios::binary);
-            move(pRegister, pDisp, &fs);
+            move(pRegister, pDisp+ _registerHeaderSize, &fs);
             fs.read((char*)&iRead, pSize);
             fs.close();
             result = to_string(iRead);
@@ -347,14 +361,14 @@ string Disk_File::read(int pRegister, int pDisp, int pSize, int pID){
                 for(int i=0; i<cycle; i++){
                     int iRead= 0;
                     fstream fs(_Path,  ios::in | ios::out |ios::binary);
-                    move(pRegister, pDisp+(i*4), &fs);
+                    move(pRegister, pDisp+(i*4)+_registerHeaderSize, &fs);
                     fs.read((char*)&iRead, pSize);
                     fs.close();
                     result.append(to_string(iRead).c_str());
                 }
             }
             else{
-                throw -1; //Falta ponerle el verdadero error
+                throw -1; //Falta poDisk_File.cpp:415:10: error: invalid use of incomplete type ‘std::fstream {aka class std::basic_fstream<char>}’nerle el verdadero error
             }
             break;
         }
@@ -365,6 +379,24 @@ string Disk_File::read(int pRegister, int pDisp, int pSize, int pID){
     }
         
     return result;
+}
+
+/*
+ * Parameters:
+ * pRegister::int the block in the file where the string will be write
+ * pNext::int pointer to the next register
+ * pTime::int the time value when the was deleted
+ * pDeleted:: flag to know if the register was deleted
+ * Returns:
+ * void return
+ * 
+ * update the values of the header of the register 
+ * 
+ */
+void Disk_File::updateRegisterHeader(int pRegister, int pNext, short pTime, bool pDeleted){
+    this->write(to_string(pNext), pRegister, -_registerHeaderSize, caseInteger);
+    this->write(to_string(pTime), pRegister, -_registerHeaderSize+sizeof(pNext), caseShort);
+    this->write(to_string(pDeleted), pRegister, -_registerSize+sizeof(pNext)+sizeof(pTime), caseByte);
 }
 
 /*
@@ -575,6 +607,10 @@ char* Disk_File::getValidPeer(){
     }
     nameToCheck=string(random_str);
     return strdup(nameToCheck.c_str());
+}
+
+string Disk_File::getName() const{
+        return _Name;
 }
 
 /*

@@ -7,17 +7,16 @@
 
 #ifndef DISK_FILE_H
 #define	DISK_FILE_H
-#include <cstring>
 #include <fstream>
-#include <iostream>
 #include <sstream>
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 #include "header.h"
 #include "RegisterPointer.h"
-//#include "ConfigurationFile.h"
+#include "ConfigurationFile.h"
 #include "schema.h"
 #define Peer_SIZE 64
 #define LETTER 26
@@ -39,7 +38,6 @@ public:
     Disk_File(const Disk_File& orig);
     int getRegisterSize();
     virtual ~Disk_File();
-    //void format();
     void write(string, int ,int , int, int);
     string read(int, int, int, int);
     string readHeader();
@@ -60,10 +58,9 @@ public:
     
     int getRegisterFree();
     
-    string getName() const {
-        return _Name;
-    }
+    string getName() const ;
     
+    //void format();
 private:
     const short zero=0;
     string _clientDescriptor;
@@ -86,7 +83,8 @@ private:
     inline bool isInteger(const string &);
     bool isFloat( string );
     bool isShort(string);
-    
+    static const int _registerHeaderSize=7;
+    void updateRegisterHeader(int,int, short, bool);
 };
 
 #endif	/* DISK_FILE_H */
