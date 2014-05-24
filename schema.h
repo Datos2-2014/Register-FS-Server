@@ -28,6 +28,8 @@ public:
     int getDesplazamiento(string);
     int getColTam(string);
     int getConst(string);
+    string getName(int);
+    int getTam(string);
     
 private:
     list<string> nombre;

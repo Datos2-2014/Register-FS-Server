@@ -8,6 +8,8 @@
 #include "ANB.h"
 #include <string>
 #include "Jzon.h"
+#include <iostream>
+#include "RegisterPointer.h"
 
 using namespace std;
 
@@ -70,7 +72,6 @@ string ANB::newFile(string pClientDescriptor, string pName, string pPath) {
     else {
         tmp = searchFolder(pPath);
         if(tmp==NULL) {
-            cout << "Ubicación incorrecta" << endl;
             return NULL;
         }
         else {
@@ -330,6 +331,9 @@ string ANB::getSchema(string pFileDesc) {
  */
 string ANB::addRegister(string pFileDesc, string pValores) {
     SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
+    if(folder_archivo == NULL) {
+        return NULL;
+    }
     SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
     Disk_File* file = archivo->getFile();
     
@@ -376,12 +380,83 @@ string ANB::addRegister(string pFileDesc, string pValores) {
  * @param pRegisterNumber Número de registro dentro del archivo.
  * @return Una cadena de caracteres que contiene los datos de las columnas consulatadas
  */
-string ANB::getRegister(string pColummns, int pFlag, string pFileDesc, int pRegisterNumber_Desp) {
+string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, string pColummns) {
     SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
     SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
     Disk_File* file = archivo->getFile();
     
-    if (pFlag == 0) {
-        file;
+    string result = "";
+    
+    if (pFlag == 1) {
+        if (pColummns == "{*}") {
+            int tam = file->getSchema()->get_nombre().size();
+            int count = 0;
+            
+            while(count<tam) {
+                string nomb = file->getSchema()->getName(count);
+                string valor = file->read(pRegisterNumber_Desp, file->getSchema()->getDesplazamiento(nomb), file->getSchema()->getTam(nomb), file->getSchema()->getConst(nomb));
+                
+                result.append("<"+nomb+":"+valor+">");
+                
+                count++;
+            }
+            return result;
+        }
+        else {
+            int pos = 1;
+            while(pos < pColummns.size()-1){
+                int i = pos;
+                int j = pos;
+                while(pColummns[j]!= ',' || pColummns[j]!= '}') {
+                    j++;
+                }
+                string nomb = pColummns.substr(i,j);
+                string valor = file->read(pRegisterNumber_Desp, file->getSchema()->getDesplazamiento(nomb), file->getSchema()->getTam(nomb), file->getSchema()->getConst(nomb));
+                
+                result.append("<"+nomb+":"+valor+">");
+                
+                pos = j+1;
+            }
+            return result;
+        }
+    }
+    else {
+        // FALTA REALIZAR
+    }
+}
+
+/**
+ * Elimina un registro específico.
+ * @param pFileDesc File descriptor que identifica al archivo donde se localiza el registro
+ * @param pFlag Bandera que indica cual es el modo de busqueda del registro
+ * 1-si es por numero de registro, 0-si es por desplazamiento dentro del archivo.
+ * @param pRegisterNumber_Desp Determina ya sea el número de registro o el desplazamiento
+ * dentro del archivo, dependiendo de la bandera.
+ * @return 0-Si la operación fue exitosa, 1-Si no lo fue
+ */
+int ANB::deleteRegister(string pFileDesc, int pFlag, int pRegisterNumbre_Desp) {
+    SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
+    SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
+    Disk_File* file = archivo->getFile();
+    
+    if (pFlag == 1) {
+        
+    }
+}
+
+/**
+ * Consulta un archivo e imprime el ID y desplazamiento de cada registro del mismo.
+ * @param pFileDesc File descriptor para buscar el archivo.
+ */
+void ANB::checkFile(string pFileDesc) {
+    SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
+    SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
+    Disk_File* file = archivo->getFile();
+    
+    RegisterPointer lista = file->getUsedRecords();
+    RegisterPointerNode* tmp = lista.GetHead();
+    for(tmp; tmp!=NULL; tmp = tmp->GetNext()) {
+        cout << tmp->GetActual() << endl;
+        //Imprimir desplazamiento.
     }
 }

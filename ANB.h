@@ -17,15 +17,17 @@ public:
     ANB(const ANB& orig);
     virtual ~ANB();
     
-    int newFolder(string, string); //Añade un nuevo contenedor
-    string newFile(string, string, string); //Añade un nuevo archivo al arbol
-    int createSchema(string, string); //Crea el esquema de registros para un archivo especifico
-    void deleteFile(string); //Elimina un archivo representado por el file descriptor entrado como parametro
-    void deleteFolder(string); //Elimina una carpeta. Esta operacion no se puede realizar si dicha carpeta tiene contenido
+    int newFolder(string, string); //Añade un nuevo contenedor.
+    string newFile(string, string, string); //Añade un nuevo archivo al arbol.
+    int createSchema(string, string); //Crea el esquema de registros para un archivo especifico.
+    void deleteFile(string); //Elimina un archivo representado por el file descriptor entrado como parametro.
+    void deleteFolder(string); //Elimina una carpeta. Esta operacion no se puede realizar si dicha carpeta tiene contenido.
     void queryFolder(string); //Consulta una carpeta para mostrar su contenido en pantalla.
-    string getSchema(string); //Obtiene e imprime en consola los datos del esquema de regitro de un archivo
+    string getSchema(string); //Obtiene e imprime en consola los datos del esquema de regitro de un archivo.
     string addRegister(string, string); //Crea un nuevo registro en el archivo.
-    string getRegister(string, int, string, int); //Obtiene el registro
+    string getRegister(string, int, int, string); //Obtiene el registro.
+    int deleteRegister(string, int, int); //Borra un registro.
+    void checkFile(string); //Consulta un archivo.
     
 private:
     SLLNode* root; //Raiz del arbol n-ario

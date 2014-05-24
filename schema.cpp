@@ -187,3 +187,55 @@ int schema::getConst(string pNombre) {
         return 3;
     }
 }
+
+/**
+ * Obtiene un nombre de columna de acuerdo a su posición en la lista.
+ * @param pIndex Indice donde se necuentra el nombre.
+ * @return Nombre en ese índice.
+ */
+string schema::getName(int pIndex) {
+    list<string>::iterator it_nombre = nombre.begin();
+    
+    string dataNombre = *it_nombre;
+    int pos = 0;
+    
+    while(pos<pIndex) {
+        it_nombre++;
+        dataNombre = *it_nombre;
+        pos++;
+    }
+    return dataNombre;
+}
+
+/**
+ * Obtiene el tamaño de una columna de acuerdo a su nombre.
+ * @param pNombre Nombre de la columna.
+ * @return tamaño de la columna.
+ */
+int schema::getTam(string pNombre) {
+    list<string>::iterator it_nombre = nombre.begin();
+    
+    string dataNombre = *it_nombre;
+    int pos = 0;
+    
+    while(dataNombre.compare(pNombre) != 0) {
+        it_nombre++;
+        dataNombre = *it_nombre;
+        pos++;
+    }
+    
+    list<string>::iterator it_tamanyo = tamanyo.begin();
+    
+    int tam;
+    int count = 0;
+    
+    while(count <= pos) {
+        string s = *it_tamanyo;
+        int a = atoi(s.c_str());
+        tam = a;
+        it_tamanyo++;
+        count++;
+    }
+    
+    return tam;
+}
