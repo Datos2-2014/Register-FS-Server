@@ -7,6 +7,7 @@
 
 #ifndef DISK_FILE_H
 #define	DISK_FILE_H
+
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -19,6 +20,7 @@
 #include "RegisterPointer.h"
 #include "ConfigurationFile.h"
 #include "schema.h"
+
 #define Peer_SIZE 64
 #define LETTER 26
 #define NUMBER 10
@@ -55,7 +57,7 @@ public:
     string getFileDescriptor() const;
     RegisterPointer getDeletedRecords() const;
     RegisterPointer getUsedRecords() const;
-    header getHeader() const;
+    header* getHeader() ;
     
     int getRegisterFree();
     
@@ -68,7 +70,7 @@ private:
     string _fileDescriptor;
     string _Name;
     string _Path;
-    header _header;
+    header* _header;
     RegisterPointer usedRecords;
     RegisterPointer deletedRecords;
     char* _peerDescriptor;

@@ -20,6 +20,7 @@ RegisterPointerNode::~RegisterPointerNode() {
 
 void RegisterPointerNode::SetNext(RegisterPointerNode* next) {
     this->next = next;
+    this->SetSiguiente(next->GetActual());
 }
 
 RegisterPointerNode* RegisterPointerNode::GetNext() const {

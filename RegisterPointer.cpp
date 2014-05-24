@@ -10,7 +10,7 @@
 using namespace std;
 
 
-RegisterPointer::RegisterPointer() {
+RegisterPointer::RegisterPointer() { 
     this->_head=NULL;
     this->_tail=NULL;
 }

@@ -28,7 +28,7 @@ RegisterPointer Disk_File::getUsedRecords() const {
     return usedRecords;
 }
 
-header Disk_File::getHeader() const {
+header* Disk_File::getHeader() {
     return _header;
 }
 
@@ -42,7 +42,7 @@ void Disk_File::init(int pSize){
     fstream fs(_Path, std::ios::out | std::ios::binary);
     fs.close();
     this->_registerSize=pSize+_registerHeaderSize;
-    this->_header=header(0,0,0,0,0,0);
+    this->_header=new header(0,0,0,0,0,0);
     this->deletedRecords=RegisterPointer();
     this->usedRecords=RegisterPointer();
 }
@@ -55,20 +55,32 @@ void Disk_File::init(int pSize){
  */
 int Disk_File::getRegisterFree(){
     if(deletedRecords.GetHead()!=NULL){
-        RegisterPointerNode * tmp= deletedRecords.deleteHead();
-        updateRegisterHeader(usedRecords.GetHead()->GetActual(), tmp->GetActual(), 0, 0);
-        usedRecords.addRegister(tmp->GetActual(), -1);
-        _header.setFin(tmp->GetActual());
-        _header.setNumregtot(_header.getNumregtot()+1);
-        return tmp->GetActual();
+        RegisterPointerNode * tmp1= deletedRecords.deleteHead();
+        updateRegisterHeader(usedRecords.GetHead()->GetActual(), tmp1->GetActual(), 0, 0);
+        usedRecords.addRegister(tmp1->GetActual(), -1);
+        _header->setFin(tmp1->GetActual());
+        _header->setNumregtot(_header->getNumregtot()+1);
+        return tmp1->GetActual();
     }else{
-        if(_header.getNumregtot()==_header.getFin()){
-            RegisterPointerNode * tmp= new RegisterPointerNode(_header.getFin()+1, -1);
-            updateRegisterHeader(usedRecords.GetHead()->GetActual(), tmp->GetActual(), 0, 0);
-            _header.setFin(tmp->GetActual());
-            usedRecords.addRegister(tmp->GetActual(), -1);
-            _header.setNumregtot(_header.getNumregtot()+1);
+          RegisterPointerNode * tmp;
+        if(_header->getNumregtot()-1==_header->getFin()||_header->getNumregtot()==0){
+            cout<< " header-> get fin  wtfff " << _header->getFin()<< endl;
+            if(usedRecords.GetHead()!=NULL){
+                tmp= new RegisterPointerNode(_header->getFin()+1, -1);
+                updateRegisterHeader(usedRecords.GetHead()->GetActual(), tmp->GetActual(), 0, 0);
+                _header->setFin(tmp->GetActual());
+                usedRecords.addRegister(tmp->GetActual(), -1);
+                _header->setNumregtot(_header->getNumregtot()+1);
+            } else{
+                
+                tmp= new RegisterPointerNode(_header->getFin(), -1);
+                _header->setFin(tmp->GetActual());
+                usedRecords.addRegister(tmp->GetActual(), -1);
+                _header->setNumregtot(_header->getNumregtot()+1);
+            }
         }
+          cout <<" registro a escribir "<< tmp->GetActual() <<endl ;
+          return tmp->GetActual();
     }
 }
 /*
@@ -419,8 +431,8 @@ void Disk_File::move(int pRegister, int pBytes, fstream* pFile){
 //    cout << " posicion que quiere   " << _headerSize+(pRegister*(_registerSize+1))+pBytes << endl;
 //    cout << " tama;o del registro " << _registerSize << endl;
 //    cout << " tama;o del header  " << _headerSize << endl;
-//    cout << " registroo " << pRegister << endl;
-//    cout << " desplazamiento  " << pBytes << endl;
+    cout << " registroo " << pRegister << endl;
+    cout << " desplazamiento  " << pBytes << endl;
     if(_headerSize+(pRegister*(_registerSize+1))+pBytes>fsize){
         for(int i=fsize; i<(_headerSize+(pRegister*(_registerSize+1)+_registerSize+1)+pBytes); i++){
             pFile->write((char*)&zero, 1);
@@ -429,7 +441,6 @@ void Disk_File::move(int pRegister, int pBytes, fstream* pFile){
     pFile->seekp(_headerSize+(pRegister*(_registerSize+1))+pBytes, ios_base::beg);
     pFile->seekg(_headerSize+(pRegister*(_registerSize+1))+pBytes, ios_base::beg);
     cout<< "wto Byte: "<< pFile->tellp() << endl;
-    cout<< "rto Byte: "<< pFile->tellg() << endl;
 }
 
 
