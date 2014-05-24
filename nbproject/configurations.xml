@@ -32,6 +32,7 @@
         <itemPath>header.cpp</itemPath>
         <itemPath>main.cpp</itemPath>
         <itemPath>schema.cpp</itemPath>
+        <itemPath>server.cpp</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -45,7 +46,6 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
-    <itemPath>server.cpp</itemPath>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

@@ -434,7 +434,7 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
  * dentro del archivo, dependiendo de la bandera.
  * @return 0-Si la operación fue exitosa, 1-Si no lo fue
  */
-int ANB::deleteRegister(string pFileDesc, int pFlag, int pRegisterNumbre_Desp) {
+int ANB::deleteRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp) {
     SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
     SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
     Disk_File* file = archivo->getFile();
