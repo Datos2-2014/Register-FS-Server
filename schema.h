@@ -18,7 +18,7 @@ public:
     void set_nombre(string);
     void set_tipo(string);
     void set_tamanyo(string);
-    schema();
+    schema(string);
     schema(const schema& orig);
     virtual ~schema();
     list<string> get_nombre();
@@ -30,6 +30,7 @@ public:
     int getConst(string);
     string getName(int);
     int getTam(string);
+    int getTamanyoTotal() const;
     
 private:
     list<string> nombre;

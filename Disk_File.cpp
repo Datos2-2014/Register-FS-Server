@@ -21,11 +21,11 @@ Disk_File::Disk_File(string pClientDescriptor,string pFileName) {
 }
 
 RegisterPointer Disk_File::getDeletedRecords() const {
-    return deletedRecords;
+    return _deletedRecords;
 }
 
 RegisterPointer Disk_File::getUsedRecords() const {
-    return usedRecords;
+    return _usedRecords;
 }
 
 header* Disk_File::getHeader() {
@@ -43,8 +43,8 @@ void Disk_File::init(int pSize){
     fs.close();
     this->_registerSize=pSize+_registerHeaderSize;
     this->_header=new header(0,0,0,0,0,0);
-    this->deletedRecords=RegisterPointer();
-    this->usedRecords=RegisterPointer();
+    this->_deletedRecords=RegisterPointer();
+    this->_usedRecords=RegisterPointer();
 }
 
 /*
@@ -54,28 +54,28 @@ void Disk_File::init(int pSize){
  * 
  */
 int Disk_File::getRegisterFree(){
-    if(deletedRecords.GetHead()!=NULL){
-        RegisterPointerNode * tmp1= deletedRecords.deleteHead();
-        updateRegisterHeader(usedRecords.GetHead()->GetActual(), tmp1->GetActual(), 0, 0);
-        usedRecords.addRegister(tmp1->GetActual(), -1);
+    if(_deletedRecords.GetHead()!=NULL){
+        RegisterPointerNode * tmp1= _deletedRecords.deleteHead();
+        updateRegisterHeader(_usedRecords.GetTail()->GetActual(), tmp1->GetActual(), 0, 0);
+        _usedRecords.addRegister(tmp1->GetActual(), -1);
         _header->setFin(tmp1->GetActual());
         _header->setNumregtot(_header->getNumregtot()+1);
         return tmp1->GetActual();
     }else{
           RegisterPointerNode * tmp;
         if(_header->getNumregtot()-1==_header->getFin()||_header->getNumregtot()==0){
-            cout<< " header-> get fin  wtfff " << _header->getFin()<< endl;
-            if(usedRecords.GetHead()!=NULL){
+            cout<< " header->getfin: " << _header->getFin()<< endl;
+            if(_usedRecords.GetHead()!=NULL){
                 tmp= new RegisterPointerNode(_header->getFin()+1, -1);
-                updateRegisterHeader(usedRecords.GetHead()->GetActual(), tmp->GetActual(), 0, 0);
+                updateRegisterHeader(_usedRecords.GetTail()->GetActual(), tmp->GetActual(), 0, 0);
                 _header->setFin(tmp->GetActual());
-                usedRecords.addRegister(tmp->GetActual(), -1);
+                _usedRecords.addRegister(tmp->GetActual(), -1);
                 _header->setNumregtot(_header->getNumregtot()+1);
             } else{
                 
                 tmp= new RegisterPointerNode(_header->getFin(), -1);
                 _header->setFin(tmp->GetActual());
-                usedRecords.addRegister(tmp->GetActual(), -1);
+                _usedRecords.addRegister(tmp->GetActual(), -1);
                 _header->setNumregtot(_header->getNumregtot()+1);
             }
         }
@@ -102,60 +102,33 @@ Disk_File::Disk_File(const Disk_File& orig) {
   * @param formato Representa el formato como van a ordenarsen las columnas y especifica
   * los tipos, nombres y tamaños de datos.
   */
- void Disk_File::setSchema(string formato) {
-     int tipo_dato=1;
-     int n=3;
-     while (n < formato.size()-2){
-         int i=n;
-         int j=n;
-         while (formato[j]!='>'){
-             j++;
-         }
-         string dato=formato.substr(i,j);  //string dato=formato.substr(i,i+j-1);
-         if (tipo_dato==1){
-             schemeRegister->set_nombre(dato);
-             tipo_dato++;
-             n=j+3;
-         }
-         else{
-             if (tipo_dato==2){
-                 schemeRegister->set_tipo(dato);
-                 tipo_dato++;
-                 n=j+3;
-             }
-             else{
-                 if (tipo_dato==3){
-                     schemeRegister->set_tamanyo(dato);
-                     tipo_dato=1;
-                     n=j+5;
-                 }
-             }
-         }
-     }
-     schemeRegister->setTamanyoTotal();
+ void Disk_File::setSchema(string pFormato) {
+     this->schemeRegister=new schema(pFormato);
+     this->init(schemeRegister->getTamanyoTotal());
+     this->flushHeader();
  }
  
  schema* Disk_File::getSchema() {     
-     list<string> nombre = schemeRegister->get_nombre();
-     list<string>::iterator it_nombre = nombre.begin();
-     while(it_nombre != nombre.end()) {
-         cout << *it_nombre++ << "\t";
-     }
-     cout << endl;
-     
-     list<string> tipo = schemeRegister->get_tipo();
-     list<string>::iterator it_tipo = tipo.begin();
-     while(it_tipo != tipo.end()) {
-         cout << *it_tipo++ <<  "\t";
-     }
-     cout << endl;
-     
-     list<string> tamanyo = schemeRegister->get_tamanyo();
-     list<string>::iterator it_tamanyo = tamanyo.begin();
-     while(it_tamanyo != tamanyo.end()) {
-         cout << *it_tamanyo++ <<  "\t";
-     }
-     cout << endl;
+//     list<string> nombre = schemeRegister->get_nombre();
+//     list<string>::iterator it_nombre = nombre.begin();
+//     while(it_nombre != nombre.end()) {
+//         cout << *it_nombre++ << "\t";
+//     }
+//     cout << endl;
+//     
+//     list<string> tipo = schemeRegister->get_tipo();
+//     list<string>::iterator it_tipo = tipo.begin();
+//     while(it_tipo != tipo.end()) {
+//         cout << *it_tipo++ <<  "\t";
+//     }
+//     cout << endl;
+//     
+//     list<string> tamanyo = schemeRegister->get_tamanyo();
+//     list<string>::iterator it_tamanyo = tamanyo.begin();
+//     while(it_tamanyo != tamanyo.end()) {
+//         cout << *it_tamanyo++ <<  "\t";
+//     }
+//     cout << endl;
      
      return schemeRegister;
 }
@@ -294,8 +267,33 @@ void Disk_File::write(string pToWrite, int pRegistro, int pDisp, int pId, int pS
         }
             
     }
+    cout << "valor a escribir "<<pToWrite << endl;
     
 }
+
+
+/*
+ * @param int pRegister the number of register
+ * @return int with the offset in the file of the register
+ * 
+ * Return the position of the register in the file
+ */
+
+int Disk_File::getOffset(int pRegister){
+    return _headerSize+(pRegister*(_registerSize+1));
+}
+
+/*
+ * @param int pRegister the number of register
+ * @return int with the offset in the file of the register
+ * 
+ * Return the position of the register in the file
+ */
+
+int Disk_File::getRegisterNumberOffset(int pOffset){
+    return pOffset/(_headerSize+((_registerSize+1)));
+}
+
 
 /*
  * Parameters:
@@ -408,7 +406,7 @@ string Disk_File::read(int pRegister, int pDisp, int pSize, int pID){
 void Disk_File::updateRegisterHeader(int pRegister, int pNext, short pTime, bool pDeleted){
     this->write(to_string(pNext), pRegister, -_registerHeaderSize, caseInteger);
     this->write(to_string(pTime), pRegister, -_registerHeaderSize+sizeof(pNext), caseShort);
-    this->write(to_string(pDeleted), pRegister, -_registerSize+sizeof(pNext)+sizeof(pTime), caseByte);
+    this->write(to_string(pDeleted), pRegister, -_registerHeaderSize+sizeof(pNext)+sizeof(pTime), caseByte);
 }
 
 /*
@@ -521,15 +519,16 @@ bool Disk_File::isValid(string pFileName){
  * 
  * Write the header of the file
  */
-void Disk_File::writeHeader(string pHeader){
+void Disk_File::flushHeader(){
+    string pHeader="              ";
+    this->_header->setSize(pHeader.size());
     this->_headerSize=pHeader.size();
     
     fstream fs;
     char* pFileNameChar2 = strdup(pHeader.c_str());
-    cout << "Writing header" << endl;
-    fs.open(_peerDescriptor, ios::in|ios::out  | ios::binary);
+    fs.open(_Path, ios::in|ios::out  | ios::binary);
     fs.seekp(0, ios_base::beg);
-    fs.write(pFileNameChar2, _headerSize);
+    fs.write(pFileNameChar2, pHeader.size());
     fs.close();
 }
 
@@ -540,16 +539,16 @@ void Disk_File::writeHeader(string pHeader){
  * 
  * Read the header of the file
  */
-string Disk_File::readHeader(){
-    fstream fs;
-    cout << "reading header" << endl;
-    fs.open(_peerDescriptor,  ios::in |ios::out| ios::binary);
-    fs.seekg(0);
-    fs.seekp(0);
-    char* read;
-    fs.read(read, _headerSize);
-    fs.close();
-    return read;
+void Disk_File::loadHeader(){
+//    fstream fs;
+//    cout << "reading header" << endl;
+//    fs.open(_peerDescriptor,  ios::in |ios::out| ios::binary);
+//    fs.seekg(0);
+//    fs.seekp(0);
+//    char* read;
+//    fs.read(read, _headerSize);
+//    fs.close();
+//    return read;
 }
 
 

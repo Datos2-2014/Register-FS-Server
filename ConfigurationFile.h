@@ -8,7 +8,7 @@
 #ifndef CONFIGURATIONFILE_H
 #define	CONFIGURATIONFILE_H
 
-#define path "/home/malcolm/Documents/Register-FS-Server/trunk/Archivos"
+#define path "/home/malcolm/Documents/Register-FS-Server/trunk/Archivos/"
 
 
 #endif	/* CONFIGURATIONFILE_H */

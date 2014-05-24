@@ -21,7 +21,7 @@
 #include "ConfigurationFile.h"
 #include "schema.h"
 
-#define Peer_SIZE 64
+#define Peer_SIZE 16
 #define LETTER 26
 #define NUMBER 10
 #define caseInteger 0
@@ -43,11 +43,10 @@ public:
     virtual ~Disk_File();
     void write(string, int ,int , int, int);
     string read(int, int, int, int);
-    string readHeader();
-    void writeHeader(string);
+    
     void cleanRegister(int);
     string getPeerDescriptor() const;
-    void init(int);
+    
     void setSchema(string);
     schema* getSchema();
 
@@ -62,7 +61,8 @@ public:
     int getRegisterFree();
     
     string getName() const ;
-    
+    int getOffset(int pRegister);
+    int getRegisterNumberOffset(int pOffset);
     //void format();
 private:
     const short zero=0;
@@ -71,8 +71,8 @@ private:
     string _Name;
     string _Path;
     header* _header;
-    RegisterPointer usedRecords;
-    RegisterPointer deletedRecords;
+    RegisterPointer _usedRecords;
+    RegisterPointer _deletedRecords;
     char* _peerDescriptor;
     int _registerSize;
     schema* schemeRegister;
@@ -88,6 +88,9 @@ private:
     bool isShort(string);
     static const int _registerHeaderSize=7;
     void updateRegisterHeader(int,int, short, bool);
+    void init(int);
+    void loadHeader();
+    void flushHeader();
 };
 
 #endif	/* DISK_FILE_H */

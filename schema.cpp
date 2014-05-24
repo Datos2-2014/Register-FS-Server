@@ -7,7 +7,37 @@
 
 #include "schema.h"
 
-schema::schema() {
+schema::schema(string pFormato) {
+    int tipo_dato=1;
+     int n=3;
+     while (n < pFormato.size()-2){
+         int i=n;
+         int j=n;
+         while (pFormato[j]!='>'){
+             j++;
+         }
+         string dato=pFormato.substr(i,j);  //string dato=formato.substr(i,i+j-1);
+         if (tipo_dato==1){
+             this->set_nombre(dato);
+             tipo_dato++;
+             n=j+3;
+         }
+         else{
+             if (tipo_dato==2){
+                 this->set_tipo(dato);
+                 tipo_dato++;
+                 n=j+3;
+             }
+             else{
+                 if (tipo_dato==3){
+                     this->set_tamanyo(dato);
+                     tipo_dato=1;
+                     n=j+5;
+                 }
+             }
+         }
+     }
+     this->setTamanyoTotal();
 }
 
 schema::schema(const schema& orig) {
@@ -238,4 +268,8 @@ int schema::getTam(string pNombre) {
     }
     
     return tam;
+}
+
+int schema::getTamanyoTotal() const {
+    return tamanyoTotal;
 }
