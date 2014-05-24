@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/ANB.o \
 	${OBJECTDIR}/Disk_File.o \
+	${OBJECTDIR}/Interface.o \
 	${OBJECTDIR}/Jzon.o \
 	${OBJECTDIR}/RegisterPointer.o \
 	${OBJECTDIR}/RegisterPointerNode.o \
@@ -44,7 +45,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/SLLNode.o \
 	${OBJECTDIR}/header.o \
 	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/schema.o
+	${OBJECTDIR}/schema.o \
+	${OBJECTDIR}/server.o
 
 
 # C Compiler Flags
@@ -80,6 +82,11 @@ ${OBJECTDIR}/Disk_File.o: Disk_File.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Disk_File.o Disk_File.cpp
+
+${OBJECTDIR}/Interface.o: Interface.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Interface.o Interface.cpp
 
 ${OBJECTDIR}/Jzon.o: Jzon.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -120,6 +127,11 @@ ${OBJECTDIR}/schema.o: schema.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/schema.o schema.cpp
+
+${OBJECTDIR}/server.o: server.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/server.o server.cpp
 
 # Subprojects
 .build-subprojects:
