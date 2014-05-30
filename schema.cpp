@@ -273,3 +273,35 @@ int schema::getTam(string pNombre) {
 int schema::getTamanyoTotal() const {
     return tamanyoTotal;
 }
+
+/**
+ * Obtiene el tipo de dato de acuerdo al nombre de la columna
+ * @param pNombre Nombre de la colimna
+ * @return String que representa el tipo de dato en esta columna
+ */
+string schema::getTipo(string pNombre) {
+    list<string>::iterator it_nombre = nombre.begin();
+    
+    string dataNombre = *it_nombre;
+    int pos = 0;
+    
+    while(dataNombre.compare(pNombre) != 0) {
+        it_nombre++;
+        dataNombre = *it_nombre;
+        pos++;
+    }
+    
+    list<string>::iterator it_tipo = tipo.begin();
+    
+    string tipo;
+    int count = 0;
+    
+    while(count <= pos) {
+        string s = *it_tipo;
+        tipo = s;
+        it_tipo++;
+        count++;
+    }
+    
+    return tipo;
+}

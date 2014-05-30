@@ -31,6 +31,7 @@ public:
     string getName(int);
     int getTam(string);
     int getTamanyoTotal() const;
+    string getTipo(string);
     
 private:
     list<string> nombre;

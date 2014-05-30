@@ -337,35 +337,38 @@ string ANB::addRegister(string pFileDesc, string pValores) {
     SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
     Disk_File* file = archivo->getFile();
     
-    string nomb;
-    string value;
+//    file->write(pValores);
     
-    int tipo_dato = 1;
-    int n = 3;
     
-    while(n < pValores.size()-2) {
-        int i = n;
-        int j = n;
-        
-        while(pValores[j] != '>') {
-            j++;
-        }
-        string dato = pValores.substr(i,i+j-1);
-        
-        if(tipo_dato == 1) {
-            nomb = dato;
-            tipo_dato++;
-            n=j+3;
-        }
-        else {
-            value = dato;
-            tipo_dato = 1;
-            n = j+5;
-            int registLibre = file->getRegisterFree();
-            file->write(value, registLibre, file->getSchema()->getDesplazamiento(nomb), file->getSchema()->getConst(nomb), file->getSchema()->getColTam(nomb));
-        }
-    }
-    return to_string(file->getRegisterFree());
+//    string nomb;
+//    string value;
+//    
+//    int tipo_dato = 1;
+//    int n = 3;
+//    
+//    while(n < pValores.size()-2) {
+//        int i = n;
+//        int j = n;
+//        
+//        while(pValores[j] != '>') {
+//            j++;
+//        }
+//        string dato = pValores.substr(i,i+j-1);
+//        
+//        if(tipo_dato == 1) {
+//            nomb = dato;
+//            tipo_dato++;
+//            n=j+3;
+//        }
+//        else {
+//            value = dato;
+//            tipo_dato = 1;
+//            n = j+5;
+//            int registLibre = file->getRegisterFree();
+//            file->write(value, registLibre, file->getSchema()->getDesplazamiento(nomb), file->getSchema()->getConst(nomb), file->getSchema()->getColTam(nomb));
+//        }
+//    }
+//    return to_string(file->getRegisterFree());
 }
 
 /**
@@ -385,44 +388,102 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
     SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
     Disk_File* file = archivo->getFile();
     
-    string result = "";
-    
-    if (pFlag == 1) {
-        if (pColummns == "{*}") {
-            int tam = file->getSchema()->get_nombre().size();
-            int count = 0;
-            
-            while(count<tam) {
-                string nomb = file->getSchema()->getName(count);
-                string valor = file->read(pRegisterNumber_Desp, file->getSchema()->getDesplazamiento(nomb), file->getSchema()->getTam(nomb), file->getSchema()->getConst(nomb));
-                
-                result.append("<"+nomb+":"+valor+">");
-                
-                count++;
-            }
-            return result;
-        }
-        else {
-            int pos = 1;
-            while(pos < pColummns.size()-1){
-                int i = pos;
-                int j = pos;
-                while(pColummns[j]!= ',' || pColummns[j]!= '}') {
-                    j++;
-                }
-                string nomb = pColummns.substr(i,j);
-                string valor = file->read(pRegisterNumber_Desp, file->getSchema()->getDesplazamiento(nomb), file->getSchema()->getTam(nomb), file->getSchema()->getConst(nomb));
-                
-                result.append("<"+nomb+":"+valor+">");
-                
-                pos = j+1;
-            }
-            return result;
-        }
+    void* reg;
+    if(pFlag == 1) {
+        reg = file->readR(pRegisterNumber_Desp);
     }
     else {
-        // FALTA REALIZAR
+        reg = file->readO(pRegisterNumber_Desp);
     }
+    
+    string result = "";
+    if (pColummns == "{*}") {
+        int tam = file->getSchema()->get_nombre().size();
+        int count = 0;
+        int tmp = 0;
+        while(count<tam) {
+            string nomb = file->getSchema()->getName(count);
+            string tipoDato = file->getSchema()->getTipo(nomb);
+            
+            if(tipoDato=="Byte") {
+                char value = (char) &(reg+tmp);
+                tmp += 1;
+                    
+                std::string value_std(value);
+                result.append("<"+nomb+":"+value_std+">");
+            }
+            else if(tipoDato=="Short") {
+                short value = (short) &(reg+tmp);
+                tmp += 2;
+                    
+                string value_std = std::to_string(value);
+                result.append("<"+nomb+":"+value_std+">");
+            }
+            else if(tipoDato=="Int") {
+                int value = (int) &(reg+tmp);
+                tmp += 4;
+
+                string value_std = std::to_string(value);
+                result.append("<"+nomb+":"+value_std+">");
+            }
+            else if(tipoDato=="float") {
+                float value = (float) &(reg+tmp);
+                tmp += 4;
+
+                string value_std = std::to_string(value);
+                result.append("<"+nomb+":"+value_std+">");
+            }
+            else if(tipoDato=="BigInt") {
+                int tamDato = file->getSchema()->getColTam(nomb);
+                
+                 value = (int) &(reg+tmp);
+                tmp += 4;
+
+                string value_std = std::to_string(value);
+                result.append("<"+nomb+":"+value_std+">");
+            }
+        }
+    }
+    
+    
+//    string result = "";
+//    
+//    if (pFlag == 1) {
+//        if (pColummns == "{*}") {
+//            int tam = file->getSchema()->get_nombre().size();
+//            int count = 0;
+//            
+//            while(count<tam) {
+//                string nomb = file->getSchema()->getName(count);
+//                string valor = file->read(pRegisterNumber_Desp, file->getSchema()->getDesplazamiento(nomb), file->getSchema()->getTam(nomb), file->getSchema()->getConst(nomb));
+//                
+//                result.append("<"+nomb+":"+valor+">");
+//                
+//                count++;
+//            }
+//            return result;
+//        }
+//        else {
+//            int pos = 1;
+//            while(pos < pColummns.size()-1){
+//                int i = pos;
+//                int j = pos;
+//                while(pColummns[j]!= ',' || pColummns[j]!= '}') {
+//                    j++;
+//                }
+//                string nomb = pColummns.substr(i,j);
+//                string valor = file->read(pRegisterNumber_Desp, file->getSchema()->getDesplazamiento(nomb), file->getSchema()->getTam(nomb), file->getSchema()->getConst(nomb));
+//                
+//                result.append("<"+nomb+":"+valor+">");
+//                
+//                pos = j+1;
+//            }
+//            return result;
+//        }
+//    }
+//    else {
+//        // FALTA REALIZAR
+//    }
 }
 
 /**
@@ -439,9 +500,12 @@ int ANB::deleteRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp) {
     SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
     Disk_File* file = archivo->getFile();
     
-    if (pFlag == 1) {
-        
-    }
+//    if(pFlag == 1) {
+//        return file->deleteR(pRegisterNumber_Desp);
+//    }
+//    else {
+//        return file->deleteO(pRegisterNumber_Desp);
+//    }
 }
 
 /**
