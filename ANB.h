@@ -28,6 +28,7 @@ public:
     string getRegister(string, int, int, string); //Obtiene el registro.
     int deleteRegister(string, int, int); //Borra un registro.
     void checkFile(string); //Consulta un archivo.
+    void modifyReg(string, int, int, string);
     
 private:
     SLLNode* root; //Raiz del arbol n-ario

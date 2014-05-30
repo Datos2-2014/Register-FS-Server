@@ -353,7 +353,7 @@ string ANB::addRegister(string pFileDesc, string pValores) {
 //        while(pValores[j] != '>') {
 //            j++;
 //        }
-//        string dato = pValores.substr(i,i+j-1);
+//        string dato = pValores.substr(i,j);
 //        
 //        if(tipo_dato == 1) {
 //            nomb = dato;
@@ -435,14 +435,98 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
             }
             else if(tipoDato=="BigInt") {
                 int tamDato = file->getSchema()->getColTam(nomb);
-                
-                 value = (int) &(reg+tmp);
-                tmp += 4;
+                int punteroTmp=tmp;
+                string bigIntData;
+                while(punteroTmp!=tamDato) {
+                    int value = (int)&(reg+tmp);
+                    string value_std = std::to_string(value);
+                    bigIntData.append(value_std);
+                    tmp += 4;
+                    punteroTmp += 4;
+                }
+                result.append("<"+nomb+":"+bigIntData+">");
+            }
+            else {
+                int tamDato = file->getSchema()->getColTam(nomb);
+                int punteroTmp=tmp;
+                string bigIntData;
+                while(punteroTmp!=tamDato) {
+                    char value = (int)&(reg+tmp);
+                    string value_std = std::to_string(value);
+                    bigIntData.append(value_std);
+                    tmp += 1;
+                    punteroTmp += 1;
+                }
+                result.append("<"+nomb+":"+bigIntData+">");
+            }
+        }
+        return result;
+    }
+    else {
+        int pos = 1;
+        while(pos < pColummns.size()-1){
+            int i = pos;
+            int j = pos;
+            while(pColummns[j]!= ',' || pColummns[j]!= '}') {
+                j++;
+            }
+            string nomb = pColummns.substr(i,j);
+            int desp = file->getSchema()->getDesplazamiento(nomb);
+            
+            string tipoDato = file->getSchema()->getTipo(nomb);
+            if(tipoDato=="Byte") {
+                char value = (char) &(reg+desp);
+                    
+                std::string value_std(value);
+                result.append("<"+nomb+":"+value_std+">");
+            }
+            else if(tipoDato=="Short") {
+                short value = (short) &(reg+desp);
+                    
+                string value_std = std::to_string(value);
+                result.append("<"+nomb+":"+value_std+">");
+            }
+            else if(tipoDato=="Int") {
+                int value = (int) &(reg+desp);
 
                 string value_std = std::to_string(value);
                 result.append("<"+nomb+":"+value_std+">");
             }
+            else if(tipoDato=="float") {
+                float value = (float) &(reg+desp);
+
+                string value_std = std::to_string(value);
+                result.append("<"+nomb+":"+value_std+">");
+            }
+            else if(tipoDato=="BigInt") {
+                int tamDato = file->getSchema()->getColTam(nomb);
+                int punteroTmp=desp;
+                string bigIntData;
+                while(punteroTmp!=tamDato) {
+                    int value = (int)&(reg+desp);
+                    string value_std = std::to_string(value);
+                    bigIntData.append(value_std);
+                    desp += 4;
+                    punteroTmp += 4;
+                }
+                result.append("<"+nomb+":"+bigIntData+">");
+            }
+            else {
+                int tamDato = file->getSchema()->getColTam(nomb);
+                int punteroTmp=desp;
+                string bigIntData;
+                while(punteroTmp!=tamDato) {
+                    char value = (int)&(reg+desp);
+                    string value_std = std::to_string(value);
+                    bigIntData.append(value_std);
+                    desp += 1;
+                    punteroTmp += 1;
+                }
+                result.append("<"+nomb+":"+bigIntData+">");
+            }
+            pos = j+1;
         }
+        return result;
     }
     
     
@@ -522,5 +606,59 @@ void ANB::checkFile(string pFileDesc) {
     for(tmp; tmp!=NULL; tmp = tmp->GetNext()) {
         cout << tmp->GetActual() << endl;
         //Imprimir desplazamiento.
+    }
+}
+
+/**
+ * Modifica un registro específico dentro del archivo especificado por el parametro pFileDesc
+ * @param pFileDesc Descriptor que representa el archivo a consultar
+ * @param pFlag Bandera que indica cual es el modo de busqueda del registro
+ * 1-si es por numero de registro, 0-si es por desplazamiento dentro del archivo.
+ * @param pRegisterNumber_Desp Desplazamiento del registro a mostrar, dentro de su archivo. O numero de registro
+ * Dependiendo de la bandera.
+ * @param pColummns Columnas que se desean modificar junto con su valor
+ */
+void ANB::modifyReg(string pFileDesc, int pFlag, int pRegisterNumber_Desp, string pColumns) {
+    SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
+    SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
+    Disk_File* file = archivo->getFile();
+    
+    string datos = "";
+    
+    int tipo_dato = 1;
+    int n = 3;
+    
+    while(n < pColumns.size()-2) {
+        int i = n;
+        int j = n;
+        
+        while(pColumns[j] != '>') {
+            j++;
+        }
+        string dato = pColumns.substr(i,j);
+        
+        if(tipo_dato == 1) {
+            if(datos=="") {
+                datos.append(dato);
+            }
+            else {
+                datos.append(","+dato);
+            }
+            tipo_dato++;
+            n=j+3;
+        }
+        else {
+            datos.append(","+dato);
+            
+            tipo_dato = 1;
+            n = j+5;
+        }
+    }
+    
+    if(pFlag==0) {
+        file->modifyR(datos, pRegisterNumber_Desp);
+    }
+    else {
+        file->modifyO(datos, pRegisterNumber_Desp);
     }
 }
