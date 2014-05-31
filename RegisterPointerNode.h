@@ -7,6 +7,14 @@
 
 #ifndef REGISTERPOINTERNODE_H
 #define	REGISTERPOINTERNODE_H
+#include <cstdio>
+#include <string.h>
+#include "ConfigurationFile.h"
+#include "schema.h"
+#include <fstream>
+#include <iostream>
+#include <sstream>
+using namespace std;
 
 class RegisterPointerNode {
 public:
@@ -19,12 +27,30 @@ public:
     int GetSiguiente() const;
     void SetActual(int actual);
     int GetActual() const;
+    int GetOffset() const;
+    void* GetRegistro() const;
+    void init(string* , schema*);
+    void modify(void* pDatos, string* pColum, schema * pSchema);
+
+   
     
 private:
-    int actual;
-    int siguiente;
-    RegisterPointerNode* next;
-};
+    int _NumReg;
+    int _siguiente;
+    RegisterPointerNode* _next;
+    void * _Registro;
+    int _offset;
+    
+    bool _modify;
+    bool inMemory;
+    
+    void initVoidp(string *, schema*);
+    void updateVoidP(string*, string*, schema*);
+    
+    inline bool isInteger(const string &);
+    bool isFloat( string );
+    bool isShort(string);
+    bool IsInMemory() const ;
 
 #endif	/* REGISTERPOINTERNODE_H */
 

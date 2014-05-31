@@ -7,7 +7,6 @@
 
 #include "RegisterPointer.h"
 #include <iostream>
-using namespace std;
 
 
 RegisterPointer::RegisterPointer() { 
@@ -89,13 +88,13 @@ void RegisterPointer::remove(int pData) {
  * @param pData Elemento para buscar el nodo a eliminar.
  * @return delvuelve 1 si el elemento se encuentra en caso contrario devuelve 0.
  */
-int RegisterPointer::search(int pData) {
+RegisterPointerNode * RegisterPointer::search(int pData) {
     RegisterPointerNode* temp1 = _head->GetNext();
  
     int cont = 0;
  
     if (_head->GetActual() == pData) {
-        return 1;
+        return _head;
     } 
     else {
         while (temp1) {
@@ -108,10 +107,10 @@ int RegisterPointer::search(int pData) {
     }
  
     if (cont == 0) {
-        return 0;
+        return NULL;
     }
     else{
-        return 1;
+        return temp1;
     }
 }
 

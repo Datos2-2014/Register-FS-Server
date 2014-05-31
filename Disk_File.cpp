@@ -64,7 +64,7 @@ int Disk_File::getRegisterFree(){
     }else{
           RegisterPointerNode * tmp;
         if(_header->getNumregtot()-1==_header->getFin()||_header->getNumregtot()==0){
-            cout<< " header->getfin: " << _header->getFin()<< endl;
+//            cout<< " header->getfin: " << _header->getFin()<< endl;
             if(_usedRecords.GetHead()!=NULL){
                 tmp= new RegisterPointerNode(_header->getFin()+1, -1);
                 updateRegisterHeader(_usedRecords.GetTail()->GetActual(), tmp->GetActual(), 0, 0);
@@ -79,23 +79,11 @@ int Disk_File::getRegisterFree(){
                 _header->setNumregtot(_header->getNumregtot()+1);
             }
         }
-          cout <<" registro a escribir "<< tmp->GetActual() <<endl ;
+//          cout <<" registro a escribir "<< tmp->GetActual() <<endl ;
           return tmp->GetActual();
     }
 }
-/*
- * 
- */
-Disk_File::Disk_File(){
-//    this->size=defaultDiskSize;
-//    setFileName(getValidName());
-//    this->_registerSize=defaultBlockSize;
-//    cout << "BlockSize: " << _registerSize << endl;
-//    
-}
 
-Disk_File::Disk_File(const Disk_File& orig) {
-}
 
 /**
   * Establece el esquema de registro para este archivo.
@@ -108,6 +96,11 @@ Disk_File::Disk_File(const Disk_File& orig) {
      this->flushHeader();
  }
  
+ /**
+  * retorna el esquema de registro para este archivo.
+  * @param None
+  * @return el esquema de registro para este archivo.
+  */
  schema* Disk_File::getSchema() {     
 //     list<string> nombre = schemeRegister->get_nombre();
 //     list<string>::iterator it_nombre = nombre.begin();
@@ -135,20 +128,18 @@ Disk_File::Disk_File(const Disk_File& orig) {
 
 Disk_File::~Disk_File() {
 }
-///*
-// * No params
-// * Returns Void
-// * Fills the document with 0
-// */
-//void Disk_File::format(){
-//    fstream fs((char*)fileName, std::ios::out | std::ios::binary);
-//    cout << "Formating     " << fileName << "  .... "<< endl;
-//    move(0, 0, &fDisk_File.cpp:415:10: error: invalid use of incomplete type ‘std::fstream {aka class std::basic_fstream<char>}’s);
-//    for(int i=0; i<=(size*(1024*1024*1024));i++){
-//        fs.write((char*)&zero, 1);
-//    }
-//    fs.close();
-//}
+
+/*
+ * @param None
+ * @return No returns
+ * 
+ */
+void Disk_File::deleteRegisterR(int pRegister){
+    RegisterPointerNode * tmp = this->_usedRecords.search(pRegister);
+    this->_deletedRecords.addRegister(tmp->GetActual(),-1);
+    this->_usedRecords.remove(tmp->GetActual());
+    tmp->~RegisterPointerNode();    
+}
 
 
 /*
@@ -164,113 +155,205 @@ Disk_File::~Disk_File() {
  * 
  * Writes a string in the file 
  */
-void Disk_File::write(string pToWrite, int pRegistro, int pDisp, int pId, int pSize=0){
-    switch(pId){
-        case caseCharArray:
-        {
-            char* cToWriteChar = strdup(pToWrite.c_str());
-            fstream fs(_Path, ios::in | ios::out | ios::binary);
-            move(pRegistro, pDisp+ _registerHeaderSize, &fs);
-            fs.write(cToWriteChar, pToWrite.size());
-            fs.close();
-            break;
-        }
-        case caseInteger:
-        {
-            if(isInteger(pToWrite)){
-                int iToWrite = atoi(pToWrite.c_str());
-                fstream fs(_Path, ios::in | ios::out | ios::binary);
-                move(pRegistro, pDisp+ _registerHeaderSize, &fs);
-                fs.write((char*)&iToWrite, sizeof(iToWrite));
-                fs.close();
-            }else{
-                throw -1;//Falta ponerle el verdadero error
-            }
-            break;
-        }
-        case caseFloat:
-        {
-            if(isFloat(pToWrite)){
-                float fToWrite = std::stod(pToWrite);
-                fstream fs(_Path, ios::in | ios::out | ios::binary);
-                move(pRegistro, pDisp+ _registerHeaderSize, &fs);
-                fs.write((char*)&fToWrite, sizeof(fToWrite));
-                fs.close();
-            }else{
-                throw -1;//Falta ponerle el verdadero error
-            }
-            break;
-        }
-        case caseByte:
-        {
-            if(pToWrite.size()==1){
-                char* cToWrite = strdup(pToWrite.c_str());
-                fstream fs(_Path, ios::in | ios::out | ios::binary);
-                move(pRegistro, pDisp+ _registerHeaderSize, &fs);
-                fs.write((char*)cToWrite, sizeof(cToWrite));
-                fs.close();
-            }else{
-                throw -1;//Falta ponerle el verdadero error
-            }
-            break;
-        }
-        case caseShort:
-        {
-            if(isShort(pToWrite)){
-                short iToWrite = atoi(pToWrite.c_str());
-                fstream fs(_Path, ios::in | ios::out | ios::binary);
-                move(pRegistro, pDisp+ _registerHeaderSize, &fs);
-                fs.write((char*)&iToWrite, sizeof(iToWrite));
-                fs.close();
-            }else{
-                throw -1;//Falta ponerle el verdadero error
-            }
-            break;
-        }
-        case caseBigInt:
-        {
-            if(pSize%4==0){
-                int cycle=pToWrite.size()/10;
-                if(pToWrite.size()%10!=0){
-                    cycle++;
-                }
-                if((pSize/4)<=cycle){
-                    for(int i=0; i< cycle;i++){                        
-//                        cout << "  tmp2 " << tmp2 << endl;
-//                        pToWrite.copy(tmp2, 10, i*10);
-                        string tmp=pToWrite.substr(i*10,10);
-                        cout <<"string  "<< tmp << "   ciclo "<<i<< endl;
-                        if(isInteger(tmp.c_str())){
-                            int iToWrite = atoi(tmp.c_str());
-                            fstream fs(_Path, ios::in | ios::out | ios::binary);
-                            move(pRegistro, pDisp+(i*4)+ _registerHeaderSize, &fs);
-                            fs.write((char*)&iToWrite, sizeof(iToWrite));
-                            fs.close();
-                        }
-                        else{
-                            throw -1;//Falta el codigo de error
-                        }
-                    }
-                }
-                else{
-                    throw -1;//Falta el codigo de error
-                }
-            }
-            else{
-                throw -1; //Falta ponerle el verdadero error
-            }
-            break;
-        }
-        default:
-        {
-            throw -1;// poner error para cuando el id no es correcto
-        }
-            
-    }
-    cout << "valor a escribir "<<pToWrite << endl;
-    
+void* Disk_File::write(string* pToWrite){
+//    switch(pId){
+//        case caseCharArray:
+//        {
+//            char* cToWriteChar = strdup(pToWrite.c_str());
+//            fstream fs(_Path, ios::in | ios::out | ios::binary);
+//            move(pRegistro, pDisp+ _registerHeaderSize, &fs);
+//            fs.write(cToWriteChar, pToWrite.size());
+//            fs.close();
+//            break;
+//        }
+//        case caseInteger:
+//        {
+//            if(this->isInteger(pToWrite)){
+//                int iToWrite = atoi(pToWrite.c_str());
+//                fstream fs(_Path, ios::in | ios::out | ios::binary);
+//                move(pRegistro, pDisp+ _registerHeaderSize, &fs);
+//                fs.write((char*)&iToWrite, sizeof(iToWrite));
+//                fs.close();
+//            }else{
+//                throw -1;//Falta ponerle el verdadero error
+//            }
+//            break;
+//        }
+//        case caseFloat:
+//        {
+//            if(isFloat(pToWrite)){
+//                float fToWrite = std::stod(pToWrite);
+//                fstream fs(_Path, ios::in | ios::out | ios::binary);
+//                move(pRegistro, pDisp+ _registerHeaderSize, &fs);
+//                fs.write((char*)&fToWrite, sizeof(fToWrite));
+//                fs.close();
+//            }else{
+//                throw -1;//Falta ponerle el verdadero error
+//            }
+//            break;
+//        }
+//        case caseByte:
+//        {
+//            if(pToWrite.size()==1){
+//                char* cToWrite = strdup(pToWrite.c_str());
+//                fstream fs(_Path, ios::in | ios::out | ios::binary);
+//                move(pRegistro, pDisp+ _registerHeaderSize, &fs);
+//                fs.write((char*)cToWrite, sizeof(cToWrite));
+//                fs.close();
+//            }else{
+//                throw -1;//Falta ponerle el verdadero error
+//            }
+//            break;
+//        }
+//        case caseShort:
+//        {
+//            if(isShort(pToWrite)){
+//                short iToWrite = atoi(pToWrite.c_str());
+//                fstream fs(_Path, ios::in | ios::out | ios::binary);
+//                move(pRegistro, pDisp+ _registerHeaderSize, &fs);
+//                fs.write((char*)&iToWrite, sizeof(iToWrite));
+//                fs.close();
+//            }else{
+//                throw -1;//Falta ponerle el verdadero error
+//            }
+//            break;
+//        }
+//        case caseBigInt:
+//        {
+//            if(pSize%4==0){
+//                int cycle=pToWrite.size()/10;
+//                if(pToWrite.size()%10!=0){
+//                    cycle++;
+//                }
+//                if((pSize/4)<=cycle){
+//                    for(int i=0; i< cycle;i++){                        
+////                        cout << "  tmp2 " << tmp2 << endl;
+////                        pToWrite.copy(tmp2, 10, i*10);
+//                        string tmp=pToWrite.substr(i*10,10);
+////                        cout <<"string  "<< tmp << "   ciclo "<<i<< endl;
+//                        if(isInteger(tmp.c_str())){
+//                            int iToWrite = atoi(tmp.c_str());
+//                            fstream fs(_Path, ios::in | ios::out | ios::binary);
+//                            move(pRegistro, pDisp+(i*4)+ _registerHeaderSize, &fs);
+//                            fs.write((char*)&iToWrite, sizeof(iToWrite));
+//                            fs.close();
+//                        }
+//                        else{
+//                            throw -1;//Falta el codigo de error
+//                        }
+//                    }
+//                }
+//                else{
+//                    throw -1;//Falta el codigo de error
+//                }
+//            }
+//            else{
+//                throw -1; //Falta ponerle el verdadero error
+//            }
+//            break;
+//        }
+//        default:
+//        {
+//            throw -1;// poner error para cuando el id no es correcto
+//        }
+//            
+//    }
+//    cout << "valor a escribir "<<pToWrite << endl;
+    int registro = this->getRegisterFree();
+    RegisterPointerNode* tmp = this->_usedRecords.search(registro);
+    tmp->init(pToWrite, this->getSchema());
+    char* cToWriteChar = strdup(pToWrite.c_str());
+    fstream fs(_Path, ios::in | ios::out | ios::binary);
+    move(tmp->GetActual(), _registerHeaderSize, &fs);
+    fs.write(cToWriteChar, pToWrite.size());
+    fs.close();
+    break;
 }
 
+/* Funcion que modifica un registro, con los datos que entran en el void * 
+ * y se escriben correspondientemente con los nombres de las columnas que entran
+ * al string* separados por una coma
+ * 
+ * Parameters:
+ * pRegister::int::El numero de registro a modificar
+ * pDatos::void*:: Los datos que se desean modificar seguidos en el void*
+ * pColum::string* los nombres de las columnas separadas por una coma deben de
+ *  estar acomodadas del mismo modo que los datos del void*
+ * 
+ * No returns
+ * 
+ * Writes a string in the file 
+ */
+void* Disk_File::modifyR(int pRegister, void* pDatos, string * pColum){
+//    try{
+//        RegisterPointerNode* tmp = this->_usedRecords.search(pRegister);
+//        tmp->modify(pDatos, pColum, this->getSchema());
+//        char* cToWriteChar = strdup(pToWrite.c_str());
+//        fstream fs(_Path, ios::in | ios::out | ios::binary);
+//        move(tmp->GetActual(), _registerHeaderSize, &fs);
+//        fs.write(cToWriteChar, pToWrite.size());
+//        fs.close();
+//    }
+//    catch(int e){
+//        switch(e){
+//            default:
+//                throw -1;
+//        }
+//    }
+//    break;
+}
+
+/* Funcion que modifica un registro, con los datos que entran en el void * 
+ * y se escriben correspondientemente con los nombres de las columnas que entran
+ * al string* separados por una coma
+ * 
+ * Parameters:
+ * pOffset::int::El numero de desplazamiento dentro del archivo
+ * pDatos::void*:: Los datos que se desean modificar seguidos en el void*
+ * pColum::string* los nombres de las columnas separadas por una coma deben de
+ *  estar acomodadas del mismo modo que los datos del void*
+ * 
+ * No returns
+ * 
+ * Writes a string in the file 
+ */
+void* Disk_File::modifyO(int pOffset, void* pDatos, string * pColum){
+//    int registro = this->getRegisterFree();
+//    RegisterPointerNode* tmp = this->_usedRecords.search(registro);
+//    tmp->init(pToWrite, this->getSchema());
+//    char* cToWriteChar = strdup(pToWrite.c_str());
+//    fstream fs(_Path, ios::in | ios::out | ios::binary);
+//    move(tmp->GetActual(), _registerHeaderSize, &fs);
+//    fs.write(cToWriteChar, pToWrite.size());
+//    fs.close();
+//    break;
+}
+
+/*Funcion que modifica un registro, con los datos que entran en el void * 
+ * y se escriben correspondientemente con los nombres de las columnas que entran
+ * al string* separados por una coma
+ * 
+ * Parameters:
+ * pOffset::int::El numero de registro a modificar
+ * pDatos::void*:: Los datos que se desean modificar seguidos en el void*
+ * pColum::string* los nombres de las columnas separadas por una coma deben de
+ *  estar acomodadas del mismo modo que los datos del void*
+ * 
+ * No returns
+ * 
+ * Writes a string in the file 
+ */
+void* Disk_File::modifyO(int pRegister, void* pDatos, string * pColum){
+//    int registro = this->getRegisterFree();
+//    RegisterPointerNode* tmp = this->_usedRecords.search(registro);
+//    tmp->init(pToWrite, this->getSchema());
+//    char* cToWriteChar = strdup(pToWrite.c_str());
+//    fstream fs(_Path, ios::in | ios::out | ios::binary);
+//    move(tmp->GetActual(), _registerHeaderSize, &fs);
+//    fs.write(cToWriteChar, pToWrite.size());
+//    fs.close();
+//    break;
+}
 
 /*
  * @param int pRegister the number of register
@@ -306,89 +389,89 @@ int Disk_File::getRegisterNumberOffset(int pOffset){
  * 
  * Reads a string from the file 
  */
-string Disk_File::read(int pRegister, int pDisp, int pSize, int pID){
-    string result="";
-    switch(pID){
-        case caseCharArray:
-        {
-            
-            char Read[pSize];
-            fstream fs(_Path,  ios::in | ios::out |ios::binary);
-            move(pRegister, pDisp+ _registerHeaderSize, &fs);
-            fs.read((char*)&Read, pSize);
-            fs.close();
-            result = Read;
-            break;
-        }
-        case caseInteger:
-        {
-            int iRead= 0;
-            fstream fs(_Path,  ios::in | ios::out |ios::binary);
-            move(pRegister, pDisp+ _registerHeaderSize, &fs);
-            fs.read((char*)&iRead, pSize);
-            fs.close();
-            result = to_string(iRead);
-            break;
-        }
-        case caseFloat:
-        {
-            float fRead= 0;
-            fstream fs(_Path,  ios::in | ios::out |ios::binary);
-            move(pRegister, pDisp+ _registerHeaderSize, &fs);
-            fs.read((char*)&fRead, sizeof(fRead));
-            fs.close();
-            result = to_string(fRead);
-            break;
-        }
-        case caseByte:
-        {
-            if(pSize==1){
-                char bRead;
-                fstream fs(_Path,  ios::in | ios::out |ios::binary);
-                move(pRegister, pDisp+ _registerHeaderSize, &fs);
-                fs.read((char*)&bRead, pSize);
-                fs.close();
-                result = bRead;
-            }else{
-                throw -1;// Poner el codigo de error
-            }
-            break;
-        }
-        case caseShort:
-        {
-            short iRead= 0;
-            fstream fs(_Path,  ios::in | ios::out |ios::binary);
-            move(pRegister, pDisp+ _registerHeaderSize, &fs);
-            fs.read((char*)&iRead, pSize);
-            fs.close();
-            result = to_string(iRead);
-            break;
-        }
-        case caseBigInt:
-        {
-            if(pSize%4==0){
-                int cycle=pSize/sizeof(int);
-                for(int i=0; i<cycle; i++){
-                    int iRead= 0;
-                    fstream fs(_Path,  ios::in | ios::out |ios::binary);
-                    move(pRegister, pDisp+(i*4)+_registerHeaderSize, &fs);
-                    fs.read((char*)&iRead, pSize);
-                    fs.close();
-                    result.append(to_string(iRead).c_str());
-                }
-            }
-            else{
-                throw -1; //Falta poDisk_File.cpp:415:10: error: invalid use of incomplete type ‘std::fstream {aka class std::basic_fstream<char>}’nerle el verdadero error
-            }
-            break;
-        }
-        default:
-        {
-            throw -1;// poner error para cuando el id no es correcto
-        }
-    }
-        
-    return result;
+void* Disk_File::readR(int pRegister){
+//    string result="";
+//    switch(pID){
+//        case caseCharArray:
+//        {
+//            
+//            char Read[pSize];
+//            fstream fs(_Path,  ios::in | ios::out |ios::binary);
+//            move(pRegister, pDisp+ _registerHeaderSize, &fs);
+//            fs.read((char*)&Read, pSize);
+//            fs.close();
+//            result = Read;
+//            break;
+//        }
+//        case caseInteger:
+//        {
+//            int iRead= 0;
+//            fstream fs(_Path,  ios::in | ios::out |ios::binary);
+//            move(pRegister, pDisp+ _registerHeaderSize, &fs);
+//            fs.read((char*)&iRead, pSize);
+//            fs.close();
+//            result = to_string(iRead);
+//            break;
+//        }
+//        case caseFloat:
+//        {
+//            float fRead= 0;
+//            fstream fs(_Path,  ios::in | ios::out |ios::binary);
+//            move(pRegister, pDisp+ _registerHeaderSize, &fs);
+//            fs.read((char*)&fRead, sizeof(fRead));
+//            fs.close();
+//            result = to_string(fRead);
+//            break;
+//        }
+//        case caseByte:
+//        {
+//            if(pSize==1){
+//                char bRead;
+//                fstream fs(_Path,  ios::in | ios::out |ios::binary);
+//                move(pRegister, pDisp+ _registerHeaderSize, &fs);
+//                fs.read((char*)&bRead, pSize);
+//                fs.close();
+//                result = bRead;
+//            }else{
+//                throw -1;// Poner el codigo de error
+//            }
+//            break;
+//        }
+//        case caseShort:
+//        {
+//            short iRead= 0;
+//            fstream fs(_Path,  ios::in | ios::out |ios::binary);
+//            move(pRegister, pDisp+ _registerHeaderSize, &fs);
+//            fs.read((char*)&iRead, pSize);
+//            fs.close();
+//            result = to_string(iRead);
+//            break;
+//        }
+//        case caseBigInt:
+//        {
+//            if(pSize%4==0){
+//                int cycle=pSize/sizeof(int);
+//                for(int i=0; i<cycle; i++){
+//                    int iRead= 0;
+//                    fstream fs(_Path,  ios::in | ios::out |ios::binary);
+//                    move(pRegister, pDisp+(i*4)+_registerHeaderSize, &fs);
+//                    fs.read((char*)&iRead, pSize);
+//                    fs.close();
+//                    result.append(to_string(iRead).c_str());
+//                }
+//            }
+//            else{
+//                throw -1; //Falta poDisk_File.cpp:415:10: error: invalid use of incomplete type ‘std::fstream {aka class std::basic_fstream<char>}’nerle el verdadero error
+//            }
+//            break;
+//        }
+//        default:
+//        {
+//            throw -1;// poner error para cuando el id no es correcto
+//        }
+//    }
+//        
+//    return result;
 }
 
 /*
@@ -404,9 +487,14 @@ string Disk_File::read(int pRegister, int pDisp, int pSize, int pID){
  * 
  */
 void Disk_File::updateRegisterHeader(int pRegister, int pNext, short pTime, bool pDeleted){
-    this->write(to_string(pNext), pRegister, -_registerHeaderSize, caseInteger);
-    this->write(to_string(pTime), pRegister, -_registerHeaderSize+sizeof(pNext), caseShort);
-    this->write(to_string(pDeleted), pRegister, -_registerHeaderSize+sizeof(pNext)+sizeof(pTime), caseByte);
+    fstream fs(_Path, ios::in | ios::out | ios::binary);
+    move(pRegister, 0, &fs);
+    fs.write((char*)&pNext, sizeof(pNext));
+    move(pRegister, sizeof(pNext), &fs);
+    fs.write((char*)&pTime, sizeof(pTime));
+    move(pRegister, sizeof(pNext)+sizeof(pTime), &fs);
+    fs.write((char*)&pDeleted, sizeof(pDeleted));
+    fs.close();
 }
 
 /*
@@ -429,8 +517,8 @@ void Disk_File::move(int pRegister, int pBytes, fstream* pFile){
 //    cout << " posicion que quiere   " << _headerSize+(pRegister*(_registerSize+1))+pBytes << endl;
 //    cout << " tama;o del registro " << _registerSize << endl;
 //    cout << " tama;o del header  " << _headerSize << endl;
-    cout << " registroo " << pRegister << endl;
-    cout << " desplazamiento  " << pBytes << endl;
+//    cout << " registroo " << pRegister << endl;
+//    cout << " desplazamiento  " << pBytes << endl;
     if(_headerSize+(pRegister*(_registerSize+1))+pBytes>fsize){
         for(int i=fsize; i<(_headerSize+(pRegister*(_registerSize+1)+_registerSize+1)+pBytes); i++){
             pFile->write((char*)&zero, 1);
@@ -438,7 +526,7 @@ void Disk_File::move(int pRegister, int pBytes, fstream* pFile){
     }
     pFile->seekp(_headerSize+(pRegister*(_registerSize+1))+pBytes, ios_base::beg);
     pFile->seekg(_headerSize+(pRegister*(_registerSize+1))+pBytes, ios_base::beg);
-    cout<< "wto Byte: "<< pFile->tellp() << endl;
+//    cout<< "wto Byte: "<< pFile->tellp() << endl;
 }
 
 
@@ -496,7 +584,7 @@ bool Disk_File::isValid(string pFileName){
     const char* bin=".bin";
     bool isvalid=true;
     int j=0;
-    cout << "Name to check  " << pFileNameChar1 <<endl;
+//    cout << "Name to check  " << pFileNameChar1 <<endl;
     if(size>4){
         for(int i = size-4; i<size;i++){
             if(pFileNameChar1[i]!=bin[j]){
@@ -685,45 +773,3 @@ string Disk_File::getPeerDescriptor() const {
 }
 
 
- /*
-  * Funcion para verificar si el string es un int valido
-  * 
-  */
- inline bool Disk_File::isInteger(const std::string & s)
-{
-   if(s.empty() || ((!isdigit(s[0])) && (s[0] != '-') && (s[0] != '+'))) return false ;
-   if((s.length()>11)) return false;
-   if(!(-2147483649<stol(s.c_str()) && stol(s.c_str())<2147483648)) return false;
-   cout << stol(s.c_str()) << endl;
-   char * p ;
-   strtol(s.c_str(), &p, 10) ;
-   
-   return ((*p == 0));
-}
- /*
-  * Funcion para verificar si el string es un short valido
-  * 
-  */
- bool Disk_File::isShort(const std::string  s)
-{
-   if(s.empty() || ((!isdigit(s[0])) && (s[0] != '-') && (s[0] != '+'))) return false ;
-   if((s.length()>11)) return false;
-   if(!(-32769<stol(s.c_str()) && stol(s.c_str())<32768)) return false;
-   cout << stol(s.c_str()) << endl;
-   char * p ;
-   strtol(s.c_str(), &p, 10) ;
-   
-   return ((*p == 0));
-}
- 
-  /*
-  * Funcion para verificar si el string es un float valido
-  * 
-  */
- bool Disk_File::isFloat( string myString ) {
-    std::istringstream iss(myString);
-    float f;
-    iss >> noskipws >> f; // noskipws considers leading whitespace invalid
-    // Check the entire string was consumed and if either failbit or badbit is set
-    return iss.eof() && !iss.fail(); 
-}

@@ -8,43 +8,32 @@
 #ifndef DISK_FILE_H
 #define	DISK_FILE_H
 
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <string.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 #include "header.h"
 #include "RegisterPointer.h"
-#include "ConfigurationFile.h"
-#include "schema.h"
 
-#define Peer_SIZE 16
-#define LETTER 26
-#define NUMBER 10
-#define caseInteger 0
-#define caseFloat 1
-#define caseBigInt 2
-#define caseCharArray 3
-#define caseByte 4
-#define caseShort 5
-using namespace std;
 
 
 
 class Disk_File {
 public:
     Disk_File(string, string);
-    Disk_File();
-    Disk_File(const Disk_File& orig);
-    int getRegisterSize();
     virtual ~Disk_File();
-    void write(string, int ,int , int, int);
-    string read(int, int, int, int);
     
-    void cleanRegister(int);
+    void* write(string*);
+    
+    void modifyR(int pRegister, void* pDatos, string * pColum);
+    void modifyO(int pOffset, void* pDatos, string* pColum);
+    void* readR(int pRegister);
+    void* readO(int pOffset);
+    void deleteRegisterR(int pRegister);
+    void deleteRegisterO(int pOffset);
+    
+   
     string getPeerDescriptor() const;
     
     void setSchema(string);
@@ -58,14 +47,12 @@ public:
     RegisterPointer getUsedRecords() const;
     header* getHeader() ;
     
-    int getRegisterFree();
     
     string getName() const ;
     int getOffset(int pRegister);
     int getRegisterNumberOffset(int pOffset);
-    //void format();
 private:
-    const short zero=0;
+//    const short zero=0;
     string _clientDescriptor;
     string _fileDescriptor;
     string _Name;
@@ -83,14 +70,15 @@ private:
     char* getValidPeer();
     void setRegisterSize(int);
     void loadRegisters();
-    inline bool isInteger(const string &);
-    bool isFloat( string );
-    bool isShort(string);
     static const int _registerHeaderSize=7;
     void updateRegisterHeader(int,int, short, bool);
     void init(int);
     void loadHeader();
     void flushHeader();
+    void cleanRegister(int);
+    int getRegisterSize();
+    int getRegisterFree();
+    //void format();
 };
 
 #endif	/* DISK_FILE_H */
