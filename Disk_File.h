@@ -26,8 +26,8 @@ public:
     
     void* write(string*);
     
-    void modifyR(int pRegister, void* pDatos, string * pColum);
-    void modifyO(int pOffset, void* pDatos, string* pColum);
+    void modifyR(string  pColum_datos,int pRegister);
+    void modifyO(string  pColum_datos,int pRegister);
     void* readR(int pRegister);
     void* readO(int pOffset);
     void deleteRegisterR(int pRegister);
@@ -52,7 +52,7 @@ public:
     int getOffset(int pRegister);
     int getRegisterNumberOffset(int pOffset);
 private:
-//    const short zero=0;
+    const short zero=0;
     string _clientDescriptor;
     string _fileDescriptor;
     string _Name;

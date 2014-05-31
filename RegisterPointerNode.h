@@ -31,7 +31,7 @@ public:
     void* GetRegistro() const;
     void init(string* , schema*);
     void modify(void* pDatos, string* pColum, schema * pSchema);
-
+    void flush();
    
     
 private:
@@ -51,6 +51,6 @@ private:
     bool isFloat( string );
     bool isShort(string);
     bool IsInMemory() const ;
-
+};
 #endif	/* REGISTERPOINTERNODE_H */
 
