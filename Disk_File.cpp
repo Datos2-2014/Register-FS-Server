@@ -154,7 +154,7 @@ void Disk_File::deleteRegisterR(int pRegister) {
  * 
  * Writes a string in the file 
  */
-void* Disk_File::write(string* pToWrite) {
+void* Disk_File::addReg(string pToWrite) {
     //    switch(pId){
     //        case caseCharArray:
     //        {
@@ -260,7 +260,7 @@ void* Disk_File::write(string* pToWrite) {
     //    cout << "valor a escribir "<<pToWrite << endl;
     int registro = this->getRegisterFree();
     RegisterPointerNode* tmp = this->_usedRecords.search(registro);
-    tmp->init(pToWrite, this->getSchema());
+    tmp->init(&pToWrite, this->getSchema(), getOffset(registro));
     char* cToWriteChar = strdup(pToWrite.c_str());
     fstream fs(_Path, ios::in | ios::out | ios::binary);
     move(tmp->GetActual(), _registerHeaderSize, &fs);
@@ -286,13 +286,36 @@ void* Disk_File::write(string* pToWrite) {
 void* Disk_File::modifyR(string pColum_datos, int pRegister) {
     try {
         RegisterPointerNode* tmp = this->_usedRecords.search(pRegister);
-        tmp->modify(pDatos, pColum, this->getSchema());
-
-        //        char* cToWriteChar = strdup(pToWrite.c_str());
-        //        fstream fs(_Path, ios::in | ios::out | ios::binary);
-        //        move(tmp->GetActual(), _registerHeaderSize, &fs);
-        //        fs.write(cToWriteChar, pToWrite.size());
-        //        fs.close();
+        
+        if(!tmp->IsInMemory()){
+            tmp->init(this->readR(tmp->GetActual()), this->getOffset(tmp->GetActual()));
+        }
+        int tipo_dato = 1;
+        int n = 3;
+    
+        string nomb;
+        while(n < pColum_datos.size()) {
+            int i = n;
+            int j = 0;
+        
+        while(pColum_datos[i] != ",") {
+            j++;
+            i++;
+        }
+        string dato = pColum_datos.substr(n,j);
+        
+        if(tipo_dato == 1) {
+            nomb = dato;
+            tipo_dato++;
+            n=i+1;
+        }
+        else {
+            tipo_dato = 1;
+            n = i+1;
+            tmp->modify(dato, nomb, this->getSchema());
+        }
+    }
+        
     }    catch (int e) {
         switch (e) {
             default:
@@ -316,7 +339,7 @@ void* Disk_File::modifyR(string pColum_datos, int pRegister) {
  * 
  * Writes a string in the file 
  */
-void* Disk_File::modifyO(string pColum_datos, int pRegister) {
+void* Disk_File::modifyO(string pColum_datos, int pOffset) {
     //    int registro = this->getRegisterFree();
     //    RegisterPointerNode* tmp = this->_usedRecords.search(registro);
     //    tmp->init(pToWrite, this->getSchema());
@@ -326,6 +349,7 @@ void* Disk_File::modifyO(string pColum_datos, int pRegister) {
     //    fs.write(cToWriteChar, pToWrite.size());
     //    fs.close();
     //    break;
+    this->modifyR(pColum_datos, getRegisterNumberOffset(pOffset));
 }
 
 
@@ -545,13 +569,7 @@ void* Disk_File::readO(int pOffset) {
     //    }
     //        
     //    return result;
-    void * iRead=malloc(this->getSchema()->getTamanyoTotal());
-    memset(iRead, 0, this->getSchema()->getTamanyoTotal());
-    fstream fs(_Path,  ios::in | ios::out |ios::binary);
-    move(getRegisterNumberOffset(pOffset), _registerHeaderSize, &fs);
-    fs.read((char*)iRead, this->getSchema()->getTamanyoTotal());
-    fs.close();
-    return iRead;
+    readR(this->getRegisterNumberOffset(pOffset));
 }
 
 /*
@@ -609,22 +627,6 @@ void Disk_File::move(int pRegister, int pBytes, fstream* pFile) {
     //    cout<< "wto Byte: "<< pFile->tellp() << endl;
 }
 
-/*
- * Parameters:
- *pBlock::int the block to format
- * 
- * No returns
- * 
- * Will fill with 0 all the bytes in the block
- */
-void Disk_File::cleanRegister(int pBlock) {
-    fstream fs(_Path, ios::in | ios::out | ios::binary);
-    for (int i = 0; i <= _registerSize; i++) {
-        move(pBlock, i, &fs);
-        fs.write((char*) &zero, 1);
-    }
-    fs.close();
-}
 
 /*
  * Parameters:
@@ -841,3 +843,32 @@ string Disk_File::getPeerDescriptor() const {
 }
 
 
+/* writes all the registers that was modified on disk
+ * @param None 
+ * @return none
+ */
+void Disk_File::flush(){
+    this->flushHeader();
+    RegisterPointerNode * tmp=  this->_usedRecords.GetHead();
+    while(tmp!=NULL){
+        if(tmp->IsModify()){
+            write(tmp);
+            tmp->flush();
+        }
+        tmp=tmp->GetNext();
+    }
+}
+
+
+/*
+ * writes a register on disk
+ * @param ReegisterPointerNode * pRegister:: the register to write
+ * @return No returns
+ */
+void Disk_File::write(RegisterPointerNode * pRegister){
+    void * iwrite=pRegister->GetRegistro();
+    fstream fs(_Path,  ios::in | ios::out |ios::binary);
+    move(pRegister->GetActual(), _registerHeaderSize, &fs);
+    fs.write((char*)iwrite, this->getSchema()->getTamanyoTotal());
+    fs.close();
+}

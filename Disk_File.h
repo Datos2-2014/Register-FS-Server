@@ -24,7 +24,7 @@ public:
     Disk_File(string, string);
     virtual ~Disk_File();
     
-    void* write(string*);
+    void* addReg(string*);
     
     void modifyR(string  pColum_datos,int pRegister);
     void modifyO(string  pColum_datos,int pRegister);
@@ -51,6 +51,7 @@ public:
     string getName() const ;
     int getOffset(int pRegister);
     int getRegisterNumberOffset(int pOffset);
+    void flush();
 private:
     const short zero=0;
     string _clientDescriptor;
@@ -75,9 +76,9 @@ private:
     void init(int);
     void loadHeader();
     void flushHeader();
-    void cleanRegister(int);
     int getRegisterSize();
     int getRegisterFree();
+    void write(RegisterPointerNode * pRegister);
     //void format();
 };
 

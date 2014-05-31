@@ -4,39 +4,48 @@
  * 
  * Created on 16 de mayo de 2014, 02:27 AM
  */
-
 #include "RegisterPointerNode.h"
 #include "schema.h"
 
 RegisterPointerNode::RegisterPointerNode(int pActual, int pSiguiente) {
     this->_NumReg=pActual;
     this->_siguiente=pSiguiente;
-    
+    this->inMemory=false;
+    this->_next=NULL;
+    this->_Registro=NULL;
+    this->_modify=false;
+//    this->
 }
 
 /*Funcion que incializa desde un string de entrada de usuario el registro
  */
-void RegisterPointerNode::init(string *pDatos, schema * pSchema){
+void RegisterPointerNode::init(string *pDatos, schema * pSchema, int pOffset){
     this->initVoidp(pDatos, pSchema);
     this->_modify=true;
+    this->_offset=pOffset;
+    this->inMemory=true;
 }
 
-void RegisterPointerNode::modify(string* pDatos, string* pColum, schema* pSchema){
-    int n=0;
-    int desplazamiento=0;
-    while(n < pColum->size()) {
-        int i = n;
-        int j = n;
-        
-        while(pColum[j].compare(",") != 0) {
-            j++;
-        }
-        string colum = pColum->substr(i,j);
-        n = j+1;
-        string* datos = (string*)pDatos+desplazamiento;
-        this->updateVoidP(,&colum,pSchema);
-        desplazamiento+=pSchema->getColTam(colum);
-    }
+/*Funcion que incializa desde un string de entrada de usuario el registro
+ * @param void * pRegister :: el puntero void  del registro en memoria
+ * @param int pOffset :: el offset del registro en el archivo
+ * @return No returns
+ */
+void RegisterPointerNode::init(void *pRegister, int pOffset){
+    this->_Registro=pRegister;
+    this->_modify=false;
+    this->_offset=pOffset;
+    this->inMemory=true;
+}
+
+/*Funcion que modifica un registro en memoria
+ * @param string * pDato :: el dato a modificar dentro del registro
+ * @param string * pColum :: la columna donde se va a guardar el dato
+ * @return No returns
+ */
+void RegisterPointerNode::modify(string* pDato, string* pColum, schema* pSchema){
+    updateVoidP(pDato, pColum, pSchema);
+    this->_modify=true;
 }
 
 RegisterPointerNode::RegisterPointerNode(const RegisterPointerNode& orig) {
@@ -56,6 +65,7 @@ RegisterPointerNode* RegisterPointerNode::GetNext() const {
 
 void RegisterPointerNode::SetSiguiente(int siguiente) {
     this->_siguiente = siguiente;
+    this->_modify=true;
 }
 
 int RegisterPointerNode::GetSiguiente() const {
@@ -64,6 +74,7 @@ int RegisterPointerNode::GetSiguiente() const {
 
 void RegisterPointerNode::SetActual(int actual) {
     this->_NumReg = actual;
+    this->_modify=true;
 }
 
 int RegisterPointerNode::GetActual() const {
@@ -78,6 +89,14 @@ void* RegisterPointerNode::GetRegistro() const {
     return _Registro;
 }
 
+
+/*
+ * Inicializa el puntero void del registro llenandolo con los datos que le entran
+ * en el pDatos y con el formato del pSchema
+ * @param string * pDatos :: los datos a escribir en el puntero void
+ * @param schema * pSchema :: el formato como se escriben en los datos
+ * @return No return
+ */
 void RegisterPointerNode::initVoidp(string* pDatos, schema* pSchema){
     string nomb;
     string value;
@@ -87,22 +106,23 @@ void RegisterPointerNode::initVoidp(string* pDatos, schema* pSchema){
     
     while(n < pDatos->size()-2) {
         int i = n;
-        int j = n;
+        int j = 0;
         
-        while(pDatos[j].compare(">") != 0) {
+        while(pDatos[i].compare(">") != 0) {
             j++;
+            i++;
         }
-        string dato = pDatos->substr(i,j);
+        string dato = pDatos->substr(n,j);
         
         if(tipo_dato == 1) {
             nomb = dato;
             tipo_dato++;
-            n=j+3;
+            n=i+3;
         }
         else {
             value = dato;
             tipo_dato = 1;
-            n = j+5;
+            n = i+5;
             this->updateVoidP(&dato,&nomb,pSchema);
         //    file->write(value, registLibre, file->getSchema()->getDesplazamiento(nomb), file->getSchema()->getConst(nomb), file->getSchema()->getColTam(nomb));
         }
@@ -201,6 +221,7 @@ void RegisterPointerNode::updateVoidP(string * pDato,string * pColum, schema* pS
         throw -1;// poner error para cuando el id no es correcto
     }
     }
+    this->_modify=true;
 }
 
  /*
@@ -249,3 +270,14 @@ void RegisterPointerNode::updateVoidP(string * pDato,string * pColum, schema* pS
  bool RegisterPointerNode::IsInMemory() const {
     return this->inMemory;
 }
+
+ bool RegisterPointerNode::IsModify() const {
+     return _modify;
+ }
+ 
+ void RegisterPointerNode::flush(){
+     free(this->_Registro);
+     this->_Registro=NULL;
+     this->inMemory=false;
+    this->_modify=false;
+ }

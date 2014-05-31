@@ -29,10 +29,12 @@ public:
     int GetActual() const;
     int GetOffset() const;
     void* GetRegistro() const;
-    void init(string* , schema*);
+    void init(string* , schema*, int);
+    void init(void*, int);
     void modify(void* pDatos, string* pColum, schema * pSchema);
     void flush();
-   
+    bool IsInMemory() const ;
+    bool IsModify() const;
     
 private:
     int _NumReg;
@@ -50,7 +52,5 @@ private:
     inline bool isInteger(const string &);
     bool isFloat( string );
     bool isShort(string);
-    bool IsInMemory() const ;
 };
 #endif	/* REGISTERPOINTERNODE_H */
-
