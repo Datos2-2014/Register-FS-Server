@@ -406,28 +406,28 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
             string tipoDato = file->getSchema()->getTipo(nomb);
             
             if(tipoDato=="Byte") {
-                char value = (char) &(reg+tmp);
+                char* value = (char*) (reg+tmp);
                 tmp += 1;
                     
                 std::string value_std(value);
                 result.append("<"+nomb+":"+value_std+">");
             }
             else if(tipoDato=="Short") {
-                short value = (short) &(reg+tmp);
+                short* value = (short*) (reg+tmp);
                 tmp += 2;
                     
                 string value_std = std::to_string(value);
                 result.append("<"+nomb+":"+value_std+">");
             }
             else if(tipoDato=="Int") {
-                int value = (int) &(reg+tmp);
+                int* value = (int*) (reg+tmp);
                 tmp += 4;
 
                 string value_std = std::to_string(value);
                 result.append("<"+nomb+":"+value_std+">");
             }
             else if(tipoDato=="float") {
-                float value = (float) &(reg+tmp);
+                float* value = (float*) (reg+tmp);
                 tmp += 4;
 
                 string value_std = std::to_string(value);
@@ -466,8 +466,9 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
         int pos = 1;
         while(pos < pColummns.size()-1){
             int i = pos;
-            int j = pos;
-            while(pColummns[j]!= ',' || pColummns[j]!= '}') {
+            int j = 0;
+            while(pColummns[pos]!= ',' || pColummns[pos]!= '}') {
+                pos++;
                 j++;
             }
             string nomb = pColummns.substr(i,j);
@@ -475,25 +476,25 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
             
             string tipoDato = file->getSchema()->getTipo(nomb);
             if(tipoDato=="Byte") {
-                char value = (char) &(reg+desp);
+                char* value = (char*) (reg+desp);
                     
                 std::string value_std(value);
                 result.append("<"+nomb+":"+value_std+">");
             }
             else if(tipoDato=="Short") {
-                short value = (short) &(reg+desp);
+                short* value = (short*) (reg+desp);
                     
                 string value_std = std::to_string(value);
                 result.append("<"+nomb+":"+value_std+">");
             }
             else if(tipoDato=="Int") {
-                int value = (int) &(reg+desp);
+                int* value = (int*) (reg+desp);
 
                 string value_std = std::to_string(value);
                 result.append("<"+nomb+":"+value_std+">");
             }
             else if(tipoDato=="float") {
-                float value = (float) &(reg+desp);
+                float* value = (float*) (reg+desp);
 
                 string value_std = std::to_string(value);
                 result.append("<"+nomb+":"+value_std+">");
@@ -524,7 +525,7 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
                 }
                 result.append("<"+nomb+":"+bigIntData+">");
             }
-            pos = j+1;
+            pos++;
         }
         return result;
     }
@@ -630,12 +631,13 @@ void ANB::modifyReg(string pFileDesc, int pFlag, int pRegisterNumber_Desp, strin
     
     while(n < pColumns.size()-2) {
         int i = n;
-        int j = n;
+        int j = 0;
         
-        while(pColumns[j] != '>') {
+        while(pColumns[i] != '>') {
+            i++;
             j++;
         }
-        string dato = pColumns.substr(i,j);
+        string dato = pColumns.substr(n,j);
         
         if(tipo_dato == 1) {
             if(datos=="") {
@@ -645,13 +647,13 @@ void ANB::modifyReg(string pFileDesc, int pFlag, int pRegisterNumber_Desp, strin
                 datos.append(","+dato);
             }
             tipo_dato++;
-            n=j+3;
+            n=i+3;
         }
         else {
             datos.append(","+dato);
             
             tipo_dato = 1;
-            n = j+5;
+            n = i+5;
         }
     }
     

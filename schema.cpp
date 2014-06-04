@@ -12,27 +12,28 @@ schema::schema(string pFormato) {
      int n=3;
      while (n < pFormato.size()-2){
          int i=n;
-         int j=n;
-         while (pFormato[j]!='>'){
+         int j=0;
+         while (pFormato[i]!='>'){
              j++;
+             i++;
          }
-         string dato=pFormato.substr(i,j);  //string dato=formato.substr(i,i+j-1);
+         string dato=pFormato.substr(n,j);  //string dato=formato.substr(i,i+j-1);
          if (tipo_dato==1){
              this->set_nombre(dato);
              tipo_dato++;
-             n=j+3;
+             n=i+3;
          }
          else{
              if (tipo_dato==2){
                  this->set_tipo(dato);
                  tipo_dato++;
-                 n=j+3;
+                 n=i+3;
              }
              else{
                  if (tipo_dato==3){
                      this->set_tamanyo(dato);
                      tipo_dato=1;
-                     n=j+5;
+                     n=i+5;
                  }
              }
          }
