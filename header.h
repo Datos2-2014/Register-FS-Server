@@ -7,7 +7,8 @@
 
 #ifndef HEADER_H
 #define	HEADER_H
-
+#include <string>
+using namespace std;
 class header {
 public:
     header();
@@ -28,7 +29,13 @@ public:
     void setFin(int fin);
     unsigned int getFin() const;
     void setInicio(int inicio);
-    unsigned int getInicio() const; //Devuelve el contenido de una carpeta
+    unsigned int getInicio() const;
+    void setSchema(string schema);
+    string getSchema() const;
+    void setFilename(string filename);
+    string getFilename() const;
+    void setClientDescriptor(string clientDescriptor);
+    string getClientDescriptor() const; 
         
 private:
     private:
@@ -39,7 +46,9 @@ private:
         unsigned int numregtot;
         unsigned short size;
         bool modificado= false;
-
+        string schema;
+        string clientDescriptor;
+        string filename;
 };
 
 #endif	/* HEADER_H */

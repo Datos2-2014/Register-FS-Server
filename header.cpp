@@ -94,3 +94,27 @@ unsigned int header::getInicio() const {
     return inicio;
 }
 
+void header::setSchema(string schema) {
+    this->schema = schema;
+}
+
+string header::getSchema() const {
+    return schema;
+}
+
+void header::setFilename(string filename) {
+    this->filename = filename;
+}
+
+string header::getFilename() const {
+    return filename;
+}
+
+void header::setClientDescriptor(string clientDescriptor) {
+    this->clientDescriptor = clientDescriptor;
+}
+
+string header::getClientDescriptor() const {
+    return clientDescriptor;
+}
+

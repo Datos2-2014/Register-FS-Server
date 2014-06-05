@@ -8,16 +8,42 @@
 #include "Disk_File.h"
 
 /*
- * CONSTRUCTOR
+ * CONSTRUCTOR Para instanciar un nuevo archivo
+ * Parameters:
+ * pFileName::char* the desired name of the file
+ * pClientDescriptor::a string with the client descriptor
+ */
+Disk_File::Disk_File(string pClientDescriptor, string pFileName) {
+    if(pClientDescriptor.size()<=16){
+        if(pFileName.size()<=64){
+            this->_peerDescriptor = (getValidPeer());
+            this->_Path = string(path) + _peerDescriptor + ".bin";
+            this->_Name = pFileName;
+            this->getHeader()->setFilename(pFileName);
+            this->_clientDescriptor = pClientDescriptor;
+            this->getHeader()->setClientDescriptor(pFileName);
+            this->_fileDescriptor = _clientDescriptor + _peerDescriptor;
+        }
+        else{
+            throw -1;
+        }
+    }
+    else{
+        throw -1;
+    }
+}
+/*
+ * CONSTRUCTOR Para instanciar un archivo ya existente
  * Parameters:
  * pFileName::char* the desired name of the file
  * pSize::float the desired size of the file in gb
  */
-Disk_File::Disk_File(string pClientDescriptor, string pFileName) {
-    this->_peerDescriptor = (getValidPeer());
+Disk_File::Disk_File(string pPeerDescriptor) {
+    this->_peerDescriptor = string pPeerDescriptor;
     this->_Path = string(path) + _peerDescriptor + ".bin";
-    this->_Name = pFileName;
-    this->_clientDescriptor = pClientDescriptor;
+    this->loadHeader();
+    this->_Name = this->getHeader()->getFilename();
+    this->_clientDescriptor = this->getHeader()->getClientDescriptor();
     this->_fileDescriptor = _clientDescriptor + _peerDescriptor;
 }
 
@@ -93,6 +119,7 @@ int Disk_File::getRegisterFree() {
 void Disk_File::setSchema(string pFormato) {
     this->schemeRegister = new schema(pFormato);
     this->init(schemeRegister->getTamanyoTotal());
+    this->getHeader()->setSchema(pFormato);
     this->flushHeader();
 }
 
@@ -154,7 +181,7 @@ void Disk_File::deleteRegisterR(int pRegister) {
  * 
  * Writes a string in the file 
  */
-void* Disk_File::addReg(string pToWrite) {
+int Disk_File::addReg(string pToWrite) {
     //    switch(pId){
     //        case caseCharArray:
     //        {
@@ -266,7 +293,7 @@ void* Disk_File::addReg(string pToWrite) {
     move(tmp->GetActual(), _registerHeaderSize, &fs);
     fs.write(cToWriteChar, pToWrite.size());
     fs.close();
-    break;
+    return registro;
 }
 
 /* Funcion que modifica un registro, con los datos que entran en el void * 
@@ -685,15 +712,29 @@ bool Disk_File::isValid(string pFileName) {
  * Write the header of the file
  */
 void Disk_File::flushHeader() {
-    string pHeader = "              ";
-    this->_header->setSize(pHeader.size());
-    this->_headerSize = pHeader.size();
-
+    this->_headerSize = 22+16+64+this->getHeader()->getSchema().size();
+    
     fstream fs;
-    char* pFileNameChar2 = strdup(pHeader.c_str());
+    char* pSchema = strdup(this->getHeader()->getSchema());
     fs.open(_Path, ios::in | ios::out | ios::binary);
-    fs.seekp(0, ios_base::beg);
-    fs.write(pFileNameChar2, pHeader.size());
+    fs.seekp(0, std::ios::beg);
+    fs.write((char*)&this->getHeader()->getInicio(), sizeof(int));
+    fs.seekp(4, std::ios::beg);
+    fs.write((char*)&this->getHeader()->getFin(), sizeof(int));
+    fs.seekp(4+4, std::ios::beg);
+    fs.write((char*)&this->getHeader()->getRegistros_libres(), sizeof(int));
+    fs.seekp(4+4+4, std::ios::beg);
+    fs.write((char*)&this->getHeader()->getNumreglibres(), sizeof(int));
+    fs.seekp(4+4+4+4, std::ios::beg);
+    fs.write((char*)&this->getHeader()->getNumregtot(), sizeof(int));
+    fs.seekp(4+4+4+4+4, std::ios::beg);
+    fs.write((char*)&this->getHeader()->getSize(), sizeof(int));
+    fs.seekp(22, std::ios::beg);
+    fs.write((char*)&this->getHeader()->getFilename(), 64);
+    fs.seekp(22+64, std::ios::beg);
+    fs.read((char*)&this->getHeader()->getClientDescriptor(), 16);
+    fs.seekp(102, std::ios::beg);
+    fs.read((char*)&this->getHeader()->getSchema(), this->getHeader()->getSchema().size());
     fs.close();
 }
 
@@ -708,28 +749,38 @@ void Disk_File::loadHeader() {
         fstream fs;
         cout << "reading header" << endl;
         fs.open(_Path,  ios::in |ios::out| ios::binary);
-        fs.seekg(0);
-        int* read;
-        fs.read(read, sizeof(int));
+        fs.seekg(0, std::ios::beg);
+        int read=0;
+        fs.read((char*)&read, sizeof(int));
         this->getHeader()->setInicio(*read);
-        fs.seekg(4);
-        fs.read(read, sizeof(int));
+        fs.seekg(4, std::ios::beg);
+        fs.read((char*)&read, sizeof(int));
         this->getHeader()->setFin(*read);
-        fs.seekg(4+4);
-        fs.read(read, sizeof(int));
+        fs.seekg(4+4, std::ios::beg);
+        fs.read((char*)&read, sizeof(int));
         this->getHeader()->setRegistros_libres(*read);
-        fs.seekg(4+4+4);
-        fs.read(read, sizeof(int));
+        fs.seekg(4+4+4, std::ios::beg);
+        fs.read((char*)&read, sizeof(int));
         this->getHeader()->setNumreglibres(*read);
-        fs.seekg(4+4+4+4);
-        fs.read(read, sizeof(int));
+        fs.seekg(4+4+4+4, std::ios::beg);
+        fs.read((char*)&read, sizeof(int));
         this->getHeader()->setNumregtot(*read);
-        fs.seekg(4+4+4+4+4);
-        fs.read(read, sizeof(short));
+        fs.seekg(4+4+4+4+4, std::ios::beg);
+        fs.read((char*)&read, sizeof(int));
         this->getHeader()->setSize(*read);
-        
+        fs.seekg(22, std::ios::beg);
+        char filename[64];
+        fs.read((char*)&filename, 64);
+        this->getHeader()->setFilename(string(filename));
+        fs.seekg(22+64, std::ios::beg);
+        char clientdescriptor[16];
+        fs.read((char*)&clientdescriptor, 16);
+        this->getHeader()->setClientDescriptor(string(clientdescriptor));
+        fs.seekg(102, std::ios::beg);
+        char schema[this->getHeader()->getSize()-22];
+        fs.read((char*)&schema, this->getHeader()->getSize()-22);
+        this->setSchema(string(schema));
         fs.close();
-        return read;
 }
 
 static char random_letter(int is_cap) {

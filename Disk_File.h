@@ -22,9 +22,10 @@
 class Disk_File {
 public:
     Disk_File(string, string);
+    Disk_File(string);
     virtual ~Disk_File();
     
-    void* addReg(string*);
+    int addReg(string);
     
     void modifyR(string  pColum_datos,int pRegister);
     void modifyO(string  pColum_datos,int pRegister);
