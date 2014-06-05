@@ -46,11 +46,11 @@ bool header::getModificado() const {
     return modificado;
 }
 
-void header::setSize(int size) {
+void header::setSize(short size) {
     this->size = size;
 }
 
-int header::getSize() const {
+unsigned short header::getSize() const {
     return size;
 }
 
@@ -58,7 +58,7 @@ void header::setNumregtot(int numregtot) {
     this->numregtot = numregtot;
 }
 
-int header::getNumregtot() const {
+unsigned int header::getNumregtot() const {
     return numregtot;
 }
 
@@ -66,7 +66,7 @@ void header::setNumreglibres(int numreglibres) {
     this->numreglibres = numreglibres;
 }
 
-int header::getNumreglibres() const {
+unsigned int header::getNumreglibres() const {
     return numreglibres;
 }
 
@@ -74,7 +74,7 @@ void header::setRegistros_libres(int registros_libres) {
     this->registros_libres = registros_libres;
 }
 
-int header::getRegistros_libres() const {
+unsigned int header::getRegistros_libres() const {
     return registros_libres;
 }
 
@@ -82,7 +82,7 @@ void header::setFin(int fin) {
     this->fin = fin;
 }
 
-int header::getFin() const {
+unsigned int header::getFin() const {
     return fin;
 }
 
@@ -90,7 +90,7 @@ void header::setInicio(int inicio) {
     this->inicio = inicio;
 }
 
-int header::getInicio() const {
+unsigned int header::getInicio() const {
     return inicio;
 }
 

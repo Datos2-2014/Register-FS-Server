@@ -705,15 +705,31 @@ void Disk_File::flushHeader() {
  * Read the header of the file
  */
 void Disk_File::loadHeader() {
-    //    fstream fs;
-    //    cout << "reading header" << endl;
-    //    fs.open(_peerDescriptor,  ios::in |ios::out| ios::binary);
-    //    fs.seekg(0);
-    //    fs.seekp(0);
-    //    char* read;
-    //    fs.read(read, _headerSize);
-    //    fs.close();
-    //    return read;
+        fstream fs;
+        cout << "reading header" << endl;
+        fs.open(_Path,  ios::in |ios::out| ios::binary);
+        fs.seekg(0);
+        int* read;
+        fs.read(read, sizeof(int));
+        this->getHeader()->setInicio(*read);
+        fs.seekg(4);
+        fs.read(read, sizeof(int));
+        this->getHeader()->setFin(*read);
+        fs.seekg(4+4);
+        fs.read(read, sizeof(int));
+        this->getHeader()->setRegistros_libres(*read);
+        fs.seekg(4+4+4);
+        fs.read(read, sizeof(int));
+        this->getHeader()->setNumreglibres(*read);
+        fs.seekg(4+4+4+4);
+        fs.read(read, sizeof(int));
+        this->getHeader()->setNumregtot(*read);
+        fs.seekg(4+4+4+4+4);
+        fs.read(read, sizeof(short));
+        this->getHeader()->setSize(*read);
+        
+        fs.close();
+        return read;
 }
 
 static char random_letter(int is_cap) {
