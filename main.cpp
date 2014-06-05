@@ -23,11 +23,12 @@
 #define MYPORT 3490    // Puerto al que conectarán los usuarios
 #define MAXBUFLEN 200  // Maximo de caracteres para el buffer
 #define BACKLOG 10     // Conexiones pendientes en cola
-
-
 #define MAX 100
 
 using namespace std;
+
+//main prueba server//
+
 
 ANB* File_System = new ANB();
 int longitud;//LONGITUD DE LA CADENA ENTRADA
