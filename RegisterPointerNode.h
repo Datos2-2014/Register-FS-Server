@@ -52,6 +52,5 @@ private:
     inline bool isInteger(const string &);
     bool isFloat( string );
     bool isShort(string);
-    bool IsInMemory() const ;
 };
 #endif	/* REGISTERPOINTERNODE_H */

@@ -5,6 +5,8 @@
  * Created on 7 de mayo de 2013, 12:19 PM
  */
 
+
+#include <boost/lexical_cast.hpp>
 #include "Disk_File.h"
 
 /*
@@ -39,7 +41,8 @@ Disk_File::Disk_File(string pClientDescriptor, string pFileName) {
  * pSize::float the desired size of the file in gb
  */
 Disk_File::Disk_File(string pPeerDescriptor) {
-    this->_peerDescriptor = string pPeerDescriptor;
+    char* value_std = boost::lexical_cast<char*>(pPeerDescriptor);
+    this->_peerDescriptor = value_std;
     this->_Path = string(path) + _peerDescriptor + ".bin";
     this->loadHeader();
     this->_Name = this->getHeader()->getFilename();
@@ -310,7 +313,7 @@ int Disk_File::addReg(string pToWrite) {
  * 
  * Writes a string in the file 
  */
-void* Disk_File::modifyR(string pColum_datos, int pRegister) {
+void Disk_File::modifyR(string pColum_datos, int pRegister) {
     try {
         RegisterPointerNode* tmp = this->_usedRecords.search(pRegister);
         
@@ -325,7 +328,7 @@ void* Disk_File::modifyR(string pColum_datos, int pRegister) {
             int i = n;
             int j = 0;
         
-        while(pColum_datos[i] != ",") {
+        while(pColum_datos[i] != ',') {
             j++;
             i++;
         }
@@ -339,7 +342,7 @@ void* Disk_File::modifyR(string pColum_datos, int pRegister) {
         else {
             tipo_dato = 1;
             n = i+1;
-            tmp->modify(dato, nomb, this->getSchema());
+            tmp->modify(&dato, &nomb, this->getSchema());
         }
     }
         
@@ -349,7 +352,6 @@ void* Disk_File::modifyR(string pColum_datos, int pRegister) {
                 throw -1;
         }
     }
-    break;
 }
 
 /* Funcion que modifica un registro, con los datos que entran en el void * 
@@ -366,7 +368,7 @@ void* Disk_File::modifyR(string pColum_datos, int pRegister) {
  * 
  * Writes a string in the file 
  */
-void* Disk_File::modifyO(string pColum_datos, int pOffset) {
+void Disk_File::modifyO(string pColum_datos, int pOffset) {
     //    int registro = this->getRegisterFree();
     //    RegisterPointerNode* tmp = this->_usedRecords.search(registro);
     //    tmp->init(pToWrite, this->getSchema());
@@ -715,20 +717,26 @@ void Disk_File::flushHeader() {
     this->_headerSize = 22+16+64+this->getHeader()->getSchema().size();
     
     fstream fs;
-    char* pSchema = strdup(this->getHeader()->getSchema());
+    char* pSchema = strdup(this->getHeader()->getSchema().c_str());
     fs.open(_Path, ios::in | ios::out | ios::binary);
     fs.seekp(0, std::ios::beg);
-    fs.write((char*)&this->getHeader()->getInicio(), sizeof(int));
+    int tmp =this->getHeader()->getInicio();
+    fs.write((char*)&tmp, sizeof(int));
     fs.seekp(4, std::ios::beg);
-    fs.write((char*)&this->getHeader()->getFin(), sizeof(int));
+    tmp=this->getHeader()->getFin();
+    fs.write((char*)&tmp, sizeof(int));
     fs.seekp(4+4, std::ios::beg);
-    fs.write((char*)&this->getHeader()->getRegistros_libres(), sizeof(int));
+    tmp=this->getHeader()->getRegistros_libres();
+    fs.write((char*)&tmp, sizeof(int));
     fs.seekp(4+4+4, std::ios::beg);
-    fs.write((char*)&this->getHeader()->getNumreglibres(), sizeof(int));
+    tmp=this->getHeader()->getNumreglibres();
+    fs.write((char*)&tmp, sizeof(int));
     fs.seekp(4+4+4+4, std::ios::beg);
-    fs.write((char*)&this->getHeader()->getNumregtot(), sizeof(int));
+    tmp=this->getHeader()->getNumregtot();
+    fs.write((char*)&tmp, sizeof(int));
     fs.seekp(4+4+4+4+4, std::ios::beg);
-    fs.write((char*)&this->getHeader()->getSize(), sizeof(int));
+    tmp=this->getHeader()->getSize();
+    fs.write((char*)&tmp, sizeof(int));
     fs.seekp(22, std::ios::beg);
     fs.write((char*)&this->getHeader()->getFilename(), 64);
     fs.seekp(22+64, std::ios::beg);

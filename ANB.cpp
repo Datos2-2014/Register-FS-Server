@@ -10,6 +10,7 @@
 #include "Jzon.h"
 #include <iostream>
 #include "RegisterPointer.h"
+#include <boost/lexical_cast.hpp>
 
 using namespace std;
 
@@ -329,7 +330,7 @@ string ANB::getSchema(string pFileDesc) {
  * @param pValores Cadena de valores pasados por el usuario, contiene tanto el nombre de la columna como su vaor respectivo.
  * @return Una cadena de caracteres que contiene el número de registro y su posición dentro del archivo.
  */
-string ANB::addRegister(string pFileDesc, string pValores) {
+int ANB::addRegister(string pFileDesc, string pValores) {
     SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
     if(folder_archivo == NULL) {
         return NULL;
@@ -337,7 +338,7 @@ string ANB::addRegister(string pFileDesc, string pValores) {
     SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
     Disk_File* file = archivo->getFile();
     
-//    file->write(pValores);
+    return file->addReg(pValores);
     
     
 //    string nomb;
@@ -416,21 +417,21 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
                 short* value = (short*) (reg+tmp);
                 tmp += 2;
                     
-                string value_std = std::to_string(value);
+                string value_std = boost::lexical_cast<string>(*value);
                 result.append("<"+nomb+":"+value_std+">");
             }
             else if(tipoDato=="Int") {
                 int* value = (int*) (reg+tmp);
                 tmp += 4;
 
-                string value_std = std::to_string(value);
+                string value_std = boost::lexical_cast<string>(*value);
                 result.append("<"+nomb+":"+value_std+">");
             }
             else if(tipoDato=="float") {
                 float* value = (float*) (reg+tmp);
                 tmp += 4;
 
-                string value_std = std::to_string(value);
+                string value_std = boost::lexical_cast<string>(*value);
                 result.append("<"+nomb+":"+value_std+">");
             }
             else if(tipoDato=="BigInt") {
@@ -438,8 +439,8 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
                 int punteroTmp=tmp;
                 string bigIntData;
                 while(punteroTmp!=tamDato) {
-                    int value = (int)&(reg+tmp);
-                    string value_std = std::to_string(value);
+                    int* value = (int*)(reg+tmp);
+                    string value_std = boost::lexical_cast<string>(*value);
                     bigIntData.append(value_std);
                     tmp += 4;
                     punteroTmp += 4;
@@ -451,8 +452,8 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
                 int punteroTmp=tmp;
                 string bigIntData;
                 while(punteroTmp!=tamDato) {
-                    char value = (int)&(reg+tmp);
-                    string value_std = std::to_string(value);
+                    char* value = (char*)(reg+tmp);
+                    string value_std = boost::lexical_cast<string>(*value);
                     bigIntData.append(value_std);
                     tmp += 1;
                     punteroTmp += 1;
@@ -484,19 +485,19 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
             else if(tipoDato=="Short") {
                 short* value = (short*) (reg+desp);
                     
-                string value_std = std::to_string(value);
+                string value_std = boost::lexical_cast<string>(*value);
                 result.append("<"+nomb+":"+value_std+">");
             }
             else if(tipoDato=="Int") {
                 int* value = (int*) (reg+desp);
 
-                string value_std = std::to_string(value);
+                string value_std = boost::lexical_cast<string>(*value);
                 result.append("<"+nomb+":"+value_std+">");
             }
             else if(tipoDato=="float") {
                 float* value = (float*) (reg+desp);
 
-                string value_std = std::to_string(value);
+                string value_std = boost::lexical_cast<string>(*value);
                 result.append("<"+nomb+":"+value_std+">");
             }
             else if(tipoDato=="BigInt") {
@@ -504,8 +505,8 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
                 int punteroTmp=desp;
                 string bigIntData;
                 while(punteroTmp!=tamDato) {
-                    int value = (int)&(reg+desp);
-                    string value_std = std::to_string(value);
+                    int* value = (int*)(reg+desp);
+                    string value_std = boost::lexical_cast<string>(*value);
                     bigIntData.append(value_std);
                     desp += 4;
                     punteroTmp += 4;
@@ -517,8 +518,8 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
                 int punteroTmp=desp;
                 string bigIntData;
                 while(punteroTmp!=tamDato) {
-                    char value = (int)&(reg+desp);
-                    string value_std = std::to_string(value);
+                    char* value = (char*) (reg+desp);
+                    string value_std = boost::lexical_cast<string>(*value);
                     bigIntData.append(value_std);
                     desp += 1;
                     punteroTmp += 1;
