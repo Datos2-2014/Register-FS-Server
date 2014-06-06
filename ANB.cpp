@@ -29,7 +29,7 @@ ANB::~ANB() {
  * @param pPath Direccion donde va a ser creada
  * @return 0 si la operacion fue exitosa, 1 si no lo fue
  */
-int ANB::newFolder(string pName, string pPath){
+int ANB::newFolder(string pName, string pPath, string pUsername, string pPassword){
     SLLNode* tmp = root;
     
     char* a = strdup(pPath.c_str());
@@ -59,7 +59,7 @@ int ANB::newFolder(string pName, string pPath){
  * @param pPath Direccion donde se encuentra el archivo
  * @return Puntero hacia un arreglo de caracteres que contiene el fileDescriptor
  */
-string ANB::newFile(string pClientDescriptor, string pName, string pPath) {
+string ANB::newFile(string pClientDescriptor, string pName, string pPath, string pUsername, string pPassword) {
     SLLNode* tmp = root;
     
     char* a = strdup(pPath.c_str());
@@ -119,7 +119,7 @@ SLLNode* ANB::searchFolder(string pPath) {
  * @param pCol cadena con las columnas y el nombre de cada una, de la forma: {<column1Name>,<column1Type>,<column1Size>},{<column2Name>,<column2Type>,<column2Size>},..,{<columnNName>,<columnNType>,<columnNSize>}
  * @return 1-Si la operacion no fue exitosa, 0-si lo fue
  */
-int ANB::createSchema(string pFileDesc, string pCol) {
+int ANB::createSchema(string pFileDesc, string pCol, string pUsername, string pPassword) {
     SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
     
     SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
@@ -136,7 +136,7 @@ int ANB::createSchema(string pFileDesc, string pCol) {
  * Recibe un file descriptor(array de caracteres de 32 posiciones) y elimina el archivo representado por este.
  * @param pFileDesc File descriptor necesario para buscar el archivo a borrar dentero del arbol n-ario
  */
-void ANB::deleteFile(string pFileDesc) {
+void ANB::deleteFile(string pFileDesc, string pUsername, string pPassword) {
     SLL* contentFolder = root->getFolder();
     
     if(contentFolder == NULL) {
@@ -187,7 +187,7 @@ SLL* ANB::searchFile(string pFileDesc, SLL* pFolder) {
  * si dicha carpeta tiene algún contenido.
  * @param pPath Direccion donde se encuentra la carpeta.
  */
-void ANB::deleteFolder(string pPath) {
+void ANB::deleteFolder(string pPath, string pUsername, string pPassword) {
     char* a = strdup(pPath.c_str());
     char* folderActual = strtok(a, "/");
     char* folderAnt;
@@ -246,7 +246,7 @@ SLL* ANB::searchSLLFolder(string pPath) {
  * Consulta un contenedor para mostrar su contenido en consola.
  * @param Direccion donde se encuentra el contenedor, incorpora la carpeta a buscar.
  */
-void ANB::queryFolder(string pPath) {
+void ANB::queryFolder(string pPath, string pUsername, string pPassword) {
     SLLNode* cont = searchFolder(pPath);
     
     SLL* folder = cont->getFolder();
@@ -329,7 +329,7 @@ string ANB::getSchema(string pFileDesc) {
  * @param pValores Cadena de valores pasados por el usuario, contiene tanto el nombre de la columna como su vaor respectivo.
  * @return Una cadena de caracteres que contiene el número de registro y su posición dentro del archivo.
  */
-int ANB::addRegister(string pFileDesc, string pValores) {
+int ANB::addRegister(string pFileDesc, string pValores, string pUsername, string pPassword) {
     SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
     if(folder_archivo == NULL) {
         return NULL;
@@ -383,7 +383,7 @@ int ANB::addRegister(string pFileDesc, string pValores) {
  * @param pRegisterNumber Número de registro dentro del archivo.
  * @return Una cadena de caracteres que contiene los datos de las columnas consulatadas
  */
-string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, string pColummns) {
+string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, string pColummns, string pUsername, string pPassword) {
     SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
     SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
     Disk_File* file = archivo->getFile();
@@ -620,7 +620,7 @@ int ANB::deleteRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp) {
  * Consulta un archivo e imprime el ID y desplazamiento de cada registro del mismo.
  * @param pFileDesc File descriptor para buscar el archivo.
  */
-void ANB::checkFile(string pFileDesc) {
+void ANB::checkFile(string pFileDesc, string pUsername, string pPassword) {
     SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
     SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
     Disk_File* file = archivo->getFile();
@@ -642,7 +642,7 @@ void ANB::checkFile(string pFileDesc) {
  * Dependiendo de la bandera.
  * @param pColummns Columnas que se desean modificar junto con su valor
  */
-void ANB::modifyReg(string pFileDesc, int pFlag, int pRegisterNumber_Desp, string pColumns) {
+void ANB::modifyReg(string pFileDesc, int pFlag, int pRegisterNumber_Desp, string pColumns, string pUsername, string pPassword) {
     SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
     SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
     Disk_File* file = archivo->getFile();
