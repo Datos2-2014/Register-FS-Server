@@ -6,7 +6,6 @@
  */
 
 
-#include <boost/lexical_cast.hpp>
 #include "Disk_File.h"
 
 /*
@@ -41,8 +40,7 @@ Disk_File::Disk_File(string pClientDescriptor, string pFileName) {
  * pSize::float the desired size of the file in gb
  */
 Disk_File::Disk_File(string pPeerDescriptor) {
-    char* value_std = boost::lexical_cast<char*>(pPeerDescriptor);
-    this->_peerDescriptor = value_std;
+    this->_peerDescriptor = pPeerDescriptor.c_str();
     this->_Path = string(path) + _peerDescriptor + ".bin";
     this->loadHeader();
     this->_Name = this->getHeader()->getFilename();
@@ -738,11 +736,14 @@ void Disk_File::flushHeader() {
     tmp=this->getHeader()->getSize();
     fs.write((char*)&tmp, sizeof(int));
     fs.seekp(22, std::ios::beg);
-    fs.write((char*)&this->getHeader()->getFilename(), 64);
+    string tmp2=string(this->getHeader()->getFilename());
+    fs.write((char*)&tmp2, 64);
     fs.seekp(22+64, std::ios::beg);
-    fs.read((char*)&this->getHeader()->getClientDescriptor(), 16);
+    tmp2=string(this->getHeader()->getClientDescriptor());
+    fs.read((char*)&tmp2, 16);
     fs.seekp(102, std::ios::beg);
-    fs.read((char*)&this->getHeader()->getSchema(), this->getHeader()->getSchema().size());
+    tmp2=string(this->getHeader()->getSchema());
+    fs.read((char*)&tmp2, this->getHeader()->getSchema().size());
     fs.close();
 }
 
