@@ -417,10 +417,9 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
                 
                 ostringstream ss;
                 ss << value;
+                    
                 
-                string value_std = <string>(ss);    
-                
-                result.append("<"+nomb+":"+value_std+">");
+                result.append("<"+nomb+":"+ss.str()+">");
             }
             else if(tipoDato=="Int") {
                 int* value = (int*) (reg+tmp);
@@ -429,8 +428,8 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
                 ostringstream ss;
                 ss << value;
                 
-                string value_std = <string>(ss);
-                result.append("<"+nomb+":"+value_std+">");
+                
+                result.append("<"+nomb+":"+ss.str()+">");
             }
             else if(tipoDato=="float") {
                 float* value = (float*) (reg+tmp);
@@ -438,10 +437,8 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
                 
                 ostringstream ss;
                 ss << value;
-
-                string value_std = <string>(ss);
                
-                result.append("<"+nomb+":"+value_std+">");
+                result.append("<"+nomb+":"+ss.str()+">");
             }
             else if(tipoDato=="BigInt") {
                 int tamDato = file->getSchema()->getColTam(nomb);
@@ -453,8 +450,7 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
                     ostringstream ss;
                     ss << value;
                     
-                    string value_std = <string>(ss);
-                    bigIntData.append(value_std);
+                    bigIntData.append(ss.str());
                     tmp += 4;
                     punteroTmp += 4;
                 }
@@ -467,7 +463,7 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
                 while(punteroTmp!=tamDato) {
                     char* value = (char*)(reg+tmp);
                     
-                    string value_std =<string>(value);
+                    std::string value_std(value);
                     
                     bigIntData.append(value_std);
                     tmp += 1;
@@ -502,30 +498,24 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
                 
                 ostringstream ss;
                 ss << value;
-                
-                string value_std = <string>(ss);
                     
-                result.append("<"+nomb+":"+value_std+">");
+                result.append("<"+nomb+":"+ss.str()+">");
             }
             else if(tipoDato=="Int") {
                 int* value = (int*) (reg+desp);
                 
                 ostringstream ss;
                 ss << value;
-
-                string value_std = <string>(ss);
                 
-                result.append("<"+nomb+":"+value_std+">");
+                result.append("<"+nomb+":"+ss.str()+">");
             }
             else if(tipoDato=="float") {
                 float* value = (float*) (reg+desp);
                 
                 ostringstream ss;
                 ss << value;
-
-                string value_std = <string>(ss);
                 
-                result.append("<"+nomb+":"+value_std+">");
+                result.append("<"+nomb+":"+ss.str()+">");
             }
             else if(tipoDato=="BigInt") {
                 int tamDato = file->getSchema()->getColTam(nomb);
@@ -537,8 +527,7 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
                     ostringstream ss;
                     ss << value;
 
-                    string value_std = <string>(*value);
-                    bigIntData.append(value_std);
+                    bigIntData.append(ss.str());
                     desp += 4;
                     punteroTmp += 4;
                 }
@@ -551,7 +540,7 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
                 while(punteroTmp!=tamDato) {
                     char* value = (char*) (reg+desp);
                     
-                    string value_std =<string>(value);
+                   std::string value_std(value);
                     
                     bigIntData.append(value_std);
                     desp += 1;
