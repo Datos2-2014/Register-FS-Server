@@ -40,7 +40,7 @@ Disk_File::Disk_File(string pClientDescriptor, string pFileName) {
  * pSize::float the desired size of the file in gb
  */
 Disk_File::Disk_File(string pPeerDescriptor) {
-    this->_peerDescriptor = pPeerDescriptor.c_str();
+    strcpy(this->_peerDescriptor, pPeerDescriptor.c_str());
     this->_Path = string(path) + _peerDescriptor + ".bin";
     this->loadHeader();
     this->_Name = this->getHeader()->getFilename();
@@ -761,22 +761,22 @@ void Disk_File::loadHeader() {
         fs.seekg(0, std::ios::beg);
         int read=0;
         fs.read((char*)&read, sizeof(int));
-        this->getHeader()->setInicio(*read);
+        this->getHeader()->setInicio(read);
         fs.seekg(4, std::ios::beg);
         fs.read((char*)&read, sizeof(int));
-        this->getHeader()->setFin(*read);
+        this->getHeader()->setFin(read);
         fs.seekg(4+4, std::ios::beg);
         fs.read((char*)&read, sizeof(int));
-        this->getHeader()->setRegistros_libres(*read);
+        this->getHeader()->setRegistros_libres(read);
         fs.seekg(4+4+4, std::ios::beg);
         fs.read((char*)&read, sizeof(int));
-        this->getHeader()->setNumreglibres(*read);
+        this->getHeader()->setNumreglibres(read);
         fs.seekg(4+4+4+4, std::ios::beg);
         fs.read((char*)&read, sizeof(int));
-        this->getHeader()->setNumregtot(*read);
+        this->getHeader()->setNumregtot(read);
         fs.seekg(4+4+4+4+4, std::ios::beg);
         fs.read((char*)&read, sizeof(int));
-        this->getHeader()->setSize(*read);
+        this->getHeader()->setSize(read);
         fs.seekg(22, std::ios::beg);
         char filename[64];
         fs.read((char*)&filename, 64);

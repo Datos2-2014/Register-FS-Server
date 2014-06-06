@@ -31,7 +31,7 @@ public:
     void* GetRegistro() const;
     void init(string* , schema*, int);
     void init(void*, int);
-    void modify(void* pDatos, string* pColum, schema * pSchema);
+    void modify(string* pDatos, string* pColum, schema * pSchema);
     void flush();
     bool IsInMemory() const ;
     bool IsModify() const;

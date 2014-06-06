@@ -360,7 +360,7 @@ void comandExecute(char comandoClient[])
         
 
         /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
-        string ret = File_System->addRegister(param1, param2);
+        string ret =std::to_string( File_System->addRegister(param1, param2));
         if(ret=="") {
             cout << "Archivo no encontrado" << endl; //Añadir error
         }
