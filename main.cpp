@@ -1,4 +1,4 @@
-#include <string.h>
+ #include <string.h>
 #include <iostream>
 #include "Disk_File.h"
 #include <list>
@@ -222,6 +222,8 @@ void comandExecute(char comandoClient[])
                 string param3 = comando.substr(punt2+2,aux3);
                 cout<< "Path: "<<param3<<endl;
                 /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
+                
+                //Extraccion de los parametros de usuario y password.
                 int punt4 = punt3+2;
                 int aux4=0;
                 while (comando[punt4] != '>'){
@@ -236,8 +238,9 @@ void comandExecute(char comandoClient[])
                     aux5++;
                 }
                 string param5 = comando.substr(punt4+2,aux5);
+                //Extraccion de los parametros de usuario y password.
                 
-                string ret = File_System->newFile(param2, param1, param3, param4, param5);
+                string ret = File_System->newFile(param2, param1, param3);
                 if(ret=="") {
                     cout << "Ubicacion incorrecta" << endl; //Añadir error
                 }
@@ -282,6 +285,7 @@ void comandExecute(char comandoClient[])
             }
             string param2 = comando.substr(punt1+2,aux2);
             cout<< "path: "<<param2<<endl;
+             //Extraccion de los parametros de usuario y password.
             int punt3 = punt2+2;
             int aux3=0;
             while (comando[punt3] != '>'){
@@ -296,9 +300,10 @@ void comandExecute(char comandoClient[])
                 aux4++;
             }
             string param4 = comando.substr(punt3+2,aux4);
+             //Extraccion de los parametros de usuario y password.
 
             /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
-            int ret = File_System->newFolder(param2, param1, param3, param4);
+            int ret = File_System->newFolder(param2, param1);
 
             /*Parse y envío en formato json */
             Jzon::Object root;                              //Creación del objeto para parsear el contenido
@@ -342,6 +347,7 @@ void comandExecute(char comandoClient[])
         }
         string param2 = comando.substr(punt1+1,aux2);
         cout<<"Nombres columnas: "<<param2<<endl;
+         //Extraccion de los parametros de usuario y password.
         int punt3 = punt2+2;
         int aux3=0;
         while (comando[punt3] != '>'){
@@ -356,9 +362,10 @@ void comandExecute(char comandoClient[])
             aux4++;
         }
         string param4 = comando.substr(punt3+2,aux4);
+         //Extraccion de los parametros de usuario y password.
 
         /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
-        int ret = File_System->createSchema(param1, param2, param3, param4);
+        int ret = File_System->createSchema(param1, param2);
 
         /*Parse y envío en formato json */
         Jzon::Object root;                              //Creación del objeto para parsear el contenido
@@ -400,6 +407,7 @@ void comandExecute(char comandoClient[])
         }
         string param2 = comando.substr(punt1+1,aux2);
         cout<<"Columnas: "<<param2<<endl;
+         //Extraccion de los parametros de usuario y password.
         int punt3 = punt2+2;
         int aux3=0;
         while (comando[punt3] != '>'){
@@ -414,10 +422,10 @@ void comandExecute(char comandoClient[])
             aux4++;
         }
         string param4 = comando.substr(punt3+2,aux4);
-        
+         //Extraccion de los parametros de usuario y password.
 
         /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
-        string ret =std::to_string( File_System->addRegister(param1, param2, param3, param4));
+        string ret =std::to_string( File_System->addRegister(param1, param2));
         if(ret=="") {
             cout << "Archivo no encontrado" << endl; //Añadir error
         }
@@ -476,6 +484,7 @@ void comandExecute(char comandoClient[])
         }
         string param4 = comando.substr(punt3+2,aux4);
         cout<<"todo o columnas: "<<param4<<endl;
+         //Extraccion de los parametros de usuario y password.
         int punt5 = punt4+2;
         int aux5=0;
         while (comando[punt5] != '>'){
@@ -490,9 +499,10 @@ void comandExecute(char comandoClient[])
             aux6++;
         }
         string param6 = comando.substr(punt5+2,aux6);
+         //Extraccion de los parametros de usuario y password.
 
         /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
-        string ret = File_System->getRegister(param1, param2_int, param3_int, param4, param5, param6);
+        string ret = File_System->getRegister(param1, param2_int, param3_int, param4);
 
         /*Parse y envío en formato json */
         Jzon::Object root;                              //Creación del objeto para parsear el contenido
@@ -558,6 +568,7 @@ void comandExecute(char comandoClient[])
          cout<<"offset o reg num: "<<param3<<endl;
         int param3_int = atoi(param3.c_str());
         /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
+         //Extraccion de los parametros de usuario y password.
         int punt4 = punt3+2;
         int aux4=0;
         while (comando[punt4] != '>'){
@@ -572,7 +583,8 @@ void comandExecute(char comandoClient[])
             aux5++;
         }
         string param5 = comando.substr(punt4+2,aux5);
-        File_System->deleteRegister(param1, param2_int, param3_int, param4, param5);
+         //Extraccion de los parametros de usuario y password.
+        File_System->deleteRegister(param1, param2_int, param3_int);
 
         cout << "del-reg Finalizado";
     }
@@ -626,6 +638,7 @@ void comandExecute(char comandoClient[])
         string param4 = comando.substr(punt3+1,aux4);
         cout<<"Columnas: "<<param4<<endl;
         /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
+         //Extraccion de los parametros de usuario y password.
         int punt5 = punt4+2;
         int aux5=0;
         while (comando[punt5] != '>'){
@@ -640,7 +653,8 @@ void comandExecute(char comandoClient[])
             aux6++;
         }
         string param6 = comando.substr(punt5+2,aux6);
-        File_System->modifyReg(param1, param2_int, param3_int, param4, param5, param6);
+         //Extraccion de los parametros de usuario y password.
+        File_System->modifyReg(param1, param2_int, param3_int, param4);
 
         cout << "mod-reg Finalizado";
     }
@@ -655,6 +669,7 @@ void comandExecute(char comandoClient[])
         }
         string param1 = comando.substr(j+1,aux1);
         cout<<"file descriptor: "<<param1<<endl;
+         //Extraccion de los parametros de usuario y password.
         int punt2 = punt1+2;
         int aux2=0;
         while (comando[punt2] != '>'){
@@ -669,9 +684,10 @@ void comandExecute(char comandoClient[])
             aux3++;
         }
         string param3 = comando.substr(punt2+2,aux3);
+         //Extraccion de los parametros de usuario y password.
 
         /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
-        File_System->deleteFile(param1, param2, param3);
+        File_System->deleteFile(param1);
 
         cout << "del-file Finalizado" << endl;
     }
@@ -686,6 +702,7 @@ void comandExecute(char comandoClient[])
         }
         string param1 = comando.substr(j+1,aux1);
         cout<<"path: "<<param1<<endl;
+         //Extraccion de los parametros de usuario y password.
         int punt2 = punt1+2;
         int aux2=0;
         while (comando[punt2] != '>'){
@@ -700,10 +717,11 @@ void comandExecute(char comandoClient[])
             aux3++;
         }
         string param3 = comando.substr(punt2+2,aux3);
+         //Extraccion de los parametros de usuario y password.
         
 
         /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
-        File_System->deleteFolder(param1, param2, param3);
+        File_System->deleteFolder(param1);
 
         cout << "del-cont Finalizado" << endl;
     }
@@ -719,6 +737,7 @@ void comandExecute(char comandoClient[])
         string param1 = comando.substr(j+1,aux1);
         cout<<"file descriptor: "<<param1<<endl;
         /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
+         //Extraccion de los parametros de usuario y password.
         int punt2 = punt1+2;
         int aux2=0;
         while (comando[punt2] != '>'){
@@ -733,7 +752,8 @@ void comandExecute(char comandoClient[])
             aux3++;
         }
         string param3= comando.substr(punt2+2,aux3);
-        string ret = File_System->getSchema(param1, param2, param3);
+         //Extraccion de los parametros de usuario y password.
+        string ret = File_System->getSchema(param1);
 
         //Enviar result al cliente
 
@@ -751,7 +771,7 @@ void comandExecute(char comandoClient[])
         }
         string param1 = comando.substr(j+1,aux1);
         cout<<"path: "<<param1<<endl;
-        
+         //Extraccion de los parametros de usuario y password.
         int punt2 = punt1+2;
         int aux2=0;
         while (comando[punt2] != '>'){
@@ -766,9 +786,10 @@ void comandExecute(char comandoClient[])
             aux3++;
         }
         string param3 = comando.substr(punt2+2,aux3);
+        //Extraccion de los parametros de usuario y password.
 
         /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
-        File_System->queryFolder(param1, param2 , param3);
+        File_System->queryFolder(param1);
 
         cout << "ls-cont Finalizado" << endl;
     }
@@ -783,7 +804,7 @@ void comandExecute(char comandoClient[])
         }
         string param1 = comando.substr(j+1,aux1);
         cout<<"file descriptor: "<<param1<<endl;
-        
+         //Extraccion de los parametros de usuario y password.
         int punt2 = punt1+2;
         int aux2=0;
         while (comando[punt2] != '>'){
@@ -798,9 +819,10 @@ void comandExecute(char comandoClient[])
             aux3++;
         }
         string param3 = comando.substr(punt2+2,aux3);
+         //Extraccion de los parametros de usuario y password.
 
         /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
-        File_System->checkFile(param1, param2, param3);
+        File_System->checkFile(param1);
 
         cout << "cat-file Finalizado";
     }
