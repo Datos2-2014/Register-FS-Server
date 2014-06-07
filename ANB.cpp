@@ -270,7 +270,7 @@ void ANB::queryFolder(string pPath, string pUsername, string pPassword) {
  * @param pFileDesc FileDescriptor del archivo al que se le desea crear el nuevo esquema de registro.
  * @return Puntero hacia el objeto esquema respectivo del archivo.
  */
-string ANB::getSchema(string pFileDesc) {
+string ANB::getSchema(string pFileDesc,  string pUsername, string pPassword) {
     SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
     SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
     
@@ -603,7 +603,7 @@ string ANB::getRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, s
  * dentro del archivo, dependiendo de la bandera.
  * @return 0-Si la operación fue exitosa, 1-Si no lo fue
  */
-int ANB::deleteRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp) {
+int ANB::deleteRegister(string pFileDesc, int pFlag, int pRegisterNumber_Desp, string pUsername, string pPassword) {
     SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
     SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
     Disk_File* file = archivo->getFile();
