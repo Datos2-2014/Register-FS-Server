@@ -72,7 +72,7 @@ string ANB::newFile(string pClientDescriptor, string pName, string pPath, string
     else {
         tmp = searchFolder(pPath);
         if(tmp==NULL) {
-            return NULL;
+            return "null";
         }
         else {
             Disk_File* file = new Disk_File(pClientDescriptor, pName);
