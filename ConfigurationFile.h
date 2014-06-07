@@ -8,7 +8,7 @@
 #ifndef CONFIGURATIONFILE_H
 #define	CONFIGURATIONFILE_H
 
-#define path "/home/malcolm/Documents/Register-FS-Server/trunk/Archivos/"
+#define pathRFS "/home/malcolm/Documents/Register-FS-Server/trunk/Archivos/"
 #define Peer_SIZE 16
 #define LETTER 26
 #define NUMBER 10
