@@ -98,7 +98,7 @@ void* RegisterPointerNode::GetRegistro() const {
  * @return No return
  */
 void RegisterPointerNode::initVoidp(string pDatos, schema* pSchema){
-    string nomb;
+    string nomb="";
     string value;
     
     int tipo_dato = 1;
@@ -111,18 +111,18 @@ void RegisterPointerNode::initVoidp(string pDatos, schema* pSchema){
         
         while(pDatos[i] != '>') {
             
-            cout << j <<  "  j " <<endl;
-            cout << i <<  "  i " <<endl;
-            cout << pDatos.size()<< "  pdatos size " << endl;
-            cout << pDatos << endl;
-            cout << pDatos.at(i)<<endl;
+//            cout << j <<  "  j " <<endl;
+//            cout << i <<  "  i " <<endl;
+//            cout << pDatos.size()<< "  pdatos size " << endl;
+//            cout << pDatos << endl;
+//            cout << pDatos.at(i)<<endl;
             j++;
             i++;
         }
         string dato = pDatos.substr(n,j);
         
         if(tipo_dato == 1) {
-            nomb = dato;
+            nomb.append(dato);
             tipo_dato++;
             n=i+3;
         }

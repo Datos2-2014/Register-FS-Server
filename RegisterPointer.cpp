@@ -97,21 +97,18 @@ RegisterPointerNode * RegisterPointer::search(int pData) {
         return _head;
     } 
     else {
-        while (temp1) {
+        while (temp1!=NULL) {
+            cout << cont << " conteo"<<endl;
             if (temp1->GetActual() == pData) {
-                temp1=_tail->GetNext();
-                cont++;
+                return temp1;
             }
-            temp1 = temp1->GetNext();
+            else{
+                temp1 = temp1->GetNext();
+            }
         }
-    }
- 
-    if (cont == 0) {
         return NULL;
     }
-    else{
-        return temp1;
-    }
+ 
 }
 
 /**
