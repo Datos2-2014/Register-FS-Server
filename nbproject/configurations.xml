@@ -7,7 +7,9 @@
       <itemPath>ANB.h</itemPath>
       <itemPath>ConfigurationFile.h</itemPath>
       <itemPath>Disk_File.h</itemPath>
+      <itemPath>HAStorageManager.h</itemPath>
       <itemPath>Jzon.h</itemPath>
+      <itemPath>Markup.h</itemPath>
       <itemPath>RegisterPointer.h</itemPath>
       <itemPath>RegisterPointerNode.h</itemPath>
       <itemPath>SLL.h</itemPath>
@@ -23,7 +25,9 @@
                      projectFiles="true">
         <itemPath>ANB.cpp</itemPath>
         <itemPath>Disk_File.cpp</itemPath>
+        <itemPath>HAStorageManager.cpp</itemPath>
         <itemPath>Jzon.cpp</itemPath>
+        <itemPath>Markup.cpp</itemPath>
         <itemPath>RegisterPointer.cpp</itemPath>
         <itemPath>RegisterPointerNode.cpp</itemPath>
         <itemPath>SLL.cpp</itemPath>
@@ -68,9 +72,17 @@
       </item>
       <item path="Disk_File.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="HAStorageManager.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="HAStorageManager.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Jzon.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Jzon.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Markup.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Markup.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="RegisterPointer.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -129,9 +141,17 @@
       </item>
       <item path="Disk_File.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="HAStorageManager.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="HAStorageManager.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Jzon.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Jzon.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Markup.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Markup.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="RegisterPointer.cpp" ex="false" tool="1" flavor2="0">
       </item>

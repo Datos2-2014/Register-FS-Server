@@ -9,8 +9,9 @@
 #define	ANB_H
 
 #include "SLLNode.h"
-#include "schema.h"
+#include "Markup.h"
 
+using namespace std;
 class ANB {
 public:
     ANB();
@@ -29,13 +30,17 @@ public:
     int deleteRegister(string, int, int); //Borra un registro.
     void checkFile(string); //Consulta un archivo.
     void modifyReg(string, int, int, string);
+    SLLNode* getRoot();
     
 private:
     SLLNode* root; //Raiz del arbol n-ario
+    int id; //Identificador para el RegisterFS
     
     SLLNode* searchFolder(string); //Auxiliar, busca un nodo a partir de la direccion de la carpeta
     SLL* searchFile(string, SLL*); //Auxiliar, busca un arcivo, cuando lo encuentra devuelve la lista(carpeta) donde se encuentra.
     SLL* searchSLLFolder(string); //Busca una carpeta y retorna la lista donde esta se encuentra.
+    void saveXML();
+    void save_Aux(SLL*, CMarkup);
     
 };
 

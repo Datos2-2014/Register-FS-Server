@@ -6,15 +6,31 @@
  */
 
 #include "ANB.h"
+#include "schema.h"
 #include <string>
 #include "Jzon.h"
 #include <iostream>
 #include "RegisterPointer.h"
+#include <sstream> 
 
 using namespace std;
 
 ANB::ANB() {
     root = new SLLNode(NULL, "/");
+    
+    newFolder("AAA", "/");
+    
+    string PDescUsers = newFile("AAAUsers", "users", "/AAA/");
+    string PDescPermissions = newFile("AAAPermissions", "permissions", "/AAA/");
+    
+    string FDescUsers = "AAAUsers" + PDescUsers;
+    string FDescPermissions = "AAAPermissions" + PDescPermissions;
+    createSchema(FDescUsers, "{{<username>,<Char-array>,<64>},{<password>,<Char-array>,<64>},{<id>,<Int>,<4>},{<admin>,<Byte>,<1>}}");
+    createSchema(FDescPermissions, "{{<pathFile>,<Char-array>,<512>},{<userId>,<Int>,<4>},{<owner>,<Byte>,<1>}}");
+    
+    addRegister(FDescUsers, "{{<username>,<Gonzo>},{<password>,<heloo132*>},{<id>,<1>},{<admin>,<1>}}");
+    addRegister(FDescUsers, "{{<username>,<Yoda>},{<password>,<y0ur3Next@>},{<id>,<2>},{<admin>,<1>}}");
+    addRegister(FDescUsers, "{{<username>,<DarthRevan>},{<password>,<th3f0rc3~!>},{<id>,<3>},{<admin>,<1>}}");
 }
 
 ANB::ANB(const ANB& orig) {
@@ -22,6 +38,11 @@ ANB::ANB(const ANB& orig) {
 
 ANB::~ANB() {
 }
+
+SLLNode* ANB::getRoot() {
+    return root;
+}
+
 
 /**
  * Crea una nueva carpeta y la añade al arbol que estructura el sistema de archivos
@@ -58,7 +79,7 @@ int ANB::newFolder(string pName, string pPath){
  * @param pClientDescriptor ID proporcionado por el usuario.
  * @param pName Nombre para el archivo
  * @param pPath Direccion donde se encuentra el archivo
- * @return Puntero hacia un arreglo de caracteres que contiene el fileDescriptor
+ * @return Puntero hacia un arreglo de caracteres que contiene el peerDescriptor
  */
 string ANB::newFile(string pClientDescriptor, string pName, string pPath) {
     SLLNode* tmp = root;
@@ -691,3 +712,44 @@ void ANB::modifyReg(string pFileDesc, int pFlag, int pRegisterNumber_Desp, strin
         file->modifyO(datos, pRegisterNumber_Desp);
     }
 }
+
+
+void ANB::saveXML() {
+    CMarkup xml;
+    
+    SLL* root_folder = root->getFolder();
+    
+    xml.AddElem( "ROOT" );
+    xml.IntoElem();
+    
+    save_Aux(root_folder, xml);
+    
+    int id_tmp = id;
+    
+    stringstream stream; 
+ 
+    string palabra;
+
+    stream << id_tmp;
+
+    palabra = stream.str();
+    xml.Save( "Arbol"+palabra+".xml" );
+}
+
+void ANB::save_Aux(SLL* folder, CMarkup pXml) {
+    SLLNode* tmp = folder->getFirst();
+    while(tmp!=NULL) {
+        if(tmp->getFlag() == 0) {
+            pXml.AddElem("Folder");
+            pXml.SetAttrib("Name", tmp->getName());
+            pXml.IntoElem();
+            save_Aux(tmp->getFolder(), pXml);
+            pXml.OutOfElem();
+        }
+        else {
+            pXml.AddElem("File", tmp->getFile()->getPeerDescriptor());
+        }
+        tmp = tmp->getNext();
+    }
+}
+

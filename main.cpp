@@ -132,7 +132,7 @@ void enviar(char cadena[])
 }
 
 int main()//metodo principal
-{ 
+{
   crear_socket();
   
   atributos();

@@ -17,8 +17,6 @@
 #include "RegisterPointer.h"
 
 
-
-
 class Disk_File {
 public:
     Disk_File(string, string);
