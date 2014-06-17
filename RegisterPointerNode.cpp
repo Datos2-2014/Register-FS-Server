@@ -19,7 +19,7 @@ RegisterPointerNode::RegisterPointerNode(int pActual, int pSiguiente) {
 
 /*Funcion que incializa desde un string de entrada de usuario el registro
  */
-void RegisterPointerNode::init(string *pDatos, schema * pSchema, int pOffset){
+void RegisterPointerNode::init(string pDatos, schema * pSchema, int pOffset){
     this->initVoidp(pDatos, pSchema);
     this->_modify=true;
     this->_offset=pOffset;
@@ -97,22 +97,29 @@ void* RegisterPointerNode::GetRegistro() const {
  * @param schema * pSchema :: el formato como se escriben en los datos
  * @return No return
  */
-void RegisterPointerNode::initVoidp(string* pDatos, schema* pSchema){
+void RegisterPointerNode::initVoidp(string pDatos, schema* pSchema){
     string nomb;
     string value;
     
     int tipo_dato = 1;
     int n = 3;
-    
-    while(n < pDatos->size()-2) {
+    this->_Registro=(void*)malloc(pSchema->getTamanyoTotal());
+    memset(_Registro, 0, pSchema->getTamanyoTotal());
+    while(n < pDatos.size()-2) {
         int i = n;
         int j = 0;
         
-        while(pDatos[i].compare(">") != 0) {
+        while(pDatos[i] != '>') {
+            
+            cout << j <<  "  j " <<endl;
+            cout << i <<  "  i " <<endl;
+            cout << pDatos.size()<< "  pdatos size " << endl;
+            cout << pDatos << endl;
+            cout << pDatos.at(i)<<endl;
             j++;
             i++;
         }
-        string dato = pDatos->substr(n,j);
+        string dato = pDatos.substr(n,j);
         
         if(tipo_dato == 1) {
             nomb = dato;

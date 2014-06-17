@@ -29,7 +29,7 @@ public:
     int GetActual() const;
     int GetOffset() const;
     void* GetRegistro() const;
-    void init(string* , schema*, int);
+    void init(string , schema*, int);
     void init(void*, int);
     void modify(string* pDatos, string* pColum, schema * pSchema);
     void flush();
@@ -46,7 +46,7 @@ private:
     bool _modify;
     bool inMemory;
     
-    void initVoidp(string *, schema*);
+    void initVoidp(string , schema*);
     void updateVoidP(string*, string*, schema*);
     
     inline bool isInteger(const string &);
