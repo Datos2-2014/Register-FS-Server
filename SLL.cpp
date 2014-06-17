@@ -50,7 +50,7 @@ int SLL::getSize() {
 void SLL::insert(Disk_File* pFile, string pFolderName) {
     SLLNode* tmp = new SLLNode(pFile,pFolderName);
     
-    if(first==0) {
+    if(first==NULL) {
         first = tmp;
         size++;
     }

@@ -303,7 +303,10 @@ void comandExecute(char comandoClient[])
              //Extraccion de los parametros de usuario y password.
 
             /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
-            int ret = File_System->newFolder(param2, param1);
+            int ret =0;
+            ret=File_System->newFolder(param1, param2);
+            cout<<"NUMERO"<<endl;
+            cout<<ret<<endl;
 
             /*Parse y envío en formato json */
             Jzon::Object root;                              //Creación del objeto para parsear el contenido

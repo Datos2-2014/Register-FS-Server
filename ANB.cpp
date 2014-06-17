@@ -37,17 +37,18 @@ int ANB::newFolder(string pName, string pPath){
     
     if (folderActual==NULL) {
         root->getFolder()->insert(NULL, pName);
+        return 0; 
     }
     
     else {
         tmp = searchFolder(pPath);
         if(tmp==NULL) {
             cout << "Fichero no encontrado" << endl;
-            return 1;
+            return 0;
         }
         else {
             tmp->getFolder()->insert(NULL, pName);
-            return 0;
+            return 1;
         }
     }
 }
@@ -68,11 +69,13 @@ string ANB::newFile(string pClientDescriptor, string pName, string pPath) {
     if (folderActual==NULL) {
         Disk_File* file = new Disk_File(pClientDescriptor, pName);
         root->getFolder()->insert(file, pName);
+        string peerdescrip=file->getFileDescriptor();
+        return peerdescrip;
     }
     else {
         tmp = searchFolder(pPath);
         if(tmp==NULL) {
-            return "null";
+            return "";
         }
         else {
             Disk_File* file = new Disk_File(pClientDescriptor, pName);
@@ -98,7 +101,7 @@ SLLNode* ANB::searchFolder(string pPath) {
     while(folderActual!=NULL) {
         for(tmp = listaActual->getFirst(); tmp!=NULL; tmp = tmp->getNext()) {
             std::string foldAct_str(folderActual);
-            if((tmp->getFlag()==0)&&(foldAct_str.compare(tmp->getName()) == 0)) {
+            if((tmp->getFlag()==0)&(foldAct_str==tmp->getName())) {
                 listaActual = tmp->getFolder();
                 break;
             }
@@ -111,6 +114,8 @@ SLLNode* ANB::searchFolder(string pPath) {
         }
     }
     return tmp;
+    
+//    foldAct_str.compare(tmp->getName()) == 0)
 }
 
 /**

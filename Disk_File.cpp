@@ -41,7 +41,7 @@ Disk_File::Disk_File(string pClientDescriptor, string pFileName) {
  */
 Disk_File::Disk_File(string pPeerDescriptor) {
     strcpy(this->_peerDescriptor, pPeerDescriptor.c_str());
-    this->_Path = stripathRFSath) + _peerDescriptor + ".bin";
+    this->_Path = string(pathRFS) + _peerDescriptor + ".bin";
     this->loadHeader();
     this->_Name = this->getHeader()->getFilename();
     this->_clientDescriptor = this->getHeader()->getClientDescriptor();
