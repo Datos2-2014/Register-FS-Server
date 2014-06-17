@@ -20,6 +20,7 @@ Disk_File::Disk_File(string pClientDescriptor, string pFileName) {
             this->_peerDescriptor = (getValidPeer());
             this->_Path = string(pathRFS) + _peerDescriptor + ".bin";
             this->_Name = pFileName;
+            this->_header=new header(0,0,0,0,0,0);
             this->getHeader()->setFilename(pFileName);
             this->_clientDescriptor = pClientDescriptor;
             this->getHeader()->setClientDescriptor(pFileName);
