@@ -16,19 +16,24 @@
 using namespace std;
 
 ANB::ANB() {
+    
     root = new SLLNode(NULL, "/");
-    
+   
     newFolder("AAA", "/");
-    
+ 
     string PDescUsers = newFile("AAAUsers", "users", "/AAA/");
+ 
     string PDescPermissions = newFile("AAAPermissions", "permissions", "/AAA/");
-    
     string FDescUsers = "AAAUsers" + PDescUsers;
+
     string FDescPermissions = "AAAPermissions" + PDescPermissions;
+    
     createSchema(FDescUsers, "{{<username>,<Char-array>,<64>},{<password>,<Char-array>,<64>},{<id>,<Int>,<4>},{<admin>,<Byte>,<1>}}");
+    cout<<"esperando cliente"<<endl;
     createSchema(FDescPermissions, "{{<pathFile>,<Char-array>,<512>},{<userId>,<Int>,<4>},{<owner>,<Byte>,<1>}}");
     
     addRegister(FDescUsers, "{{<username>,<Gonzo>},{<password>,<heloo132*>},{<id>,<1>},{<admin>,<1>}}");
+    cout<<"esperando cliente"<<endl;
     addRegister(FDescUsers, "{{<username>,<Yoda>},{<password>,<y0ur3Next@>},{<id>,<2>},{<admin>,<1>}}");
     addRegister(FDescUsers, "{{<username>,<DarthRevan>},{<password>,<th3f0rc3~!>},{<id>,<3>},{<admin>,<1>}}");
 }
@@ -90,7 +95,7 @@ string ANB::newFile(string pClientDescriptor, string pName, string pPath) {
     if (folderActual==NULL) {
         Disk_File* file = new Disk_File(pClientDescriptor, pName);
         root->getFolder()->insert(file, pName);
-        string peerdescrip=file->getFileDescriptor();
+        string peerdescrip=file->getPeerDescriptor();
         return peerdescrip;
     }
     else {
@@ -185,11 +190,15 @@ void ANB::deleteFile(string pFileDesc) {
  * @return Retorna la carpeta donde se encuentra el archivo.
  */
 SLL* ANB::searchFile(string pFileDesc, SLL* pFolder) {
+    cout<<"pruuu"<<endl;
     SLL* contentFolder = pFolder;
     if(contentFolder == NULL) {
+        cout<<"searchhhh"<<endl;
         return NULL;
-    }    
+    }   
+    
     else {
+        cout<<"searchhhh"<<endl;
         SLLNode* tmp = contentFolder->getFirst();
         while(tmp!=NULL) {
             if(tmp->getFlag() == 1) {
@@ -204,6 +213,7 @@ SLL* ANB::searchFile(string pFileDesc, SLL* pFolder) {
                 return searchFile(pFileDesc,tmp->getFolder());
             }
         }
+        cout<<"TERMINO";
         return NULL;
     }
 }
@@ -356,14 +366,25 @@ string ANB::getSchema(string pFileDesc) {
  * @return Una cadena de caracteres que contiene el número de registro y su posición dentro del archivo.
  */
 int ANB::addRegister(string pFileDesc, string pValores) {
+    cout<<"searchhhh222"<<endl;
     SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
+    cout<<"prueba32323232325555555555555555555555555555"<<endl;
     if(folder_archivo == NULL) {
+        cout<<"malllllllllll";
         return NULL;
     }
-    SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
+    else{
+        cout<<"contunua"<<endl;
+        SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
+        cout<<"contunua22"<<endl;
     Disk_File* file = archivo->getFile();
+    cout<<"contunua3333"<<endl;
+     return file->addReg(pValores);
+    }
     
-    return file->addReg(pValores);
+    
+   
+    cout <<"endl" ;
     
     
 //    string nomb;

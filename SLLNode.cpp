@@ -50,6 +50,7 @@ int SLLNode::getFlag() {
 }
 
 SLL* SLLNode::getFolder() {
+    cout<<"prupru";
     return folder;
 }
 

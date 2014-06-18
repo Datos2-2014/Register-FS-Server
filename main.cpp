@@ -133,13 +133,15 @@ void enviar(char cadena[])
 
 int main()//metodo principal
 {
+  cout<<"SERvidor"<<endl;  
   crear_socket();
   
   atributos();
   
   socket_name();
-
+ 
   escuchar();
+ 
  
   while(1) // ciclo para llamar accept
   {

@@ -288,8 +288,11 @@ int Disk_File::addReg(string pToWrite) {
     //    }
     //    cout << "valor a escribir "<<pToWrite << endl;
     int registro = this->getRegisterFree();
+    
     RegisterPointerNode* tmp = this->_usedRecords.search(registro);
+    
     tmp->init(pToWrite, this->getSchema(), getOffset(registro));
+    cout<<"disk"<<endl;
     char* cToWriteChar = strdup(pToWrite.c_str());
     fstream fs(_Path, ios::in | ios::out | ios::binary);
     move(tmp->GetActual(), _registerHeaderSize, &fs);

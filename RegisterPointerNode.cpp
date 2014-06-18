@@ -20,7 +20,9 @@ RegisterPointerNode::RegisterPointerNode(int pActual, int pSiguiente) {
 /*Funcion que incializa desde un string de entrada de usuario el registro
  */
 void RegisterPointerNode::init(string pDatos, schema * pSchema, int pOffset){
+    cout<<"diskinit"<<endl;
     this->initVoidp(pDatos, pSchema);
+    cout<<"initttttttttttt"<<endl;
     this->_modify=true;
     this->_offset=pOffset;
     this->inMemory=true;
@@ -99,16 +101,18 @@ void* RegisterPointerNode::GetRegistro() const {
  */
 void RegisterPointerNode::initVoidp(string pDatos, schema* pSchema){
     string nomb="";
-    string value;
+    string value="";
     
     int tipo_dato = 1;
     int n = 3;
+    cout<<"initvoid"<<endl;
     this->_Registro=(void*)malloc(pSchema->getTamanyoTotal());
     memset(_Registro, 0, pSchema->getTamanyoTotal());
     while(n < pDatos.size()-2) {
+        cout<<"asdfghjkl"<<endl;
         int i = n;
         int j = 0;
-        
+        //string pru=pDatos->at(5); 
         while(pDatos[i] != '>') {
             
 //            cout << j <<  "  j " <<endl;
@@ -120,6 +124,7 @@ void RegisterPointerNode::initVoidp(string pDatos, schema* pSchema){
             i++;
         }
         string dato = pDatos.substr(n,j);
+        cout<<"initvoid"<<endl;
         
         if(tipo_dato == 1) {
             nomb.append(dato);
@@ -134,6 +139,7 @@ void RegisterPointerNode::initVoidp(string pDatos, schema* pSchema){
         //    file->write(value, registLibre, file->getSchema()->getDesplazamiento(nomb), file->getSchema()->getConst(nomb), file->getSchema()->getColTam(nomb));
         }
     }
+    cout<<"initvoidddddddddddddddddddd"<<endl;
 }
 
 

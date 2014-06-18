@@ -37,7 +37,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/ANB.o \
 	${OBJECTDIR}/Disk_File.o \
+	${OBJECTDIR}/HAStorageManager.o \
 	${OBJECTDIR}/Jzon.o \
+	${OBJECTDIR}/Markup.o \
 	${OBJECTDIR}/RegisterPointer.o \
 	${OBJECTDIR}/RegisterPointerNode.o \
 	${OBJECTDIR}/SLL.o \
@@ -81,10 +83,20 @@ ${OBJECTDIR}/Disk_File.o: Disk_File.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Disk_File.o Disk_File.cpp
 
+${OBJECTDIR}/HAStorageManager.o: HAStorageManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/HAStorageManager.o HAStorageManager.cpp
+
 ${OBJECTDIR}/Jzon.o: Jzon.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Jzon.o Jzon.cpp
+
+${OBJECTDIR}/Markup.o: Markup.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Markup.o Markup.cpp
 
 ${OBJECTDIR}/RegisterPointer.o: RegisterPointer.cpp 
 	${MKDIR} -p ${OBJECTDIR}
