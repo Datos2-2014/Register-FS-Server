@@ -180,25 +180,25 @@ int schema::getConst(string pNombre) {
     
     string dataNombre = *it_nombre;
     int pos = 0;
-    
+    cout << "entro al ciclo 1" << endl;
     while(dataNombre.compare(pNombre) != 0) {
         it_nombre++;
         dataNombre = *it_nombre;
         pos++;
     }
-    
+    cout << "salio al ciclo 1" << endl;
     list<string>::iterator it_tipo = tipo.begin();
     
     string data;
     int count = 0;
-    
+    cout << "entro al ciclo 2" << endl;
     while(count <= pos) {
         data = *it_tipo;
         
         it_tipo++;
         count++;
     }
-    
+    cout << "salio al ciclo 2" << endl;
     if (data.compare("Byte") == 0) {
         return 4;
     }

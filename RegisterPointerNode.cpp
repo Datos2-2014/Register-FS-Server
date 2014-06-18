@@ -100,9 +100,8 @@ void* RegisterPointerNode::GetRegistro() const {
  * @return No return
  */
 void RegisterPointerNode::initVoidp(string pDatos, schema* pSchema){
+    string value="";  
     string nomb="";
-    string value="";
-    
     int tipo_dato = 1;
     int n = 3;
     cout<<"initvoid"<<endl;
@@ -127,23 +126,30 @@ void RegisterPointerNode::initVoidp(string pDatos, schema* pSchema){
         cout<<"initvoid"<<endl;
         
         if(tipo_dato == 1) {
+            nomb.clear();
             nomb.append(dato);
             tipo_dato++;
             n=i+3;
+            cout << " if" << endl;
         }
         else {
+            cout << " entra al else" << endl;
             value = dato;
             tipo_dato = 1;
             n = i+5;
             this->updateVoidP(&dato,&nomb,pSchema);
+            cout << " sale del else " << endl;
         //    file->write(value, registLibre, file->getSchema()->getDesplazamiento(nomb), file->getSchema()->getConst(nomb), file->getSchema()->getColTam(nomb));
         }
     }
-    cout<<"initvoidddddddddddddddddddd"<<endl;
+    cout<<" initvoidddddddddddddddddddd"<<endl;
 }
 
 
 void RegisterPointerNode::updateVoidP(string * pDato,string * pColum, schema* pSchema){
+    cout << " etro del get const " << endl;
+    pSchema->getConst(*pColum);
+    cout << " salio del get const " << endl;
     switch(pSchema->getConst(*pColum)){
     case caseCharArray:
     {
