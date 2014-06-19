@@ -294,6 +294,7 @@ int Disk_File::addReg(string pToWrite) {
     tmp->init(pToWrite, this->getSchema(), getOffset(registro));
     cout<<"disk"<<endl;
     char* cToWriteChar = strdup(pToWrite.c_str());
+    cout << this->_Path << endl;
     fstream fs(_Path, ios::in | ios::out | ios::binary);
     move(tmp->GetActual(), _registerHeaderSize, &fs);
     fs.write(cToWriteChar, pToWrite.size());
