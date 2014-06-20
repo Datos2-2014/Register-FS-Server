@@ -172,6 +172,18 @@ int main()//metodo principal
     }
     //close(newfd); //fgggggggggggggggggggggggfgffg
   }
+//    std::cout << " Creando archivos" << std::endl;
+//    Disk_File* file1 = new Disk_File("AAAUsers", "users");
+//    Disk_File* file2 = new Disk_File("AAAUsers", "users2");
+//    std::cout << " creando schemas " << std::endl;
+//    file1->setSchema("{{<username>,<Char-array>,<64>},{<password>,<Char-array>,<64>},{<id>,<Int>,<4>},{<admin>,<Byte>,<1>}}");
+//    file2->setSchema("{{<pathFile>,<Char-array>,<512>},{<userId>,<Int>,<4>},{<owner>,<Byte>,<1>}}");
+//    std::cout << " escribiendo registros  " << std::endl;
+//    file1->addReg("{{<username>,<Gonzo>},{<password>,<heloo132*>},{<id>,<1>},{<admin>,<1>}}");
+//    file1->addReg("{{<username>,<Yoda>},{<password>,<y0ur3Next@>},{<id>,<2>},{<admin>,<1>}}");
+//    file1->addReg("{{<username>,<DarthRevan>},{<password>,<th3f0rc3~!>},{<id>,<3>},{<admin>,<1>}}");
+//    file1->flush();
+//    std::cout << "Termino" << endl;
 }
 
 void comandExecute(char comandoClient[])
@@ -190,6 +202,7 @@ void comandExecute(char comandoClient[])
     string dato=comando.substr(0,j);
     //cout <<dato;
     if(dato=="touch"){
+        cout<<"ingreso";
         /*Separación de los parámetros del comando*/
         int punt1 = j+1;
         int aux1=0;

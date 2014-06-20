@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux-x86
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux-x86
-CND_ARTIFACT_NAME_Debug=trunk
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/trunk
+CND_ARTIFACT_NAME_Debug=register-fs-server
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/register-fs-server
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Debug=trunk.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/trunk.tar
+CND_PACKAGE_NAME_Debug=register-fs-server.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/register-fs-server.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux-x86
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux-x86
-CND_ARTIFACT_NAME_Release=trunk
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/trunk
+CND_ARTIFACT_NAME_Release=register-fs-server
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/register-fs-server
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
-CND_PACKAGE_NAME_Release=trunk.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/trunk.tar
+CND_PACKAGE_NAME_Release=register-fs-server.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/register-fs-server.tar
 #
 # include compiler specific variables
 #
