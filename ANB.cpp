@@ -22,7 +22,7 @@ ANB::ANB() {
     newFolder("AAA", "/");
  
     string PDescUsers = newFile("AAAUsers", "users", "/AAA/");
- 
+    
     string PDescPermissions = newFile("AAAPermissions", "permissions", "/AAA/");
     string FDescUsers = "AAAUsers" + PDescUsers;
 
@@ -36,7 +36,8 @@ ANB::ANB() {
     cout<<"esperando cliente"<<endl;
     addRegister(FDescUsers, "{{<username>,<Yoda>},{<password>,<y0ur3Next@>},{<id>,<2>},{<admin>,<1>}}");
     addRegister(FDescUsers, "{{<username>,<DarthRevan>},{<password>,<th3f0rc3~!>},{<id>,<3>},{<admin>,<1>}}");
-    this->flush();
+    
+    userID = 4;
 }
 
 void ANB::flush(){
@@ -801,3 +802,105 @@ void ANB::save_Aux(SLL* folder, CMarkup pXml) {
     }
 }
 
+/**
+ * Agrega un nuevo usuario al sistema.
+ * @param pName Nombre del usuario nuevo
+ * @param pPass Contraseña del nuevo usuario
+ * @param pAdmin entero que representa en usuario admin, 1-si es usuario administrador y 0-si es usuario comun
+ */
+void ANB::addUser(string pName, string pPass, int pAdmin) {
+    SLL* raiz = root->getFolder();
+    string filedesc = "";
+    
+    SLLNode* tmp = raiz->getFirst();
+    while(tmp!=NULL) {
+        if(tmp->getFlag()==0) {
+            if(tmp->getName().compare("AAA")==0) {
+                raiz = tmp->getFolder();
+                break;
+            }
+        }
+        tmp = tmp->getNext();
+    }
+    tmp = raiz->getFirst();
+    while(tmp!=NULL) {
+        if(tmp->getFlag()==1) {
+            string user = tmp->getFile()->getName();
+            if(user.compare("users")==0) {
+                filedesc = tmp->getFile()->getFileDescriptor();
+                break;
+            }
+        }
+        tmp = tmp->getNext();
+    }
+    
+    addRegister(filedesc, "{{<username>,<"+pName+">},{<password>,<"+pPass+">},{<id>,<"+userID+">},{<admin>,<"+pAdmin+">}}");
+    userID++;
+}
+
+/**
+ * Añade un permiso al archivo de permisos de usuarios del sistema.
+ * @param pName Nombre del usuario que esta obteniendo el permiso, ingrasar tal y como se encuentra almacenado en el archivo users
+ * @param pPath Dirección del archivo completa, tipo: /AAA/permissions , contiene el nombre del archivo.
+ * @param pFileDesc File descriptor del archivo permissions que contiene los registros.
+ */
+void ANB::addPermission(string pName, string pPath, string pFileDesc) {
+    SLL* raiz = root->getFolder();
+    Disk_File* archPerm = NULL;
+    string filedesc = "";
+    
+    SLLNode* tmp = raiz->getFirst();
+    while(tmp!=NULL) {
+        if(tmp->getFlag()==0) {
+            if(tmp->getName().compare("AAA")==0) {
+                raiz = tmp->getFolder();
+                break;
+            }
+        }
+        tmp = tmp->getNext();
+    }
+    tmp = raiz->getFirst();
+    while(tmp!=NULL) {
+        if(tmp->getFlag()==1) {
+            string user = tmp->getFile()->getName();
+            if(user.compare("permissions")==0) {
+                archPerm = tmp->getFile();
+                filedesc = tmp->getFile()->getFileDescriptor();
+                break;
+            }
+        }
+        tmp = tmp->getNext();
+    }
+    
+    RegisterPointer RP = archPerm->getUsedRecords();
+    RegisterPointerNode* tmp1 = RP.GetHead();
+    string userid = "";
+    while(tmp1!=NULL) {
+        string datos = getRegister(filedesc, 1, tmp1->GetActual(), "{username,id}");
+            
+        int pos = 11;
+        int i = pos;
+        int j = 0;
+        while(datos[pos]!= '>') {
+            pos++;
+            j++;
+        }
+        string id = datos.substr(i,j);
+        if(id.compare(pName)==0) {
+            pos += 2;
+            while(datos[pos]!= ':') {
+                pos++;
+            }
+            int i = pos+=1;
+            int j = 0;
+            while(datos[pos]!= '>') {
+                pos++;
+                j++;
+            }
+            userid = datos.substr(i,j);
+            break;
+        }
+    }
+    
+    addRegister(pFileDesc, "{{<pathFile>,<"+pPath+">},{<userId>,<"+userid+">},{<owner>,<"+1+">}}");
+}
