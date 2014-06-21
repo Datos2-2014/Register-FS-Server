@@ -716,7 +716,7 @@ void Disk_File::flushHeader() {
     
     fstream fs;
     char* pSchema = strdup(this->getHeader()->getSchema().c_str());
-    fs.open(_Path, ios::in | ios::out | ios::binary);
+    fs.open(_Path, ios::out | ios::binary);
     fs.seekp(0, std::ios::beg);
     int tmp =this->getHeader()->getInicio();
     fs.write((char*)&tmp, sizeof(int));
@@ -758,7 +758,7 @@ void Disk_File::flushHeader() {
 void Disk_File::loadHeader() {
         fstream fs;
         cout << "reading header" << endl;
-        fs.open(_Path,  ios::in |ios::out| ios::binary);
+        fs.open(_Path,  ios::in | ios::binary);
         fs.seekg(0, std::ios::beg);
         int read=0;
         fs.read((char*)&read, sizeof(int));

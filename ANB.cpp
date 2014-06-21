@@ -60,6 +60,7 @@ void ANB::flush(SLL* pFolder){
             }
             else {
                 flush(tmp->getFolder());
+                tmp=tmp->getNext();
             }
         }
         cout<<"TERMINO";
