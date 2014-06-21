@@ -833,8 +833,14 @@ void ANB::addUser(string pName, string pPass, int pAdmin) {
         }
         tmp = tmp->getNext();
     }
+    stringstream ss;
+    ss<<userID;
+    string str = ss.str();
     
-    addRegister(filedesc, "{{<username>,<"+pName+">},{<password>,<"+pPass+">},{<id>,<"+userID+">},{<admin>,<"+pAdmin+">}}");
+    stringstream ss1;
+    ss1<<pAdmin;
+    string str1 = ss1.str();
+    addRegister(filedesc, "{{<username>,<"+pName+">},{<password>,<"+pPass+">},{<id>,<"+str+">},{<admin>,<"+str1+">}}");
     userID++;
 }
 
@@ -901,6 +907,5 @@ void ANB::addPermission(string pName, string pPath, string pFileDesc) {
             break;
         }
     }
-    
-    addRegister(pFileDesc, "{{<pathFile>,<"+pPath+">},{<userId>,<"+userid+">},{<owner>,<"+1+">}}");
+    addRegister(pFileDesc, "{{<pathFile>,<"+pPath+">},{<userId>,<"+userid+">},{<owner>,<"+"1"+">}}");
 }

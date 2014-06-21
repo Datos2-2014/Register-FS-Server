@@ -46,8 +46,6 @@ private:
     void saveXML();
     void save_Aux(SLL*, CMarkup);
     void flush(SLL* pFolder);
-    
-    
 };
 
 #endif	/* ANB_H */
