@@ -137,7 +137,8 @@ int main()//metodo principal
     fstream fs("/home/malcolm/Documentos/Register-FS-Server/Archivos/holamundo.bin", std::ios::in|std::ios::out | std::ios::binary);
     fs.write((char*)&pFileName, 20);
     fs.close();
-//  cout<<"SERvidor"<<endl;  
+
+    //  cout<<"SERvidor"<<endl;  
 //  crear_socket();
 //  
 //  atributos();
