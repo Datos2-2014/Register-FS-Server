@@ -945,7 +945,7 @@ void Disk_File::flush(){
  */
 void Disk_File::write(RegisterPointerNode * pRegister){
     void * iwrite=pRegister->GetRegistro();
-    fstream fs(_Path,  ios::in | ios::out |ios::binary);
+    fstream fs(_Path,   ios::out |ios::binary);
     move(pRegister->GetActual(), _registerHeaderSize, &fs);
     fs.write((char*)iwrite, this->getSchema()->getTamanyoTotal());
     fs.close();
