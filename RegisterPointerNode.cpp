@@ -147,9 +147,7 @@ void RegisterPointerNode::initVoidp(string pDatos, schema* pSchema){
 
 
 void RegisterPointerNode::updateVoidP(string * pDato,string * pColum, schema* pSchema){
-    cout << " etro del get const " << endl;
     pSchema->getConst(*pColum);
-    cout << " salio del get const " << endl;
     switch(pSchema->getConst(*pColum)){
     case caseCharArray:
     {

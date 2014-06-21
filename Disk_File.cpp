@@ -23,7 +23,7 @@ Disk_File::Disk_File(string pClientDescriptor, string pFileName) {
             this->_header=new header(0,0,0,0,0,0);
             this->getHeader()->setFilename(pFileName);
             this->_clientDescriptor = pClientDescriptor;
-            this->getHeader()->setClientDescriptor(pFileName);
+            this->getHeader()->setClientDescriptor(_clientDescriptor);
             this->_fileDescriptor = _clientDescriptor + _peerDescriptor;
         }
         else{
@@ -68,7 +68,7 @@ header* Disk_File::getHeader() {
  * @return void
  */
 void Disk_File::init(int pSize) {
-    fstream fs(_Path, std::ios::out | std::ios::binary);
+    fstream fs(_Path, std::ios::in|std::ios::out | std::ios::binary);
     fs.close();
     this->_registerSize = pSize + _registerHeaderSize;
     this->_header = new header(0, 0, 0, 0, 0, 0);
@@ -122,6 +122,7 @@ void Disk_File::setSchema(string pFormato) {
     this->schemeRegister = new schema(pFormato);
     this->init(schemeRegister->getTamanyoTotal());
     this->getHeader()->setSchema(pFormato);
+    this->_headerSize = 22+16+64+this->getHeader()->getSchema().size();
     this->flushHeader();
 }
 
@@ -712,7 +713,6 @@ bool Disk_File::isValid(string pFileName) {
  * Write the header of the file
  */
 void Disk_File::flushHeader() {
-    this->_headerSize = 22+16+64+this->getHeader()->getSchema().size();
     
     fstream fs;
     char* pSchema = strdup(this->getHeader()->getSchema().c_str());
@@ -740,11 +740,12 @@ void Disk_File::flushHeader() {
     fs.write((char*)&tmp2, 64);
     fs.seekp(22+64, std::ios::beg);
     tmp2=string(this->getHeader()->getClientDescriptor());
-    fs.read((char*)&tmp2, 16);
+    fs.write((char*)&tmp2, 16);
     fs.seekp(102, std::ios::beg);
     tmp2=string(this->getHeader()->getSchema());
-    fs.read((char*)&tmp2, this->getHeader()->getSchema().size());
+    fs.write(pSchema, this->getHeader()->getSchema().size());
     fs.close();
+    cout << "flush header" << endl;
 }
 
 /*
