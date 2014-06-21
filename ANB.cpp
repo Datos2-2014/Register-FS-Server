@@ -36,6 +36,33 @@ ANB::ANB() {
     cout<<"esperando cliente"<<endl;
     addRegister(FDescUsers, "{{<username>,<Yoda>},{<password>,<y0ur3Next@>},{<id>,<2>},{<admin>,<1>}}");
     addRegister(FDescUsers, "{{<username>,<DarthRevan>},{<password>,<th3f0rc3~!>},{<id>,<3>},{<admin>,<1>}}");
+    this->flush();
+}
+
+void ANB::flush(){
+    flush(this->root->getFolder());
+}
+
+void ANB::flush(SLL* pFolder){
+    cout<<"flush"<<endl;
+    SLL* contentFolder = pFolder;
+    if(contentFolder == NULL) {
+        cout<<"Carpeta Vacia"<<endl;
+    }
+    else {
+        cout<<"searchhhh"<<endl;
+        SLLNode* tmp = contentFolder->getFirst();
+        while(tmp!=NULL) {
+            if(tmp->getFlag() == 1) {
+                tmp->getFile()->flush();
+                tmp = tmp->getNext();
+            }
+            else {
+                flush(tmp->getFolder());
+            }
+        }
+        cout<<"TERMINO";
+    }
 }
 
 ANB::ANB(const ANB& orig) {

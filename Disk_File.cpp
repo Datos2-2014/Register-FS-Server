@@ -933,6 +933,7 @@ void Disk_File::flush(){
         }
         tmp=tmp->GetNext();
     }
+    cout << "Flush de disco" << endl;
 }
 
 
