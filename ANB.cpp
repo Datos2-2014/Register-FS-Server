@@ -36,7 +36,7 @@ ANB::ANB() {
     cout<<"esperando cliente"<<endl;
     addRegister(FDescUsers, "{{<username>,<Yoda>},{<password>,<y0ur3Next@>},{<id>,<2>},{<admin>,<1>}}");
     addRegister(FDescUsers, "{{<username>,<DarthRevan>},{<password>,<th3f0rc3~!>},{<id>,<3>},{<admin>,<1>}}");
-    
+    flush();
     userID = 4;
 }
 
