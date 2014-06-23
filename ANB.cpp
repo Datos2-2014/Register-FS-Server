@@ -154,6 +154,7 @@ SLLNode* ANB::searchFolder(string pPath) {
     char* a = strdup(pPath.c_str());
     char* folderActual = strtok(a, "/");
     while(folderActual!=NULL) {
+        cout << "  ciclo del folder" << endl;
         for(tmp = listaActual->getFirst(); tmp!=NULL; tmp = tmp->getNext()) {
             std::string foldAct_str(folderActual);
             if((tmp->getFlag()==0)&(foldAct_str==tmp->getName())) {
@@ -180,13 +181,17 @@ SLLNode* ANB::searchFolder(string pPath) {
  * @return 1-Si la operacion no fue exitosa, 0-si lo fue
  */
 int ANB::createSchema(string pFileDesc, string pCol) {
+    cout << "buscando el folder" << endl;
     SLL* folder_archivo = searchFile(pFileDesc, root->getFolder());
-    
+    cout << "Encontro el folder/Buscando Archivo "<<endl;
     SLLNode* archivo = folder_archivo->searchFile(pFileDesc);
+    cout << "Encontro o no un archivo" << endl;
     if (archivo==NULL) {
+        cout << " No Encontro el Archivo" << endl;
         return 1;
     }
     else {
+        cout << "Encontro el archivo: " << archivo->getName();
         archivo->getFile()->setSchema(pCol);
         return 0;
     }
@@ -230,11 +235,15 @@ SLL* ANB::searchFile(string pFileDesc, SLL* pFolder) {
         cout<<"searchhhh"<<endl;
         SLLNode* tmp = contentFolder->getFirst();
         while(tmp!=NULL) {
+           
             if(tmp->getFlag() == 1) {
                 if(tmp->getFile()->getFileDescriptor().compare(pFileDesc)==0) {
+                    cout << " A FD: " << pFileDesc << endl;
+                    cout << " FD archivo: " <<tmp->getFile()->getFileDescriptor() << endl;
                     return contentFolder;
                 }
                 else {
+                    cout << " FD: carpeta" <<tmp->getName() << endl;
                     tmp = tmp->getNext();
                 }
             }
@@ -242,7 +251,7 @@ SLL* ANB::searchFile(string pFileDesc, SLL* pFolder) {
                 return searchFile(pFileDesc,tmp->getFolder());
             }
         }
-        cout<<"TERMINO";
+        cout<<"TERMINO" << endl;
         return NULL;
     }
 }

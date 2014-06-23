@@ -384,6 +384,8 @@ void comandExecute(char comandoClient[])
          //Extraccion de los parametros de usuario y password.
 
         /*Llamada a la función correspondiente y almacenamiento de su valor de retorno */
+        cout << "File Descriptor main: " << param1<< endl;
+        cout << "Schema Main: " << param2 << endl;
         int ret = File_System->createSchema(param1, param2);
 
         /*Parse y envío en formato json */

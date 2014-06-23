@@ -131,11 +131,13 @@ void SLL::removeFolder(string pName) {
 
 SLLNode* SLL::searchFile(string pFileDesc) {
     SLLNode* tmp = first;
+    cout << "buscando el archivo en la lista" << endl;
     while(tmp!=NULL) {
         if(tmp->getFile()->getFileDescriptor().compare(pFileDesc)) {
             return tmp;
         }
         else {
+            cout<<" este archivo: "<< tmp->getName() << endl;
             tmp = tmp->getNext();
         }
     }
